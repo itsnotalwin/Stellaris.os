@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>✦ STELLARIS</title>
   <meta name="theme-color" content="#000000">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Stellaris">
-  <link rel="manifest" href="manifest.json">
+  <link rel="manifest" href="data:application/json;charset=utf-8,%7B%22name%22%3A%22Stellaris%22%2C%22short_name%22%3A%22Stellaris%22%2C%22start_url%22%3A%22.%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23000000%22%2C%22theme_color%22%3A%22%23000000%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22data%3Aimage%2Fsvg%2Bxml%2C%253Csvg%2520xmlns%253D'http%253A%2F%2Fwww.w3.org%2F2000%2Fsvg'%2520viewBox%253D'0%25200%2520512%2520512'%253E%253Cdefs%253E%253CradialGradient%2520id%253D'bg'%2520cx%253D'50%2525'%2520cy%253D'50%2525'%2520r%253D'50%2525'%253E%253Cstop%2520offset%253D'0%2525'%2520stop-color%253D'%25231a1a3e'%2F%253E%253Cstop%2520offset%253D'100%2525'%2520stop-color%253D'%2523000000'%2F%253E%253C%2FradialGradient%253E%253C%2Fdefs%253E%253Ccircle%2520cx%253D'256'%2520cy%253D'256'%2520r%253D'256'%2520fill%253D'url(%2523bg)'%2F%253E%253Cpath%2520d%253D'M256%252048%2520L280%2520180%2520L420%2520200%2520L300%2520300%2520L340%2520440%2520L256%2520360%2520L172%2520440%2520L212%2520300%2520L92%2520200%2520L232%2520180%2520Z'%2520fill%253D'%2523ffd966'%2520opacity%253D'0.9'%2F%253E%253Cpath%2520d%253D'M256%2520100%2520L272%2520190%2520L365%2520210%2520L290%2520280%2520L315%2520390%2520L256%2520340%2520L197%2520390%2520L222%2520280%2520L147%2520210%2520L240%2520190%2520Z'%2520fill%253D'%2523ffffff'%2F%253E%253Ccircle%2520cx%253D'256'%2520cy%253D'210'%2520r%253D'30'%2520fill%253D'%2523ffcc00'%2F%253E%253C%2Fsvg%253E%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fsvg%2Bxml%22%7D%5D%7D">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Cdefs%3E%3CradialGradient id='bg' cx='50%25' cy='50%25' r='50%25'%3E%3Cstop offset='0%25' stop-color='%231a1a3e'/%3E%3Cstop offset='100%25' stop-color='%23000000'/%3E%3C/radialGradient%3E%3C/defs%3E%3Ccircle cx='256' cy='256' r='256' fill='url(%23bg)'/%3E%3Cpath d='M256 48 L280 180 L420 200 L300 300 L340 440 L256 360 L172 440 L212 300 L92 200 L232 180 Z' fill='%23ffd966' opacity='0.9'/%3E%3Cpath d='M256 100 L272 190 L365 210 L290 280 L315 390 L256 340 L197 390 L222 280 L147 210 L240 190 Z' fill='%23ffffff'/%3E%3Ccircle cx='256' cy='210' r='30' fill='%23ffcc00'/%3E%3C/svg%3E">
   <style>
     *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
-    html,body{width:100%;height:100dvh;overflow:hidden;background:#000}
+    html,body{width:100%;height:100dvh;overflow:hidden;background:#000;position:fixed;top:0;left:0}
     body{font-family:-apple-system,'SF Pro Text',system-ui,'Segoe UI',sans-serif}
-    #app{position:relative;width:100%;height:100%;overflow:hidden}
+    #app{position:fixed;top:0;left:0;width:100%;height:100dvh;overflow:hidden}
     canvas{position:fixed;top:0;left:0;width:100%;height:100dvh;display:block;cursor:grab;background:#000;touch-action:none}
     canvas:active{cursor:grabbing}
     #loadingOverlay{
@@ -23,24 +23,13 @@
       opacity:1;transition:opacity 0.6s ease-out;
     }
     #loadingOverlay.hidden{opacity:0;pointer-events:none}
-    .loading-star{
-      font-size:60px;color:#ffd966;animation:pulse 1.2s ease-in-out infinite;
-      text-shadow:0 0 20px rgba(255,200,100,0.6);
-    }
-    @keyframes pulse{
-      0%,100%{transform:scale(1);opacity:0.8}
-      50%{transform:scale(1.15);opacity:1}
-    }
-    .loading-text{
-      margin-top:20px;color:#888;font-size:14px;letter-spacing:2px;text-transform:uppercase;
-    }
-    .loading-ring{
-      margin-top:30px;width:40px;height:40px;border:2px solid rgba(255,255,255,0.1);
-      border-top-color:#ffd966;border-radius:50%;animation:spin 1s linear infinite;
-    }
+    .loading-star{font-size:60px;color:#ffd966;animation:pulse 1.2s ease-in-out infinite;text-shadow:0 0 20px rgba(255,200,100,0.6)}
+    @keyframes pulse{0%,100%{transform:scale(1);opacity:0.8}50%{transform:scale(1.15);opacity:1}}
+    .loading-text{margin-top:20px;color:#888;font-size:14px;letter-spacing:2px;text-transform:uppercase}
+    .loading-ring{margin-top:30px;width:40px;height:40px;border:2px solid rgba(255,255,255,0.1);border-top-color:#ffd966;border-radius:50%;animation:spin 1s linear infinite}
     @keyframes spin{to{transform:rotate(360deg)}}
     .float-btn,.bottom-btn{
-      position:absolute;display:flex;align-items:center;justify-content:center;z-index:120;cursor:pointer;
+      position:fixed;display:flex;align-items:center;justify-content:center;z-index:120;cursor:pointer;
       background:rgba(28,28,30,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
       border:0.5px solid rgba(120,120,128,0.36);border-radius:48px;
       box-shadow:0 2px 8px rgba(0,0,0,0.25);color:#f0f0f5;font-weight:500;transition:all 0.2s ease;
@@ -59,14 +48,12 @@
       left:max(20px,env(safe-area-inset-left));bottom:max(30px,env(safe-area-inset-bottom));
       height:44px;border-radius:22px;padding:0 18px;gap:6px;font-size:15px;letter-spacing:0.3px;
     }
-    .offline-indicator{
-      position:absolute;top:max(20px,env(safe-area-inset-top));left:max(20px,env(safe-area-inset-left));
-      background:rgba(28,28,30,0.85);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
-      border-radius:20px;padding:4px 12px;font-size:11px;color:#aaa;z-index:130;display:none;font-weight:500;letter-spacing:0.5px;
-      border:0.5px solid rgba(120,120,128,0.3);
+    #clearStarsBtn{
+      position:fixed;top:max(70px,env(safe-area-inset-top)+50px);right:max(20px,env(safe-area-inset-right));
+      padding:8px 16px;border-radius:20px;background:rgba(180,40,40,0.8);color:#ffccaa;font-size:13px;z-index:125;
+      display:none;cursor:pointer;border:0.5px solid rgba(255,100,80,0.5);
     }
-    .offline-indicator.show{display:block}
-    .modal{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,8,0.85);backdrop-filter:blur(36px);z-index:300;opacity:0;transition:opacity 0.35s cubic-bezier(0.2,0.95,0.4,1)}
+    .modal{position:fixed;top:0;left:0;width:100%;height:100dvh;display:none;align-items:center;justify-content:center;background:rgba(0,0,8,0.85);backdrop-filter:blur(36px);z-index:300;opacity:0;transition:opacity 0.35s cubic-bezier(0.2,0.95,0.4,1)}
     .modal.visible{opacity:1}
     .panel{width:86%;max-width:440px;background:rgba(28,28,30,0.9);backdrop-filter:blur(32px);border:0.5px solid rgba(120,120,128,0.36);border-radius:36px;padding:32px 28px;transform:scale(0.96);transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);box-shadow:0 30px 60px rgba(0,0,0,0.8)}
     .modal.visible .panel{transform:scale(1)}
@@ -74,12 +61,7 @@
     .viewer{min-height:200px;white-space:pre-wrap;word-break:break-word}
     .creator-info{font-size:11px;color:rgba(200,215,250,0.7);margin-bottom:10px;text-align:center;font-style:italic}
     .actions{display:flex;gap:12px;margin-top:24px}
-    .actions button{
-      flex:1;height:50px;border-radius:60px;
-      background:rgba(28,28,30,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
-      border:0.5px solid rgba(120,120,128,0.36);color:#f0f4ff;font-size:13px;font-weight:500;cursor:pointer;
-      transition:all 0.2s ease;
-    }
+    .actions button{flex:1;height:50px;border-radius:60px;background:rgba(28,28,30,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid rgba(120,120,128,0.36);color:#f0f4ff;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s ease}
     .actions button:active{transform:scale(0.96);background:rgba(48,48,52,0.9)}
     .name-input{width:100%;background:rgba(0,0,10,0.6);border:0.5px solid rgba(120,120,128,0.3);border-radius:24px;padding:12px 20px;color:#fff;font-size:16px;text-align:center;outline:none}
   </style>
@@ -88,17 +70,12 @@
 </head>
 <body>
 <div id="app">
-  <div id="loadingOverlay">
-    <div class="loading-star">✦</div>
-    <div class="loading-text">stellaris</div>
-    <div class="loading-ring"></div>
-  </div>
+  <div id="loadingOverlay"><div class="loading-star">✦</div><div class="loading-text">stellaris</div><div class="loading-ring"></div></div>
   <canvas id="cosmicCanvas"></canvas>
-  <div class="offline-indicator" id="offlineIndicator">✦ offline</div>
   <div class="float-btn star-count-btn" id="starCountBtn"><span>✦</span> <span id="starCountValue">0</span></div>
+  <button id="clearStarsBtn">✕ clear all</button>
   <div class="float-btn add-star-btn" id="novaBtn">+</div>
   <div class="bottom-btn reset-btn" id="resetViewBtn"><span>⦿</span><span>Center</span></div>
-
   <div class="modal" id="viewModal"><div class="panel"><div id="viewCreator" class="creator-info"></div><div class="viewer" id="memoryViewer"></div><div class="actions"><button id="closeViewBtn">close</button><button id="editFromViewBtn">edit</button></div></div></div>
   <div class="modal" id="editModal"><div class="panel"><div id="editCreator" class="creator-info"></div><textarea id="memoryEditor" placeholder="...a thought drifts..."></textarea><div class="actions"><button id="saveMemoryBtn">engrave</button><button id="cancelEditBtn">drift</button></div></div></div>
   <div class="modal" id="constellationNameModal"><div class="panel"><div style="text-align:center;color:#d0dcff;margin-bottom:12px">name this solar system</div><input type="text" class="name-input" id="constellationNameInput" placeholder="system name"><div class="actions"><button id="saveConstellationName">save</button><button id="cancelConstellationName">cancel</button></div></div></div>
@@ -106,813 +83,198 @@
 </div>
 
 <script>
-  if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('service-worker.js').catch(err => console.warn('SW failed', err));
+(function(){
+  const UNIVERSE_SEED = "stellaris_cosmos_2024";
+
+  function hideLoader(){const l=document.getElementById('loadingOverlay');if(l)l.classList.add('hidden');}
+  setTimeout(hideLoader, 5000);
+
+  function saveLocalStar(note){let local=JSON.parse(localStorage.getItem('stellaris_localStars')||'[]');let idx=local.findIndex(s=>s.id===note.id);if(idx>=0)local[idx]=note;else local.push(note);localStorage.setItem('stellaris_localStars',JSON.stringify(local));}
+  function deleteLocalStar(id){let local=JSON.parse(localStorage.getItem('stellaris_localStars')||'[]');local=local.filter(s=>s.id!==id);localStorage.setItem('stellaris_localStars',JSON.stringify(local));}
+  function loadLocalStars(){
+    let local=JSON.parse(localStorage.getItem('stellaris_localStars')||'[]');
+    local.forEach(data=>{if(!notes.find(n=>n.id===data.id)&&!tempStars.find(t=>t.id===data.id)){let rng=makeSeededRandom(data.id);data.x=data.x||(rng()-0.5)*SPAWN_RADIUS*2;data.y=data.y||(rng()-0.5)*SPAWN_RADIUS*2;data.vx=data.vx||(rng()-0.5)*0.06;data.vy=data.vy||(rng()-0.5)*0.06;data.radius=data.initialRadius||4;data.mass=data.initialMass||2;data.trail=[];data.fadeIn=1;data.systemId=data.systemId||null;data.pulsePhase=rng()*Math.PI*2;data.starTypeName=data.starTypeName||"Main Sequence";data.starTypeMul=data.starTypeMul||1.0;data.starColor=data.starColor||{core:"#88aaff",glow:"rgba(100,150,255,0.5)"};data.isTemp=data.isTemp||false;if(data.isTemp)tempStars.push(data);else notes.push(data);}});
+    updateCounter();
   }
 
-  (function(){
-    // ========== GLOBAL UNIVERSE SEED ==========
-    const UNIVERSE_SEED = "stellaris_cosmos_2024";
+  function mulberry32(a){return function(){a|=0;a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=(t+Math.imul(t^t>>>7,61|t))^t;return((t^t>>>14)>>>0)/4294967296;}}
+  function hashStringToSeed(str){let hash=0;for(let i=0;i<str.length;i++){hash=((hash<<5)-hash)+str.charCodeAt(i);hash|=0;}return Math.abs(hash);}
+  function makeSeededRandom(starId){return mulberry32(hashStringToSeed(starId+UNIVERSE_SEED));}
 
-    // ========== OFFLINE DETECTION ==========
-    let isOnline = navigator.onLine;
-    const offlineIndicator = document.getElementById('offlineIndicator');
-    window.addEventListener('online', () => { isOnline = true; offlineIndicator.classList.remove('show'); syncLocalData(); });
-    window.addEventListener('offline', () => { isOnline = false; offlineIndicator.classList.add('show'); });
+  const quoteLibrary=["a whisper between stars","a forgotten constellation","echoes of a distant light","a thought left behind","the silence between moments","a dream half-remembered","the weight of a single word","embers of a dying sun","a ripple in the void","where light forgets to fade","a promise written in dust","the echo of a heartbeat","fragments of a quiet mind","a name lost to time","the space between breaths","a flicker before dawn","what the dark remembers","a question without an answer","the shape of longing","a thread of forgotten light"];
+  const specialQuotes=["✦ a rare ember glows ✦","✦ the universe blinks ✦","✦ a spark of eternity ✦","✦ something ancient stirs ✦"];
+  function getRandomQuote(isSpecial){if(isSpecial&&specialQuotes.length)return specialQuotes[Math.floor(Math.random()*specialQuotes.length)];return quoteLibrary[Math.floor(Math.random()*quoteLibrary.length)];}
 
-    // ========== LOCAL STORAGE HELPERS ==========
-    function saveLocalStar(note) {
-      let local = JSON.parse(localStorage.getItem('stellaris_localStars') || '[]');
-      let idx = local.findIndex(s => s.id === note.id);
-      if (idx >= 0) local[idx] = note;
-      else local.push(note);
-      localStorage.setItem('stellaris_localStars', JSON.stringify(local));
-    }
-    function deleteLocalStar(id) {
-      let local = JSON.parse(localStorage.getItem('stellaris_localStars') || '[]');
-      local = local.filter(s => s.id !== id);
-      localStorage.setItem('stellaris_localStars', JSON.stringify(local));
-    }
-    function loadLocalStars() {
-      let local = JSON.parse(localStorage.getItem('stellaris_localStars') || '[]');
-      local.forEach(data => {
-        if (!notes.find(n => n.id === data.id) && !tempStars.find(t => t.id === data.id)) {
-          let rng = makeSeededRandom(data.id);
-          let radius = SPAWN_RADIUS;
-          data.x = data.x || (rng() - 0.5) * radius * 2;
-          data.y = data.y || (rng() - 0.5) * radius * 2;
-          data.vx = data.vx || (rng() - 0.5) * 0.06;
-          data.vy = data.vy || (rng() - 0.5) * 0.06;
-          data.radius = data.initialRadius || 4;
-          data.mass = data.initialMass || 2;
-          data.trail = [];
-          data.fadeIn = 1;
-          data.systemId = data.systemId || null;
-          data.pulsePhase = rng() * Math.PI * 2;
-          data.starTypeName = data.starTypeName || "Main Sequence";
-          data.starTypeMul = data.starTypeMul || 1.0;
-          data.starColor = data.starColor || { core: "#88aaff", glow: "rgba(100,150,255,0.5)" };
-          data.isTemp = data.isTemp || false;
-          if (data.isTemp) tempStars.push(data);
-          else notes.push(data);
-        }
-      });
-      updateCounter();
-    }
-    async function syncLocalData() {
-      if (!isOnline) return;
-      let local = JSON.parse(localStorage.getItem('stellaris_localStars') || '[]');
-      if (local.length === 0) return;
-      for (let star of local) {
-        try {
-          if (star.isTemp) {
-            await tempStarsCollection.doc(star.id).set(star, { merge: true });
-          } else {
-            await notesCollection.doc(star.id).set(star, { merge: true });
-          }
-        } catch (e) { console.warn('Sync failed for star', star.id, e); }
-      }
-      localStorage.removeItem('stellaris_localStars');
-      showToast('Local stars synced to the cosmos ✦');
-    }
+  let currentStreak=0;
+  function updateStreakCounter(){const lastVisit=localStorage.getItem('stellaris_last_visit');const today=new Date().toDateString();if(!lastVisit)currentStreak=1;else if(lastVisit===today)currentStreak=parseInt(localStorage.getItem('stellaris_streak'))||1;else{const lastDate=new Date(lastVisit);const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);currentStreak=(lastDate.toDateString()===yesterday.toDateString())?(parseInt(localStorage.getItem('stellaris_streak'))||0)+1:1;}localStorage.setItem('stellaris_streak',currentStreak);localStorage.setItem('stellaris_last_visit',today);}
 
-    // ========== SEEDED PRNG ==========
-    function mulberry32(a) {
-      return function() {
-        a |= 0; a = a + 0x6D2B79F5 | 0;
-        let t = Math.imul(a ^ a >>> 15, 1 | a);
-        t = (t + Math.imul(t ^ t >>> 7, 61 | t)) ^ t;
-        return ((t ^ t >>> 14) >>> 0) / 4294967296;
-      };
-    }
-    function hashStringToSeed(str) {
-      let hash = 0;
-      for (let i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; }
-      return Math.abs(hash);
-    }
-    function makeSeededRandom(starId) {
-      let seed = hashStringToSeed(starId + UNIVERSE_SEED);
-      return mulberry32(seed);
-    }
+  // FIREBASE
+  let db=null,notesCollection=null,constellationsCollection=null,tempStarsCollection=null,presenceCollection=null;
+  try {
+    firebase.initializeApp({apiKey:"AIzaSyA07--fyHuHINmX8wd182RHqpPNyDmumDE",authDomain:"farts-c8c49.firebaseapp.com",projectId:"farts-c8c49",storageBucket:"farts-c8c49.firebasestorage.app",messagingSenderId:"143589845026",appId:"1:143589845026:web:b8c8cddeefc266bf52c27b"});
+    db=firebase.firestore();
+    try{db.settings({localCache:{}});}catch(e){db.enablePersistence({synchronizeTabs:true}).catch(()=>{});}
+    notesCollection=db.collection("notes");
+    constellationsCollection=db.collection("constellations");
+    tempStarsCollection=db.collection("tempStars");
+    presenceCollection=db.collection("presence");
+  }catch(e){console.warn('Firebase unavailable');}
 
-    // ========== FIREBASE CONFIG ==========
-    const firebaseConfig = {
-      apiKey: "AIzaSyA07--fyHuHINmX8wd182RHqpPNyDmumDE",
-      authDomain: "farts-c8c49.firebaseapp.com",
-      projectId: "farts-c8c49",
-      storageBucket: "farts-c8c49.firebasestorage.app",
-      messagingSenderId: "143589845026",
-      appId: "1:143589845026:web:b8c8cddeefc266bf52c27b"
-    };
-    firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
-    const notesCollection = db.collection("notes");
-    const constellationsCollection = db.collection("constellations");
-    const tempStarsCollection = db.collection("tempStars");
-    const presenceCollection = db.collection("presence");
+  // SIMPLEX NOISE
+  class SimplexNoise{constructor(){this.grad3=[[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],[1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],[0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]];let p=[151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];this.perm=new Uint8Array(512);for(let i=0;i<256;i++){this.perm[i]=p[i];this.perm[i+256]=p[i];}}dot(g,x,y,z){return g[0]*x+g[1]*y+g[2]*z;}noise3(x,y,z){let n0=0,n1=0,n2=0,n3=0;let s=(x+y+z)/3.0;let i=Math.floor(x+s),j=Math.floor(y+s),k=Math.floor(z+s);let t=(i+j+k)/6.0;let X0=i-t,Y0=j-t,Z0=k-t;let x0=x-X0,y0=y-Y0,z0=z-Z0;let i1,j1,k1,i2,j2,k2;if(x0>=y0){if(y0>=z0){i1=1;j1=0;k1=0;i2=1;j2=1;k2=0}else if(x0>=z0){i1=1;j1=0;k1=0;i2=1;j2=0;k2=1}else{i1=0;j1=0;k1=1;i2=1;j2=0;k2=1}}else{if(y0<z0){i1=0;j1=0;k1=1;i2=0;j2=1;k2=1}else if(x0<z0){i1=0;j1=1;k1=0;i2=0;j2=1;k2=1}else{i1=0;j1=1;k1=0;i2=1;j2=1;k2=0}}let x1=x0-i1+1/6,y1=y0-j1+1/6,z1=z0-k1+1/6;let x2=x0-i2+2/6,y2=y0-j2+2/6,z2=z0-k2+2/6;let x3=x0-1,y3=y0-1,z3=z0-1;let ii=i&255,jj=j&255,kk=k&255;let gi0=this.perm[ii+this.perm[jj+this.perm[kk]]]%12;let gi1=this.perm[ii+i1+this.perm[jj+j1+this.perm[kk+k1]]]%12;let gi2=this.perm[ii+i2+this.perm[jj+j2+this.perm[kk+k2]]]%12;let gi3=this.perm[ii+1+this.perm[jj+1+this.perm[kk+1]]]%12;let t0=0.6-x0*x0-y0*y0-z0*z0;if(t0<0)n0=0;else{t0*=t0;n0=t0*t0*this.dot(this.grad3[gi0],x0,y0,z0)}let t1=0.6-x1*x1-y1*y1-z1*z1;if(t1<0)n1=0;else{t1*=t1;n1=t1*t1*this.dot(this.grad3[gi1],x1,y1,z1)}let t2=0.6-x2*x2-y2*y2-z2*z2;if(t2<0)n2=0;else{t2*=t2;n2=t2*t2*this.dot(this.grad3[gi2],x2,y2,z2)}let t3=0.6-x3*x3-y3*y3-z3*z3;if(t3<0)n3=0;else{t3*=t3;n3=t3*t3*this.dot(this.grad3[gi3],x3,y3,z3)}return 32*(n0+n1+n2+n3)}}
+  const noise=new SimplexNoise();
 
-    // ========== LOCAL PEER & NAME ==========
-    let localPeerId = localStorage.getItem('stellaris_peer_id');
-    if (!localPeerId) {
-      localPeerId = 'peer_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-      localStorage.setItem('stellaris_peer_id', localPeerId);
-    }
-    let localPeerName = localStorage.getItem('stellaris_peer_name');
+  let notes=[],tempStars=[],activeId=null;
+  let camera={x:0,y:0,zoom:1.0,targetZoom:1.0};
+  let w,h,ctx,canvasElem;
+  let currentClusters=[],namedConstellations=[];
+  let galacticClusters=[],dustClouds=[],starLayers=[],nebulaLayers=[],flowParticles=[];
+  let sparks=[],decayParticles=[],burstPool=[];
+  let birthdaySparkles=[];
+  let peerGlows={};
+  const MAX_ZOOM=6.0,MIN_ZOOM=0.15;
+  const WORLD_SIZE=24000,SPAWN_RADIUS=4000;
+  const SEED_CLUSTERS=[{name:"Nyx System",x:-1200,y:-900,color:[60,70,140]},{name:"Umbra System",x:1500,y:400,color:[75,55,120]},{name:"Noctis System",x:2800,y:-1800,color:[80,65,105]},{name:"Tenebris System",x:-3000,y:1900,color:[65,70,120]},{name:"Stryx System",x:400,y:-2200,color:[55,60,125]},{name:"Voidreach",x:-650,y:2500,color:[70,65,115]},{name:"Erebus Drift",x:5000,y:800,color:[90,75,140]},{name:"Obsidian Halo",x:-4800,y:-1200,color:[100,80,150]}];
+  const autoNames=["Veil of Eternity","Cinder Hearth","Solace Drift","Aether's Kiss","Woven Sorrow","The Silent Bell","Forgotten Halo","Ember Wake","Strayed Loom","Votive Remains","Gilded Ruin","Pale Urn","The Unspoken Lyre","Raven's Compass","Thistle Crown","Omen of Dust","The Still Pyre","Hollow Sigil","Weeping Prism","Last Accord"];
+  const MAX_BURST=200,MAX_COMETS=10;
+  let cometPool=[],saveTimer=null,fractalPatterns={},floatingMessages=[],dustMotes=[];
+  let interpolating=false,interpolStart={},interpolTarget={},interpolDuration=15000,interpolStartTime=0;
 
-    // ========== QUOTES ==========
-    let quoteLibrary = [], specialQuotes = [], quotesLoaded = false;
-    function loadQuotes() {
-      return fetch('quotes.json').then(response => response.json()).then(data => {
-        quoteLibrary = data.regular || []; specialQuotes = data.special || []; quotesLoaded = true;
-      }).catch(e => {
-        quoteLibrary = ["a whisper between stars","a forgotten constellation","echoes of a distant light","a thought left behind","the silence between moments"];
-        specialQuotes = ["✦ a rare ember glows ✦","✦ the universe blinks ✦"];
-        quotesLoaded = true;
-      });
-    }
-    function getRandomQuote(isSpecial) {
-      if (!quotesLoaded) return "";
-      if (isSpecial && specialQuotes.length) return specialQuotes[Math.floor(Math.random() * specialQuotes.length)];
-      if (quoteLibrary.length) return quoteLibrary[Math.floor(Math.random() * quoteLibrary.length)];
-      return "";
-    }
+  const RD_SIZE=80;
+  let rdGridA=new Float32Array(RD_SIZE*RD_SIZE),rdGridB=new Float32Array(RD_SIZE*RD_SIZE),rdNextA=new Float32Array(RD_SIZE*RD_SIZE),rdNextB=new Float32Array(RD_SIZE*RD_SIZE);
+  let rdCanvas,rdCtx;
+  function initRD(){rdCanvas=document.createElement('canvas');rdCanvas.width=RD_SIZE;rdCanvas.height=RD_SIZE;rdCtx=rdCanvas.getContext('2d');for(let i=0;i<RD_SIZE*RD_SIZE;i++){rdGridA[i]=1.0;rdGridB[i]=0.0;}}
+  function updateRD(){const size=RD_SIZE;for(let i=0;i<size;i++){for(let j=0;j<size;j++){let idx=i*size+j;let A=rdGridA[idx],B=rdGridB[idx];let lapA=-4*A,lapB=-4*B;lapA+=rdGridA[((i-1+size)%size)*size+j]+rdGridA[((i+1)%size)*size+j]+rdGridA[i*size+((j-1+size)%size)]+rdGridA[i*size+((j+1)%size)];lapB+=rdGridB[((i-1+size)%size)*size+j]+rdGridB[((i+1)%size)*size+j]+rdGridB[i*size+((j-1+size)%size)]+rdGridB[i*size+((j+1)%size)];let da=1.0*lapA-A*B*B+0.04*(1-A);let db=0.5*lapB+A*B*B-(0.06+0.04)*B;rdNextA[idx]=A+da*0.15;rdNextB[idx]=B+db*0.15;if(rdNextA[idx]<0)rdNextA[idx]=0;if(rdNextA[idx]>1)rdNextA[idx]=1;if(rdNextB[idx]<0)rdNextB[idx]=0;if(rdNextB[idx]>1)rdNextB[idx]=1;}}let tmpA=rdGridA;rdGridA=rdNextA;rdNextA=tmpA;let tmpB=rdGridB;rdGridB=rdNextB;rdNextB=tmpB;for(let note of notes){let gx=Math.floor((note.x+WORLD_SIZE/2)/WORLD_SIZE*size);let gy=Math.floor((note.y+WORLD_SIZE/2)/WORLD_SIZE*size);if(gx>=0&&gx<size&&gy>=0&&gy<size){rdGridB[gy*size+gx]=Math.min(1,rdGridB[gy*size+gx]+0.15);}}let imageData=rdCtx.createImageData(size,size);let data=imageData.data;for(let i=0;i<size*size;i++){let val=rdGridB[i]*200;data[i*4]=Math.min(255,val*1.2);data[i*4+1]=Math.min(255,val*0.4);data[i*4+2]=Math.min(255,val*2.0);data[i*4+3]=Math.min(255,val*0.7);}rdCtx.putImageData(imageData,0,0);}
 
-    // ========== STREAK ==========
-    let currentStreak = 0;
-    function updateStreakCounter() {
-      const lastVisit = localStorage.getItem('stellaris_last_visit');
-      const today = new Date().toDateString();
-      if (!lastVisit) currentStreak = 1;
-      else if (lastVisit === today) currentStreak = parseInt(localStorage.getItem('stellaris_streak')) || 1;
-      else {
-        const lastDate = new Date(lastVisit);
-        const yesterday = new Date(); yesterday.setDate(yesterday.getDate() - 1);
-        currentStreak = (lastDate.toDateString() === yesterday.toDateString()) ? (parseInt(localStorage.getItem('stellaris_streak')) || 0) + 1 : 1;
-      }
-      localStorage.setItem('stellaris_streak', currentStreak);
-      localStorage.setItem('stellaris_last_visit', today);
-    }
+  // STAR TYPES
+  const starTypes=[{name:"Main Sequence",prob:0.65,sizeMul:1.0,color:{core:"#88aaff",glow:"rgba(100,150,255,0.5)"},hasRing:false,gasGiant:false},{name:"Red Dwarf",prob:0.10,sizeMul:0.7,color:{core:"#ff8866",glow:"rgba(255,100,80,0.6)"},hasRing:false,gasGiant:false},{name:"Giant",prob:0.08,sizeMul:1.6,color:{core:"#ffaa77",glow:"rgba(255,160,100,0.6)"},hasRing:false,gasGiant:false},{name:"Supergiant",prob:0.05,sizeMul:2.2,color:{core:"#ffcc88",glow:"rgba(255,200,120,0.7)"},hasRing:false,gasGiant:false},{name:"White Dwarf",prob:0.04,sizeMul:0.5,color:{core:"#eeefff",glow:"rgba(220,220,255,0.8)"},hasRing:false,gasGiant:false},{name:"Nebula Heart",prob:0.02,sizeMul:1.2,color:{core:"#d4a5ff",glow:"rgba(180,100,255,0.6)"},hasRing:false,gasGiant:false},{name:"Crystal Star",prob:0.02,sizeMul:0.9,color:{core:"#aaffdd",glow:"rgba(100,255,200,0.5)"},hasRing:true,gasGiant:false},{name:"Void Ember",prob:0.01,sizeMul:1.1,color:{core:"#ff6633",glow:"rgba(255,80,40,0.6)"},hasRing:false,gasGiant:false},{name:"Frostlight",prob:0.01,sizeMul:1.0,color:{core:"#88ccff",glow:"rgba(120,200,255,0.5)"},hasRing:false,gasGiant:false},{name:"Storm Giant",prob:0.01,sizeMul:2.0,color:{core:"#77aaff",glow:"rgba(100,150,255,0.6)"},hasRing:false,gasGiant:true},{name:"Silent Nova",prob:0.01,sizeMul:1.4,color:{core:"#ffffff",glow:"rgba(255,255,200,0.7)"},hasRing:false,gasGiant:false},{name:"Eclipse Heart",prob:0.00,sizeMul:1.2,color:{core:"#6655aa",glow:"rgba(80,70,160,0.6)"},hasRing:true,gasGiant:false}];
+  let totalProb=starTypes.reduce((s,t)=>s+t.prob,0);starTypes.forEach(t=>t.prob/=totalProb);
+  const ephemeralTypes=[{name:"Ember Wisp",prob:0.50,sizeMul:1.0,color:{core:"#ffaa66",glow:"rgba(255,160,80,0.6)"}},{name:"Flareling",prob:0.20,sizeMul:1.2,color:{core:"#ff8844",glow:"rgba(255,120,60,0.6)"}},{name:"Cinder Sprite",prob:0.15,sizeMul:0.9,color:{core:"#ff6633",glow:"rgba(255,90,40,0.6)"}},{name:"Sunflicker",prob:0.08,sizeMul:1.1,color:{core:"#ffaa88",glow:"rgba(255,160,120,0.5)"}},{name:"Pyreling",prob:0.05,sizeMul:0.8,color:{core:"#ff4422",glow:"rgba(255,60,30,0.6)"}},{name:"Wildfire Orb",prob:0.02,sizeMul:1.4,color:{core:"#ffcc77",glow:"rgba(255,200,100,0.6)"}}];
+  totalProb=ephemeralTypes.reduce((s,t)=>s+t.prob,0);ephemeralTypes.forEach(t=>t.prob/=totalProb);
+  function pickDeterministicType(rng,isTemp){let types=isTemp?ephemeralTypes:starTypes;let r=rng();let acc=0;for(let t of types){acc+=t.prob;if(r<acc)return t;}return types[0];}
+  function getStarColor(star,ageMs){if(star.isTemp)return{core:star.starColor.core,glow:star.starColor.glow,trailRGB:[255,160,80]};let ageFactor=Math.min(1,ageMs/(86400000*30));let base=star.starColor.core;let r=parseInt(base.slice(1,3),16),g=parseInt(base.slice(3,5),16),b=parseInt(base.slice(5,7),16);let targetR=Math.min(255,r+(255-r)*ageFactor*0.3);let targetG=Math.max(50,g-g*ageFactor*0.2);let targetB=Math.max(50,b-b*ageFactor*0.3);let core=`rgb(${Math.floor(targetR)},${Math.floor(targetG)},${Math.floor(targetB)})`;let glow=`rgba(${Math.floor(targetR)},${Math.floor(targetG)},${Math.floor(targetB)},0.55)`;return{core,glow,trailRGB:[Math.floor(targetR),Math.floor(targetG),Math.floor(targetB)]};}
+  function getStarVisuals(star){const now=Date.now();let col=getStarColor(star,Math.max(0,now-star.created));let sizeFactor=star.starTypeMul||1.0;if(star.isSun)sizeFactor*=1.4;return{sizeFactor,coreColor:col.core,glowColor:col.glow,pulseSpeed:0.008,isWhiteDwarf:star.starTypeName==="White Dwarf",hasRing:star.hasRing||false,gasGiant:star.gasGiant||false};}
+  function capVelocity(obj){let spd=Math.hypot(obj.vx,obj.vy);if(spd>1.5){obj.vx=(obj.vx/spd)*1.5;obj.vy=(obj.vy/spd)*1.5;}}
+  function updateMassesAndRadii(nowSec){for(let star of[...notes,...tempStars]){let ageSec=(nowSec-star.created/1000);if(ageSec<0)ageSec=0;let newMass=star.initialMass+0.0005*ageSec;if(newMass>25)newMass=25;star.mass=newMass;star.radius=star.initialRadius*Math.pow(newMass/star.initialMass,1/3);}}
 
-    // ========== SIMPLEX NOISE ==========
-    class SimplexNoise {
-      constructor() {
-        this.grad3 = [[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],[1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],[0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]];
-        let p = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
-        this.perm = new Uint8Array(512);
-        for(let i=0;i<256;i++) { this.perm[i]=p[i]; this.perm[i+256]=p[i]; }
-      }
-      dot(g,x,y,z) { return g[0]*x+g[1]*y+g[2]*z; }
-      noise3(x,y,z) {
-        let n0=0,n1=0,n2=0,n3=0;
-        let s=(x+y+z)/3.0;
-        let i=Math.floor(x+s),j=Math.floor(y+s),k=Math.floor(z+s);
-        let t=(i+j+k)/6.0;
-        let X0=i-t,Y0=j-t,Z0=k-t;
-        let x0=x-X0,y0=y-Y0,z0=z-Z0;
-        let i1,j1,k1,i2,j2,k2;
-        if(x0>=y0){if(y0>=z0){i1=1;j1=0;k1=0;i2=1;j2=1;k2=0;}else if(x0>=z0){i1=1;j1=0;k1=0;i2=1;j2=0;k2=1;}else{i1=0;j1=0;k1=1;i2=1;j2=0;k2=1;}}
-        else{if(y0<z0){i1=0;j1=0;k1=1;i2=0;j2=1;k2=1;}else if(x0<z0){i1=0;j1=1;k1=0;i2=0;j2=1;k2=1;}else{i1=0;j1=1;k1=0;i2=1;j2=1;k2=0;}}
-        let x1=x0-i1+1.0/6.0,y1=y0-j1+1.0/6.0,z1=z0-k1+1.0/6.0;
-        let x2=x0-i2+2.0/6.0,y2=y0-j2+2.0/6.0,z2=z0-k2+2.0/6.0;
-        let x3=x0-1.0,y3=y0-1.0,z3=z0-1.0;
-        let ii=i&255,jj=j&255,kk=k&255;
-        let gi0=this.perm[ii+this.perm[jj+this.perm[kk]]]%12;
-        let gi1=this.perm[ii+i1+this.perm[jj+j1+this.perm[kk+k1]]]%12;
-        let gi2=this.perm[ii+i2+this.perm[jj+j2+this.perm[kk+k2]]]%12;
-        let gi3=this.perm[ii+1+this.perm[jj+1+this.perm[kk+1]]]%12;
-        let t0=0.6-x0*x0-y0*y0-z0*z0;if(t0<0)n0=0;else{t0*=t0;n0=t0*t0*this.dot(this.grad3[gi0],x0,y0,z0);}
-        let t1=0.6-x1*x1-y1*y1-z1*z1;if(t1<0)n1=0;else{t1*=t1;n1=t1*t1*this.dot(this.grad3[gi1],x1,y1,z1);}
-        let t2=0.6-x2*x2-y2*y2-z2*z2;if(t2<0)n2=0;else{t2*=t2;n2=t2*t2*this.dot(this.grad3[gi2],x2,y2,z2);}
-        let t3=0.6-x3*x3-y3*y3-z3*z3;if(t3<0)n3=0;else{t3*=t3;n3=t3*t3*this.dot(this.grad3[gi3],x3,y3,z3);}
-        return 32.0*(n0+n1+n2+n3);
-      }
-    }
-    const noise = new SimplexNoise();
+  const GRAVITY_CONST=0.00035,GRAVITY_RADIUS=400;
+  function applyUniversalGravity(){let allStars=[...notes,...tempStars];let acc=new Map();for(let star of allStars)acc.set(star,{ax:0,ay:0});for(let i=0;i<allStars.length;i++){let s1=allStars[i];for(let j=i+1;j<allStars.length;j++){let s2=allStars[j];let dx=s2.x-s1.x,dy=s2.y-s1.y,distSq=dx*dx+dy*dy;if(distSq<GRAVITY_RADIUS*GRAVITY_RADIUS&&distSq>0.1){let dist=Math.sqrt(distSq),force=(GRAVITY_CONST*s1.mass*s2.mass)/distSq;let fx=(dx/dist)*force,fy=(dy/dist)*force;acc.get(s1).ax+=fx/s1.mass;acc.get(s1).ay+=fy/s1.mass;acc.get(s2).ax-=fx/s2.mass;acc.get(s2).ay-=fy/s2.mass;}}}for(let star of allStars){let a=acc.get(star);star.vx+=a.ax;star.vy+=a.ay;capVelocity(star);}}
+  function stabilizeSystemMotion(){let allStars=[...notes,...tempStars];let systems=new Map();for(let star of allStars){if(star.systemId){if(!systems.has(star.systemId))systems.set(star.systemId,{stars:[],totalMass:0,momX:0,momY:0});let sys=systems.get(star.systemId);sys.stars.push(star);sys.totalMass+=star.mass;sys.momX+=star.vx*star.mass;sys.momY+=star.vy*star.mass;}}for(let[id,sys]of systems.entries()){if(sys.stars.length<2)continue;let comVelX=sys.momX/sys.totalMass,comVelY=sys.momY/sys.totalMass;for(let star of sys.stars){star.vx-=comVelX*0.02;star.vy-=comVelY*0.02;}}}
+  function updateSolarSystems(){let allStars=[...notes,...tempStars];let systems=new Map();for(let star of allStars){if(star.systemId){if(!systems.has(star.systemId))systems.set(star.systemId,{stars:[],totalMass:0,centerX:0,centerY:0,hasSun:false});let sys=systems.get(star.systemId);sys.stars.push(star);sys.totalMass+=star.mass;sys.centerX+=star.x;sys.centerY+=star.y;if(star.isSun)sys.hasSun=true;}}for(let[id,sys]of systems.entries()){if(sys.stars.length===0){systems.delete(id);continue;}sys.centerX/=sys.stars.length;sys.centerY/=sys.stars.length;if(!sys.hasSun&&sys.stars.length>=3){let mostMassive=sys.stars.reduce((a,b)=>(a.mass>b.mass)?a:b);mostMassive.isSun=true;sys.hasSun=true;for(let s of sys.stars)if(s!==mostMassive)s.isSun=false;}if(sys.stars.length===2){for(let s of sys.stars)if(s.isSun)s.isSun=false;sys.hasSun=false;}if(sys.stars.length===2){let s1=sys.stars[0],s2=sys.stars[1];let dx=s2.x-s1.x,dy=s2.y-s1.y;let dist=Math.hypot(dx,dy);if(dist>0.1){let totalMass=s1.mass+s2.mass,G=0.6,vOrbit=Math.sqrt(G*totalMass/dist);let baryX=s1.x+(dx*(s1.mass/totalMass)),baryY=s1.y+(dy*(s1.mass/totalMass));let angle1=Math.atan2(s1.y-baryY,s1.x-baryX),angle2=angle1+Math.PI;let v1x_des=-Math.sin(angle1)*vOrbit*(s2.mass/totalMass),v1y_des=Math.cos(angle1)*vOrbit*(s2.mass/totalMass);let v2x_des=-Math.sin(angle2)*vOrbit*(s1.mass/totalMass),v2y_des=Math.cos(angle2)*vOrbit*(s1.mass/totalMass);s1.vx+=(v1x_des-s1.vx)*0.1;s1.vy+=(v1y_des-s1.vy)*0.1;s2.vx+=(v2x_des-s2.vx)*0.1;s2.vy+=(v2y_des-s2.vy)*0.1;capVelocity(s1);capVelocity(s2);}}else if(sys.stars.length>=3&&sys.hasSun){let sun=sys.stars.find(s=>s.isSun===true)||sys.stars.reduce((a,b)=>(a.mass>b.mass)?a:b);sun.isSun=true;sys.hasSun=true;for(let s of sys.stars)if(s!==sun){let dx=s.x-sun.x,dy=s.y-sun.y,dist=Math.hypot(dx,dy);if(dist>0.1){let angleToSun=Math.atan2(dy,dx),perpAngle=angleToSun+Math.PI/2;let desiredSpeed=Math.sqrt(sun.mass/dist)*0.12,correction=(desiredSpeed-Math.hypot(s.vx,s.vy))*0.02;s.vx+=Math.cos(perpAngle)*correction;s.vy+=Math.sin(perpAngle)*correction;s.vx+=Math.cos(angleToSun)*(s.mass/(sun.mass+s.mass))*0.002;s.vy+=Math.sin(angleToSun)*(s.mass/(sun.mass+s.mass))*0.002;capVelocity(s);}}}}for(let star of allStars){if(star.systemId)continue;let nearestSys=null,nearestDistSq=Infinity;for(let[id,sys]of systems.entries()){let dx=sys.centerX-star.x,dy=sys.centerY-star.y,distSq=dx*dx+dy*dy;if(distSq<nearestDistSq&&distSq<250000){nearestDistSq=distSq;nearestSys=sys;}}if(nearestSys){let dx=nearestSys.centerX-star.x,dy=nearestSys.centerY-star.y,dist=Math.sqrt(nearestDistSq);star.vx=(star.vx||0)+dx*0.003*(star.mass*nearestSys.totalMass)/(dist*dist);star.vy=(star.vy||0)+dy*0.003*(star.mass*nearestSys.totalMass)/(dist*dist);capVelocity(star);if(dist<250)star.systemId=nearestSys.stars[0].systemId;}}for(let i=0;i<allStars.length;i++){let s1=allStars[i];if(s1.systemId)continue;for(let j=i+1;j<allStars.length;j++){let s2=allStars[j];if(s2.systemId)continue;let dx=s1.x-s2.x,dy=s1.y-s2.y;if(dx*dx+dy*dy<202500){let newSysId='sys_'+Date.now()+'_'+Math.random().toString(36).substr(2,6);s1.systemId=newSysId;s2.systemId=newSysId;let totalMass=s1.mass+s2.mass,dist=Math.hypot(dx,dy);let baryX=s1.x+(dx*(s1.mass/totalMass)),baryY=s1.y+(dy*(s1.mass/totalMass));let G=0.6,vOrbit=Math.sqrt(G*totalMass/dist);let angle1=Math.atan2(s1.y-baryY,s1.x-baryX),angle2=angle1+Math.PI;s1.vx=-Math.sin(angle1)*vOrbit*(s2.mass/totalMass);s1.vy=Math.cos(angle1)*vOrbit*(s2.mass/totalMass);s2.vx=-Math.sin(angle2)*vOrbit*(s1.mass/totalMass);s2.vy=Math.cos(angle2)*vOrbit*(s1.mass/totalMass);capVelocity(s1);capVelocity(s2);break;}}}}
 
-    // ========== GLOBAL STATE ==========
-    let notes = [], tempStars = [], activeId = null;
-    let camera = { x:0, y:0, zoom:1.0, targetZoom:1.0 };
-    let w, h, ctx, canvasElem;
-    let currentClusters = [], namedConstellations = [];
-    let galacticClusters = [], dustClouds = [], starLayers = [], nebulaLayers = [], flowParticles = [];
-    let sparks = [], decayParticles = [], burstPool = [];
-    let birthdaySparkles = [];
-    let peerGlows = {};
-    const MAX_ZOOM = 6.0, MIN_ZOOM = 0.15;
-    const WORLD_SIZE = 24000;
-    const SPAWN_RADIUS = 4000;
-    const SEED_CLUSTERS = [
-      { name:"Nyx System", x:-1200, y:-900, color:[60,70,140] },
-      { name:"Umbra System", x:1500, y:400, color:[75,55,120] },
-      { name:"Noctis System", x:2800, y:-1800, color:[80,65,105] },
-      { name:"Tenebris System", x:-3000, y:1900, color:[65,70,120] },
-      { name:"Stryx System", x:400, y:-2200, color:[55,60,125] },
-      { name:"Voidreach", x:-650, y:2500, color:[70,65,115] },
-      { name:"Erebus Drift", x:5000, y:800, color:[90,75,140] },
-      { name:"Obsidian Halo", x:-4800, y:-1200, color:[100,80,150] }
-    ];
-    const autoNames = ["Veil of Eternity","Cinder Hearth","Solace Drift","Aether's Kiss","Woven Sorrow","The Silent Bell","Forgotten Halo","Ember Wake","Strayed Loom","Votive Remains","Gilded Ruin","Pale Urn","The Unspoken Lyre","Raven's Compass","Thistle Crown","Omen of Dust","The Still Pyre","Hollow Sigil","Weeping Prism","Last Accord"];
-    const MAX_BURST = 200, MAX_COMETS = 10;
-    let cometPool = [], saveTimer = null, lastPresenceUpdate = 0;
-    let fractalPatterns = {};
-    let floatingMessages = [];
-    let dustMotes = [];
+  let viewportLeft,viewportRight,viewportTop,viewportBottom,margin;
+  function updateViewportBounds(){margin=200;let halfW=w/(2*camera.zoom),halfH=h/(2*camera.zoom);viewportLeft=-camera.x-halfW-margin;viewportRight=-camera.x+halfW+margin;viewportTop=-camera.y-halfH-margin;viewportBottom=-camera.y+halfH+margin;}
+  function isVisible(x,y,size){return x+size>viewportLeft&&x-size<viewportRight&&y+size>viewportTop&&y-size<viewportBottom;}
 
-    // ---- Interpolation state ----
-    let interpolating = false;
-    let interpolStart = {};
-    let interpolTarget = {};
-    let interpolDuration = 15000; // 15 seconds
-    let interpolStartTime = 0;
+  burstPool=Array.from({length:MAX_BURST},()=>({active:false,x:0,y:0,vx:0,vy:0,life:0,size:0,color:''}));
+  function spawnBurst(x,y,isEphemeral=false){for(let i=0;i<MAX_BURST;i++)if(!burstPool[i].active){let angle=Math.random()*Math.PI*2,speed=1+Math.random()*4;burstPool[i].active=true;burstPool[i].x=x;burstPool[i].y=y;burstPool[i].vx=Math.cos(angle)*speed;burstPool[i].vy=Math.sin(angle)*speed;burstPool[i].life=50+Math.random()*40;burstPool[i].size=1.5+Math.random()*3;let r=isEphemeral?255:120+Math.floor(Math.random()*100);let g=isEphemeral?150+Math.floor(Math.random()*105):110+Math.floor(Math.random()*100);let b=isEphemeral?70+Math.floor(Math.random()*90):200+Math.floor(Math.random()*55);burstPool[i].color=`rgba(${r},${g},${b},1)`;return;}}
+  cometPool=Array.from({length:MAX_COMETS},()=>({active:false,x:0,y:0,vx:0,vy:0,life:0,tailLength:0}));
+  function spawnComet(){for(let i=0;i<MAX_COMETS;i++)if(!cometPool[i].active){let a=Math.random()*Math.PI*2,sp=2+Math.random()*4;cometPool[i].active=true;cometPool[i].x=Math.cos(a)*(WORLD_SIZE/2-500);cometPool[i].y=Math.sin(a)*(WORLD_SIZE/2-500);cometPool[i].vx=Math.cos(a+Math.PI)*sp;cometPool[i].vy=Math.sin(a+Math.PI)*sp;cometPool[i].life=1000+Math.random()*500;cometPool[i].tailLength=80+Math.random()*100;return;}}
 
-    // Reaction‑diffusion
-    const RD_SIZE = 80;
-    let rdGridA = new Float32Array(RD_SIZE*RD_SIZE);
-    let rdGridB = new Float32Array(RD_SIZE*RD_SIZE);
-    let rdNextA = new Float32Array(RD_SIZE*RD_SIZE);
-    let rdNextB = new Float32Array(RD_SIZE*RD_SIZE);
-    const RD_DA = 1.0, RD_DB = 0.5, RD_F = 0.04, RD_K = 0.06;
-    let rdCanvas, rdCtx;
-    function initRD() { 
-      rdCanvas = document.createElement('canvas'); 
-      rdCanvas.width = RD_SIZE; rdCanvas.height = RD_SIZE; 
-      rdCtx = rdCanvas.getContext('2d'); 
-      for (let i=0; i<RD_SIZE*RD_SIZE; i++) { rdGridA[i] = 1.0; rdGridB[i] = 0.0; } 
-    }
-    function updateRD() {
-      const size = RD_SIZE;
-      for (let i=0; i<size; i++) {
-        for (let j=0; j<size; j++) {
-          let idx = i*size + j;
-          let A = rdGridA[idx], B = rdGridB[idx];
-          let lapA = -4*A, lapB = -4*B;
-          lapA += rdGridA[((i-1+size)%size)*size + j] + rdGridA[((i+1)%size)*size + j] + rdGridA[i*size + ((j-1+size)%size)] + rdGridA[i*size + ((j+1)%size)];
-          lapB += rdGridB[((i-1+size)%size)*size + j] + rdGridB[((i+1)%size)*size + j] + rdGridB[i*size + ((j-1+size)%size)] + rdGridB[i*size + ((j+1)%size)];
-          let da = RD_DA * lapA - A*B*B + RD_F*(1-A);
-          let db = RD_DB * lapB + A*B*B - (RD_K + RD_F)*B;
-          rdNextA[idx] = A + da * 0.15;
-          rdNextB[idx] = B + db * 0.15;
-          if (rdNextA[idx] < 0) rdNextA[idx] = 0; if (rdNextA[idx] > 1) rdNextA[idx] = 1;
-          if (rdNextB[idx] < 0) rdNextB[idx] = 0; if (rdNextB[idx] > 1) rdNextB[idx] = 1;
-        }
-      }
-      let tmpA = rdGridA; rdGridA = rdNextA; rdNextA = tmpA;
-      let tmpB = rdGridB; rdGridB = rdNextB; rdNextB = tmpB;
-      for (let note of notes) {
-        let gx = Math.floor((note.x + WORLD_SIZE/2) / WORLD_SIZE * size);
-        let gy = Math.floor((note.y + WORLD_SIZE/2) / WORLD_SIZE * size);
-        if (gx>=0 && gx<size && gy>=0 && gy<size) { rdGridB[gy*size + gx] = Math.min(1, rdGridB[gy*size + gx] + 0.15); }
-      }
-      let imageData = rdCtx.createImageData(size, size);
-      let data = imageData.data;
-      for (let i=0; i<size*size; i++) {
-        let val = rdGridB[i] * 200;
-        data[i*4] = Math.min(255, val * 1.2);
-        data[i*4+1] = Math.min(255, val * 0.4);
-        data[i*4+2] = Math.min(255, val * 2.0);
-        data[i*4+3] = Math.min(255, val * 0.7);
-      }
-      rdCtx.putImageData(imageData, 0, 0);
-    }
+  function createStarLayer(count,spread,minSize,maxSize,minBright,maxBright,colorRange,parallax){let layer=new Array(count);for(let i=0;i<count;i++)layer[i]={x:(Math.random()-0.5)*spread,y:(Math.random()-0.5)*spread,size:minSize+Math.random()*(maxSize-minSize),brightness:minBright+Math.random()*(maxBright-minBright),colorTemp:[colorRange[0]+Math.random()*(colorRange[1]-colorRange[0]),colorRange[2]+Math.random()*(colorRange[3]-colorRange[2]),colorRange[4]+Math.random()*(colorRange[5]-colorRange[4])],parallax,phase:Math.random()*Math.PI*2};return layer;}
+  function wrapPosition(obj,radius=0){const limit=WORLD_SIZE/2-200;if(obj.x>limit)obj.x=-limit;if(obj.x<-limit)obj.x=limit;if(obj.y>limit)obj.y=-limit;if(obj.y<-limit)obj.y=limit;}
+  function initWorld(){const spread=WORLD_SIZE*0.98;starLayers=[createStarLayer(3000,spread,0.2,0.8,0.6,0.9,[210,255,220,255,230,255],0.05),createStarLayer(4000,spread,0.25,1.0,0.65,0.95,[190,255,200,255,210,255],0.1),createStarLayer(5000,spread,0.35,1.4,0.7,1.0,[170,250,180,250,190,250],0.2),createStarLayer(4000,spread,0.6,1.8,0.75,1.0,[150,240,160,240,170,240],0.35),createStarLayer(3000,spread,0.8,2.2,0.8,1.0,[130,230,140,230,150,230],0.5),createStarLayer(2000,spread,1.0,2.8,0.85,1.0,[110,220,120,220,130,220],0.7),createStarLayer(1500,spread,1.4,3.4,0.9,1.0,[90,210,100,210,110,210],0.85),createStarLayer(1000,spread,1.8,4.0,0.95,1.0,[70,200,80,200,90,200],1.0)];nebulaLayers=[];let baseColors=[[[60,40,120],[80,50,150],[100,60,180]],[[50,70,110],[70,90,140],[90,110,170]],[[100,50,90],[130,70,120],[160,90,150]],[[40,80,70],[60,100,100],[90,130,130]],[[110,60,40],[140,80,70],[170,100,100]]];for(let i=0;i<150;i++){let cs=baseColors[Math.floor(Math.random()*baseColors.length)];nebulaLayers.push({x:(Math.random()-0.5)*spread,y:(Math.random()-0.5)*spread,radius:200+Math.random()*500,baseColor1:cs[0],baseColor2:cs[1],baseColor3:cs[2],color1:[...cs[0]],color2:[...cs[1]],color3:[...cs[2]],pulseSpeed:0.001+Math.random()*0.002,phase:Math.random()*Math.PI*2});}dustClouds=[];function gaussianRandom(){let u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return Math.sqrt(-2.0*Math.log(u))*Math.cos(2.0*Math.PI*v);}for(let i=0;i<50;i++){let cloud={x:(Math.random()-0.5)*spread,y:(Math.random()-0.5)*spread,color:[80+Math.random()*100,70+Math.random()*100,100+Math.random()*80],particles:[]};for(let j=0;j<100;j++){let ox=Math.min(Math.max(gaussianRandom()*300,-800),800),oy=Math.min(Math.max(gaussianRandom()*300,-800),800);cloud.particles.push({offsetX:ox,offsetY:oy,size:2+Math.random()*6,alpha:0.15+Math.random()*0.4});}dustClouds.push(cloud);}let centerCloud={x:0,y:0,color:[150,130,200],particles:[]};for(let j=0;j<150;j++){let ox=Math.min(Math.max(gaussianRandom()*300,-900),900),oy=Math.min(Math.max(gaussianRandom()*300,-900),900);centerCloud.particles.push({offsetX:ox,offsetY:oy,size:2+Math.random()*6,alpha:0.2+Math.random()*0.5});}dustClouds.push(centerCloud);flowParticles=[];for(let i=0;i<2000;i++)flowParticles.push({x:(Math.random()-0.5)*spread,y:(Math.random()-0.5)*spread,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,life:Math.random()*100,size:1+Math.random()*4});galacticClusters=SEED_CLUSTERS.map(c=>({...c}));window._flowGrid={cellSize:120,cols:200,rows:200,angles:new Float32Array(40000)};dustMotes=[];for(let i=0;i<200;i++)dustMotes.push({x:(Math.random()-0.5)*spread,y:(Math.random()-0.5)*spread,size:0.5+Math.random()*1.5,speed:0.01+Math.random()*0.04,angle:Math.random()*Math.PI*2,alpha:0.2+Math.random()*0.5,phase:Math.random()*Math.PI*2});initRD();}
 
-    function generateLSystem(name, iterations=3) {
-      let axiom = "F+F+F+F";
-      let rules = { 'F': ['F+F-F-FF+F+F-F', 'F-F+FF-F-F+F', 'FF-F+F-F+FF', 'F+F-F-F+F+F-F'][Math.floor(Math.random()*4)] };
-      let current = axiom;
-      for (let i=0; i<iterations; i++) {
-        let next = '';
-        for (let ch of current) next += rules[ch] || ch;
-        current = next;
-      }
-      let lines = [];
-      let x = 0, y = 0, angle = 0;
-      const step = 8;
-      for (let ch of current) {
-        if (ch === 'F') { let nx = x + Math.cos(angle)*step, ny = y + Math.sin(angle)*step; lines.push({x1:x,y1:y,x2:nx,y2:ny}); x = nx; y = ny; }
-        else if (ch === '+') angle += Math.PI/2;
-        else if (ch === '-') angle -= Math.PI/2;
-      }
-      return lines;
-    }
+  function updateNebulaColors(){for(let neb of nebulaLayers){let ir=0,ig=0,ib=0,tw=0;for(let star of notes){let dx=star.x-neb.x,dy=star.y-neb.y;if(dx*dx+dy*dy<90000){let w=(1-Math.sqrt(dx*dx+dy*dy)/300)*(star.mass||2);let age=Date.now()-star.created;let r=age<7*86400000?100:age<28*86400000?160:120,g=age<7*86400000?120:age<28*86400000?110:90,b=age<7*86400000?200:age<28*86400000?180:150;ir+=r*w;ig+=g*w;ib+=b*w;tw+=w;}}if(tw>0.1){neb.color1=[Math.floor(neb.baseColor1[0]*0.4+ir/tw*0.6),Math.floor(neb.baseColor1[1]*0.4+ig/tw*0.6),Math.floor(neb.baseColor1[2]*0.4+ib/tw*0.6)];neb.color2=[Math.floor(neb.baseColor2[0]*0.4+ir/tw*0.6),Math.floor(neb.baseColor2[1]*0.4+ig/tw*0.6),Math.floor(neb.baseColor2[2]*0.4+ib/tw*0.6)];neb.color3=[Math.floor(neb.baseColor3[0]*0.4+ir/tw*0.6),Math.floor(neb.baseColor3[1]*0.4+ig/tw*0.6),Math.floor(neb.baseColor3[2]*0.4+ib/tw*0.6)];}else{neb.color1=[...neb.baseColor1];neb.color2=[...neb.baseColor2];neb.color3=[...neb.baseColor3];}}}
+  function updateFlowField(t){let g=window._flowGrid;for(let i=0;i<g.cols;i++)for(let j=0;j<g.rows;j++){let x=(i-g.cols/2)*g.cellSize,y=(j-g.rows/2)*g.cellSize;g.angles[i+j*g.cols]=noise.noise3(x*0.0008,y*0.0008,t*0.0002)*Math.PI*5;}}
+  function getFlowAngle(px,py){let g=window._flowGrid;let cx=Math.floor((px+WORLD_SIZE/2)/g.cellSize)%g.cols,cy=Math.floor((py+WORLD_SIZE/2)/g.cellSize)%g.rows;if(cx<0||cy<0||cx>=g.cols||cy>=g.rows)return 0;return g.angles[cx+cy*g.cols]||0;}
+  function updateOrganic(t){for(let layer of starLayers)for(let s of layer){s.x+=(Math.random()-0.5)*0.06;s.y+=(Math.random()-0.5)*0.06;wrapPosition(s);}for(let cloud of dustClouds){let angle=noise.noise3(cloud.x*0.0006,cloud.y*0.0006,t*0.00009)*Math.PI*2;cloud.x+=Math.cos(angle)*0.12;cloud.y+=Math.sin(angle)*0.12;wrapPosition(cloud);}for(let neb of nebulaLayers){let angle=noise.noise3(neb.x*0.00025,neb.y*0.00025,t*0.00005)*Math.PI*2;neb.x+=Math.cos(angle)*0.06;neb.y+=Math.sin(angle)*0.06;wrapPosition(neb);neb.phase=(neb.phase||0)+0.005;}for(let mote of dustMotes){mote.x+=Math.cos(mote.angle)*mote.speed;mote.y+=Math.sin(mote.angle)*mote.speed;mote.angle+=(Math.random()-0.5)*0.02;wrapPosition(mote);}}
+  function updateFlowParticles(){for(let p of flowParticles){let angle=getFlowAngle(p.x,p.y);p.vx+=Math.cos(angle)*0.025;p.vy+=Math.sin(angle)*0.025;let spd=p.vx*p.vx+p.vy*p.vy;if(spd>4.0){p.vx*=0.97;p.vy*=0.97;}p.x+=p.vx;p.y+=p.vy;wrapPosition(p,100);p.life=(p.life+0.4)%100;}}
 
-    // ========== STAR TYPES ==========
-    const starTypes = [
-      { name: "Main Sequence", prob: 0.65, sizeMul: 1.0, color: { core: "#88aaff", glow: "rgba(100,150,255,0.5)" }, hasRing: false, gasGiant: false, ageShift: true },
-      { name: "Red Dwarf", prob: 0.10, sizeMul: 0.7, color: { core: "#ff8866", glow: "rgba(255,100,80,0.6)" }, hasRing: false, gasGiant: false, ageShift: false },
-      { name: "Giant", prob: 0.08, sizeMul: 1.6, color: { core: "#ffaa77", glow: "rgba(255,160,100,0.6)" }, hasRing: false, gasGiant: false, ageShift: true },
-      { name: "Supergiant", prob: 0.05, sizeMul: 2.2, color: { core: "#ffcc88", glow: "rgba(255,200,120,0.7)" }, hasRing: false, gasGiant: false, ageShift: true },
-      { name: "White Dwarf", prob: 0.04, sizeMul: 0.5, color: { core: "#eeefff", glow: "rgba(220,220,255,0.8)" }, hasRing: false, gasGiant: false, ageShift: false },
-      { name: "Nebula Heart", prob: 0.02, sizeMul: 1.2, color: { core: "#d4a5ff", glow: "rgba(180,100,255,0.6)" }, hasRing: false, gasGiant: false, ageShift: true },
-      { name: "Crystal Star", prob: 0.02, sizeMul: 0.9, color: { core: "#aaffdd", glow: "rgba(100,255,200,0.5)" }, hasRing: true, gasGiant: false, ageShift: false },
-      { name: "Void Ember", prob: 0.01, sizeMul: 1.1, color: { core: "#ff6633", glow: "rgba(255,80,40,0.6)" }, hasRing: false, gasGiant: false, ageShift: true },
-      { name: "Frostlight", prob: 0.01, sizeMul: 1.0, color: { core: "#88ccff", glow: "rgba(120,200,255,0.5)" }, hasRing: false, gasGiant: false, ageShift: true },
-      { name: "Storm Giant", prob: 0.01, sizeMul: 2.0, color: { core: "#77aaff", glow: "rgba(100,150,255,0.6)" }, hasRing: false, gasGiant: true, ageShift: true },
-      { name: "Silent Nova", prob: 0.01, sizeMul: 1.4, color: { core: "#ffffff", glow: "rgba(255,255,200,0.7)" }, hasRing: false, gasGiant: false, ageShift: true },
-      { name: "Eclipse Heart", prob: 0.00, sizeMul: 1.2, color: { core: "#6655aa", glow: "rgba(80,70,160,0.6)" }, hasRing: true, gasGiant: false, ageShift: true }
-    ];
-    let totalProb = starTypes.reduce((s,t) => s + t.prob, 0);
-    starTypes.forEach(t => t.prob /= totalProb);
+  function saveStarPositions(){let positions={};for(let star of[...notes,...tempStars]){positions[star.id]={x:star.x,y:star.y,vx:star.vx,vy:star.vy};}localStorage.setItem('stellaris_starPositions',JSON.stringify(positions));if(db&&navigator.onLine){let batch=db.batch();for(let star of[...notes,...tempStars]){batch.set(db.collection('starPositions').doc(star.id),{x:star.x,y:star.y,vx:star.vx,vy:star.vy,updatedAt:firebase.firestore.FieldValue.serverTimestamp()},{merge:true});}batch.commit().catch(()=>{});}}
+  function loadStarPositions(){let saved=localStorage.getItem('stellaris_starPositions');if(saved){let positions=JSON.parse(saved);let updates=[];for(let star of[...notes,...tempStars]){let pos=positions[star.id];if(pos)updates.push({star,targetX:pos.x,targetY:pos.y,targetVx:pos.vx,targetVy:pos.vy});}if(updates.length>0)startInterpolation(updates);}if(db&&navigator.onLine){db.collection('starPositions').get().then(snapshot=>{let updates=[];snapshot.forEach(doc=>{let data=doc.data();let star=[...notes,...tempStars].find(s=>s.id===doc.id);if(star)updates.push({star,targetX:data.x,targetY:data.y,targetVx:data.vx,targetVy:data.vy});});if(updates.length>0)startInterpolation(updates);}).catch(()=>{});}}
+  function startInterpolation(updates){interpolating=true;interpolStart={};interpolTarget={};interpolStartTime=performance.now();for(let u of updates){interpolStart[u.star.id]={x:u.star.x,y:u.star.y,vx:u.star.vx,vy:u.star.vy};interpolTarget[u.star.id]={x:u.targetX,y:u.targetY,vx:u.targetVx,vy:u.targetVy};}showToast("Universe positions drifting into place...");}
+  function updateInterpolation(now){if(!interpolating)return;let elapsed=now-interpolStartTime;let t=Math.min(1,elapsed/interpolDuration);let ease=t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;for(let star of[...notes,...tempStars]){let s=interpolStart[star.id],tgt=interpolTarget[star.id];if(s&&tgt){star.x=s.x+(tgt.x-s.x)*ease;star.y=s.y+(tgt.y-s.y)*ease;star.vx=s.vx+(tgt.vx-s.vx)*ease;star.vy=s.vy+(tgt.vy-s.vy)*ease;}}if(t>=1)interpolating=false;}
 
-    const ephemeralTypes = [
-      { name: "Ember Wisp", prob: 0.50, sizeMul: 1.0, color: { core: "#ffaa66", glow: "rgba(255,160,80,0.6)" } },
-      { name: "Flareling", prob: 0.20, sizeMul: 1.2, color: { core: "#ff8844", glow: "rgba(255,120,60,0.6)" } },
-      { name: "Cinder Sprite", prob: 0.15, sizeMul: 0.9, color: { core: "#ff6633", glow: "rgba(255,90,40,0.6)" } },
-      { name: "Sunflicker", prob: 0.08, sizeMul: 1.1, color: { core: "#ffaa88", glow: "rgba(255,160,120,0.5)" } },
-      { name: "Pyreling", prob: 0.05, sizeMul: 0.8, color: { core: "#ff4422", glow: "rgba(255,60,30,0.6)" } },
-      { name: "Wildfire Orb", prob: 0.02, sizeMul: 1.4, color: { core: "#ffcc77", glow: "rgba(255,200,100,0.6)" } }
-    ];
-    totalProb = ephemeralTypes.reduce((s,t) => s + t.prob, 0);
-    ephemeralTypes.forEach(t => t.prob /= totalProb);
+  function simulate(nowSec){let now=Date.now();updateInterpolation(now);if(!interpolating){updateMassesAndRadii(nowSec);for(let note of notes){if(!note.trail)note.trail=[];note.trail.push({x:note.x,y:note.y});if(note.trail.length>25)note.trail.shift();if(note.fadeIn!=null&&note.fadeIn<1)note.fadeIn+=0.02;if(!note.systemId){let fa=getFlowAngle(note.x,note.y);note.vx=(note.vx||0)+Math.cos(fa)*0.006;note.vy=(note.vy||0)+Math.sin(fa)*0.006;}else{note.vx+=(Math.random()-0.5)*0.015;note.vy+=(Math.random()-0.5)*0.015;}note.vx=(note.vx||0)*0.995;note.vy=(note.vy||0)*0.995;note.x+=note.vx;note.y+=note.vy;wrapPosition(note,note.radius);capVelocity(note);note.pulsePhase=(note.pulsePhase||0)+0.008;let ageMs=now-note.created;note._isBirthday=(ageMs>=561600000&&ageMs<=648000000)||(ageMs>=2548800000&&ageMs<=2635200000);note._ageMonths=ageMs/2592000000;}for(let ts of tempStars){if(!ts.isTemp)continue;if(!ts.systemId){let fa=getFlowAngle(ts.x,ts.y);ts.vx=(ts.vx||0)+Math.cos(fa)*0.006;ts.vy=(ts.vy||0)+Math.sin(fa)*0.006;}else{ts.vx+=(Math.random()-0.5)*0.015;ts.vy+=(Math.random()-0.5)*0.015;}ts.vx=(ts.vx||0)*0.995;ts.vy=(ts.vy||0)*0.995;ts.x+=ts.vx;ts.y+=ts.vy;wrapPosition(ts,20);capVelocity(ts);}applyUniversalGravity();updateSolarSystems();stabilizeSystemMotion();}for(let i=0;i<tempStars.length;i++){let ts=tempStars[i];if(ts.expiresAt<Date.now()){if(ts.systemId){let sys=[...notes.filter(s=>s.systemId===ts.systemId),...tempStars.filter(t=>t.systemId===ts.systemId&&t!==ts)];for(let s of sys){let a=Math.random()*Math.PI*2,sp=1.5+Math.random()*1.5;s.vx=(s.vx||0)+Math.cos(a)*sp;s.vy=(s.vy||0)+Math.sin(a)*sp;capVelocity(s);s.systemId=null;if(s.isSun)s.isSun=false;}}if(db)tempStarsCollection.doc(ts.id).delete().catch(()=>{});tempStars.splice(i,1);i--;for(let p=0;p<55;p++){let a=Math.random()*Math.PI*2,sp=0.4+Math.random()*1.4;decayParticles.push({x:ts.x,y:ts.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:2+Math.random()*3.5,size:1.2+Math.random()*3,color:`hsl(${30+Math.random()*40},80%,60%)`});}}}for(let i=birthdaySparkles.length-1;i>=0;i--){birthdaySparkles[i].life-=0.02;if(birthdaySparkles[i].life<=0)birthdaySparkles.splice(i,1);}if(Math.random()<0.3){for(let note of notes)if(note._isBirthday&&Math.random()<0.1)birthdaySparkles.push({x:note.x+(Math.random()-0.5)*note.radius*2,y:note.y+(Math.random()-0.5)*note.radius*2,life:1+Math.random(),size:0.5+Math.random()*1.5});}for(let i=0;i<MAX_BURST;i++){let b=burstPool[i];if(!b.active)continue;b.x+=b.vx;b.y+=b.vy;b.life--;if(b.life<=0)b.active=false;}for(let i=sparks.length-1;i>=0;i--){sparks[i].x+=sparks[i].vx;sparks[i].y+=sparks[i].vy;sparks[i].life-=0.02;if(sparks[i].life<=0)sparks.splice(i,1);}for(let i=decayParticles.length-1;i>=0;i--){decayParticles[i].x+=decayParticles[i].vx;decayParticles[i].y+=decayParticles[i].vy;decayParticles[i].life-=0.02;if(decayParticles[i].life<=0)decayParticles.splice(i,1);}if(Math.random()<0.0006)spawnComet();for(let i=0;i<MAX_COMETS;i++){let c=cometPool[i];if(!c.active)continue;c.x+=c.vx;c.y+=c.vy;c.life--;if(c.life<=0)c.active=false;}camera.zoom+=(camera.targetZoom-camera.zoom)*0.08;camera.targetZoom=Math.min(MAX_ZOOM,Math.max(MIN_ZOOM,camera.targetZoom));for(let pid in peerGlows)if(Date.now()-peerGlows[pid].timestamp>15000)delete peerGlows[pid];updateRD();let nowMs=performance.now();for(let i=floatingMessages.length-1;i>=0;i--){let msg=floatingMessages[i];msg.life=Math.max(0,1-(nowMs-msg.created)/msg.duration);if(msg.life<=0)floatingMessages.splice(i,1);}}
 
-    function pickDeterministicType(rng, isTemp) {
-      let types = isTemp ? ephemeralTypes : starTypes;
-      let r = rng();
-      let acc = 0;
-      for (let t of types) { acc += t.prob; if (r < acc) return t; }
-      return types[0];
-    }
+  function render(){ctx.clearRect(0,0,w,h);ctx.fillStyle="#000000";ctx.fillRect(0,0,w,h);let hueBase=(camera.x*0.0008+camera.y*0.0008+performance.now()*0.00003)%360;let skyGrad=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,Math.max(w,h));skyGrad.addColorStop(0,`hsla(${hueBase+Math.min(1,currentStreak/30)*60},65%,10%,0.35)`);skyGrad.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=skyGrad;ctx.fillRect(0,0,w,h);ctx.save();ctx.translate(w/2,h/2);ctx.scale(camera.zoom,camera.zoom);ctx.translate(camera.x,camera.y);updateViewportBounds();ctx.globalAlpha=0.06;ctx.drawImage(rdCanvas,-WORLD_SIZE/2,-WORLD_SIZE/2,WORLD_SIZE,WORLD_SIZE);ctx.globalAlpha=1.0;const nowPerf=performance.now();for(let layer of starLayers){let pxo=layer[0].parallax*0.1,cxOff=camera.x*pxo,cyOff=camera.y*pxo;for(let s of layer){if(!isVisible(s.x,s.y,s.size))continue;let tw=0.7+0.2*Math.sin(nowPerf*0.003+s.phase)+0.1*Math.sin(nowPerf*0.011+s.phase*2.7);ctx.fillStyle=`rgba(${s.colorTemp[0]},${s.colorTemp[1]},${s.colorTemp[2]},${s.brightness*tw*0.9})`;ctx.beginPath();ctx.arc(s.x-cxOff,s.y-cyOff,s.size,0,Math.PI*2);ctx.fill();}}for(let neb of nebulaLayers){if(!isVisible(neb.x,neb.y,neb.radius*1.8))continue;let pulse=0.7+0.3*Math.sin(nowPerf*0.002*neb.pulseSpeed+neb.phase),rad=neb.radius*(0.9+0.1*Math.sin(nowPerf*0.001+neb.phase));let go=ctx.createRadialGradient(neb.x,neb.y,rad*0.2,neb.x,neb.y,rad*1.8);go.addColorStop(0,`rgba(${neb.color1[0]},${neb.color1[1]},${neb.color1[2]},${0.06*pulse})`);go.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=go;ctx.beginPath();ctx.arc(neb.x,neb.y,rad*1.8,0,Math.PI*2);ctx.fill();let gn=ctx.createRadialGradient(neb.x,neb.y,rad*0.2,neb.x,neb.y,rad);gn.addColorStop(0,`rgba(${neb.color1[0]},${neb.color1[1]},${neb.color1[2]},${0.12*pulse})`);gn.addColorStop(0.5,`rgba(${neb.color2[0]},${neb.color2[1]},${neb.color2[2]},${0.06*pulse})`);gn.addColorStop(1,`rgba(${neb.color3[0]},${neb.color3[1]},${neb.color3[2]},0)`);ctx.fillStyle=gn;ctx.beginPath();ctx.arc(neb.x,neb.y,rad,0,Math.PI*2);ctx.fill();}for(let cloud of dustClouds){if(!isVisible(cloud.x,cloud.y,300))continue;for(let p of cloud.particles){let wx=cloud.x+p.offsetX,wy=cloud.y+p.offsetY,alpha=p.alpha*(0.5+0.5*Math.sin(nowPerf*0.001+wx*0.02));ctx.fillStyle=`rgba(${cloud.color[0]},${cloud.color[1]},${cloud.color[2]},${alpha*0.5})`;ctx.beginPath();ctx.arc(wx,wy,p.size,0,Math.PI*2);ctx.fill();}}for(let mote of dustMotes){if(!isVisible(mote.x,mote.y,mote.size))continue;let tw=0.4+0.6*Math.sin(nowPerf*0.001+mote.phase);ctx.fillStyle=`rgba(210,230,255,${mote.alpha*tw*0.7})`;ctx.beginPath();ctx.arc(mote.x,mote.y,mote.size,0,Math.PI*2);ctx.fill();}for(let p of flowParticles){if(isVisible(p.x,p.y,p.size)){let alpha=0.3+0.2*Math.sin(p.life*0.2);ctx.fillStyle=`rgba(200,220,255,${alpha*0.7})`;ctx.beginPath();ctx.arc(p.x,p.y,p.size*0.7,0,Math.PI*2);ctx.fill();}}for(let gc of galacticClusters){let glow=ctx.createRadialGradient(gc.x,gc.y,20,gc.x,gc.y,500);glow.addColorStop(0,`rgba(${gc.color[0]},${gc.color[1]},${gc.color[2]},0.15)`);glow.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=glow;ctx.beginPath();ctx.arc(gc.x,gc.y,500,0,Math.PI*2);ctx.fill();if(camera.zoom>0.55){ctx.font=`${Math.max(12,18*camera.zoom)}px "Segoe UI",system-ui,sans-serif`;ctx.fillStyle=`rgba(230,240,255,${0.8*Math.min(1,(camera.zoom-0.45)/0.4)})`;ctx.shadowBlur=8;ctx.fillText(gc.name,gc.x-40,gc.y-70);ctx.shadowBlur=0;}}ctx.strokeStyle="rgba(160,180,240,0.4)";ctx.lineWidth=0.9;for(let cluster of currentClusters){if(cluster.name){let key=cluster.starIds.join(',');if(!fractalPatterns[key])fractalPatterns[key]=(function(name){let axiom="F+F+F+F";let rules={'F':['F+F-F-FF+F+F-F','F-F+FF-F-F+F','FF-F+F-F+FF','F+F-F-F+F+F-F'][Math.floor(Math.random()*4)]};let current=axiom;for(let i=0;i<3;i++){let next='';for(let ch of current)next+=rules[ch]||ch;current=next;}let lines=[];let x=0,y=0,angle=0;const step=8;for(let ch of current){if(ch==='F'){let nx=x+Math.cos(angle)*step,ny=y+Math.sin(angle)*step;lines.push({x1:x,y1:y,x2:nx,y2:ny});x=nx;y=ny;}else if(ch==='+')angle+=Math.PI/2;else if(ch==='-')angle-=Math.PI/2;}return lines;})(cluster.name);let lines=fractalPatterns[key];ctx.beginPath();for(let line of lines){ctx.moveTo(cluster.centroid.x+line.x1,cluster.centroid.y+line.y1);ctx.lineTo(cluster.centroid.x+line.x2,cluster.centroid.y+line.y2);}ctx.stroke();}}if(camera.zoom>0.5){let vn=notes.filter(n=>isVisible(n.x,n.y,n.radius*4));ctx.strokeStyle="rgba(100,140,220,0.15)";ctx.lineWidth=0.5;for(let i=0;i<vn.length;i++){let a=vn[i];for(let j=i+1;j<vn.length;j++){let b=vn[j],dx=a.x-b.x,dy=a.y-b.y,dist=Math.hypot(dx,dy);if(dist<400){ctx.globalAlpha=Math.max(0,(1-dist/400)*0.4);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}}ctx.globalAlpha=1;}let allStars=[...notes,...tempStars],systems=new Map();for(let star of allStars)if(star.systemId){if(!systems.has(star.systemId))systems.set(star.systemId,[]);systems.get(star.systemId).push(star);}for(let[id,stars]of systems.entries()){if(stars.length===2){let s1=stars[0],s2=stars[1],tm=s1.mass+s2.mass,bx=s1.x+(s2.x-s1.x)*(s1.mass/tm),by=s1.y+(s2.y-s1.y)*(s1.mass/tm);ctx.beginPath();ctx.arc(bx,by,5,0,Math.PI*2);ctx.fillStyle="rgba(255,200,100,0.4)";ctx.fill();ctx.beginPath();ctx.arc(bx,by,2,0,Math.PI*2);ctx.fillStyle="rgba(255,220,150,0.8)";ctx.fill();ctx.setLineDash([5,8]);ctx.beginPath();ctx.moveTo(s1.x,s1.y);ctx.lineTo(s2.x,s2.y);ctx.strokeStyle="rgba(200,180,255,0.5)";ctx.stroke();ctx.setLineDash([]);}}for(let star of notes){if(!isVisible(star.x,star.y,star.radius*8))continue;let vs=getStarVisuals(star),pulse=Math.sin(star.pulsePhase||0)*0.5+0.5,size=Math.max(2.0,(star.radius||3.0)*vs.sizeFactor+pulse*0.6);if(star.isSun)size*=1.2;let fa=(star.fadeIn!=null)?star.fadeIn:1;if(fa<=0)continue;ctx.globalAlpha=fa;if(star.mass>5&&camera.zoom>0.6){ctx.save();ctx.globalAlpha*=0.08;for(let ray=0;ray<5;ray++){let angle=(nowPerf*0.0004+ray*Math.PI/2.5)%(Math.PI*2),length=size*(3+Math.sin(nowPerf*0.001+ray)*2);let gr=ctx.createLinearGradient(star.x,star.y,star.x+Math.cos(angle)*length,star.y+Math.sin(angle)*length);gr.addColorStop(0,vs.glowColor);gr.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=gr;ctx.beginPath();ctx.moveTo(star.x,star.y);ctx.lineTo(star.x+Math.cos(angle-0.15)*length,star.y+Math.sin(angle-0.15)*length);ctx.lineTo(star.x+Math.cos(angle+0.15)*length,star.y+Math.sin(angle+0.15)*length);ctx.closePath();ctx.fill();}ctx.restore();}ctx.save();ctx.globalAlpha=0.3*fa;ctx.strokeStyle=vs.glowColor;ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(star.x,star.y,size*1.6,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=0.15*fa;ctx.lineWidth=0.8;ctx.beginPath();ctx.arc(star.x,star.y,size*2.4,0,Math.PI*2);ctx.stroke();ctx.restore();let glow=ctx.createRadialGradient(star.x,star.y,size*0.6,star.x,star.y,size*7);glow.addColorStop(0,vs.glowColor);glow.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=glow;ctx.beginPath();ctx.arc(star.x,star.y,size*7,0,Math.PI*2);ctx.fill();let inner=ctx.createRadialGradient(star.x-2,star.y-2,1,star.x,star.y,size*1.8);inner.addColorStop(0,vs.coreColor);inner.addColorStop(0.5,vs.isWhiteDwarf?"#eeddff":"#aaccff");inner.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=inner;ctx.beginPath();ctx.arc(star.x,star.y,size*1.4,0,Math.PI*2);ctx.fill();ctx.fillStyle=vs.isWhiteDwarf?"#ffffff":"#cceeff";ctx.shadowBlur=8;ctx.shadowColor=vs.isWhiteDwarf?"rgba(220,220,255,0.9)":"rgba(100,150,255,0.6)";ctx.beginPath();ctx.arc(star.x-1,star.y-1,size*0.35,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;if(star.hasRing){ctx.save();ctx.translate(star.x,star.y);ctx.rotate(star.ringTilt||0);ctx.beginPath();ctx.ellipse(0,0,size*1.4,size*0.4,0,0,Math.PI*2);ctx.strokeStyle="rgba(200,220,255,0.5)";ctx.lineWidth=1.5;ctx.stroke();ctx.restore();}if(star.gasGiant){if(!star._gasBands){let bands=[];for(let b=0;b<4+Math.floor(Math.random()*4);b++)bands.push({offset:(b-2)*size*0.18,height:size*0.07+Math.random()*size*0.12,color:`hsl(${200+Math.random()*60},${60+Math.random()*30}%,${55+Math.random()*25}%)`});star._gasBands=bands;}ctx.globalAlpha=0.45*fa;for(let band of star._gasBands){ctx.fillStyle=band.color;ctx.beginPath();ctx.ellipse(star.x,star.y+band.offset,size*0.9,band.height,0,0,Math.PI*2);ctx.fill();}}if(star._ageMonths>1){ctx.beginPath();ctx.arc(star.x,star.y,size*2.0,0,Math.PI*2);ctx.strokeStyle="rgba(200,220,255,0.25)";ctx.lineWidth=1.2;ctx.stroke();}if(star._ageMonths>2)for(let m=0;m<2;m++){let angle=nowPerf*0.001+m*Math.PI;ctx.fillStyle="rgba(200,220,255,0.4)";ctx.beginPath();ctx.arc(star.x+Math.cos(angle)*size*1.8,star.y+Math.sin(angle)*size*1.8,1.2,0,Math.PI*2);ctx.fill();}if(star._ageMonths>3){ctx.beginPath();ctx.arc(star.x,star.y,size*2.5,0,Math.PI*2);ctx.strokeStyle="rgba(160,180,240,0.2)";ctx.lineWidth=1.0;ctx.stroke();}if(star.isSun){ctx.globalAlpha*=0.15;for(let ray=0;ray<10;ray++){let angle=(nowPerf*0.0005+ray*Math.PI/5)%(Math.PI*2),len=size*(5+Math.sin(nowPerf*0.002+ray)*3);let gr=ctx.createLinearGradient(star.x,star.y,star.x+Math.cos(angle)*len,star.y+Math.sin(angle)*len);gr.addColorStop(0,"rgba(200,220,255,0.7)");gr.addColorStop(1,"rgba(200,220,255,0)");ctx.fillStyle=gr;ctx.beginPath();ctx.moveTo(star.x,star.y);ctx.lineTo(star.x+Math.cos(angle-0.1)*len,star.y+Math.sin(angle-0.1)*len);ctx.lineTo(star.x+Math.cos(angle+0.1)*len,star.y+Math.sin(angle+0.1)*len);ctx.closePath();ctx.fill();}}for(let pid in peerGlows)if(peerGlows[pid].starId===star.id){ctx.save();ctx.globalAlpha=0.5;ctx.beginPath();ctx.arc(star.x,star.y,size*3.5,0,Math.PI*2);ctx.strokeStyle=peerGlows[pid].color;ctx.lineWidth=3;ctx.shadowColor=peerGlows[pid].color;ctx.shadowBlur=12;ctx.stroke();ctx.restore();}ctx.globalAlpha=fa;}for(let star of tempStars){let vs=getStarVisuals(star),pulse=0.96+0.04*Math.sin(nowPerf*(star.isSpecial?0.0015:0.002)),size=(star.isSpecial?5.0:4.5)*vs.sizeFactor*pulse;if(star.isSun)size*=1.3;let g=ctx.createRadialGradient(star.x,star.y,size*0.5,star.x,star.y,size*6);g.addColorStop(0,vs.glowColor);g.addColorStop(1,"rgba(255,100,50,0)");ctx.fillStyle=g;ctx.beginPath();ctx.arc(star.x,star.y,size*6,0,Math.PI*2);ctx.fill();ctx.fillStyle=vs.coreColor;ctx.shadowBlur=12;ctx.shadowColor=star.isSpecial?"rgba(255,120,60,0.8)":"rgba(255,140,80,0.7)";ctx.beginPath();ctx.arc(star.x,star.y,size*0.9,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(star.x,star.y,size*1.3+pulse*0.2,0,Math.PI*2);ctx.strokeStyle=vs.glowColor;ctx.lineWidth=1.5;ctx.stroke();ctx.shadowBlur=0;}for(let i=0;i<MAX_COMETS;i++){let c=cometPool[i];if(!c.active)continue;if(!isVisible(c.x,c.y,c.tailLength))continue;let tx=c.x-c.vx*80,ty=c.y-c.vy*80,gc=ctx.createLinearGradient(c.x,c.y,tx,ty);gc.addColorStop(0,"rgba(255,220,140,0.8)");gc.addColorStop(1,"rgba(140,100,60,0)");ctx.beginPath();ctx.moveTo(c.x,c.y);ctx.lineTo(tx,ty);ctx.strokeStyle=gc;ctx.lineWidth=3;ctx.stroke();ctx.fillStyle="#ffdd99";ctx.beginPath();ctx.arc(c.x,c.y,3,0,Math.PI*2);ctx.fill();}for(let p of sparks)if(isVisible(p.x,p.y,2)){ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,2.5*p.life,0,Math.PI*2);ctx.fill();}for(let p of decayParticles)if(isVisible(p.x,p.y,p.size)){ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size*(p.life*0.6+0.3),0,Math.PI*2);ctx.fill();}for(let i=0;i<MAX_BURST;i++){let p=burstPool[i];if(!p.active)continue;if(!isVisible(p.x,p.y,p.size))continue;ctx.fillStyle=p.color.replace('1)',`${p.life/90})`);ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();}for(let sp of birthdaySparkles)if(isVisible(sp.x,sp.y,sp.size)){ctx.fillStyle=`rgba(220,200,255,${sp.life*0.6})`;ctx.beginPath();ctx.arc(sp.x,sp.y,sp.size,0,Math.PI*2);ctx.fill();}ctx.restore();ctx.save();let vignette=ctx.createRadialGradient(w/2,h/2,Math.max(w,h)*0.5,w/2,h/2,Math.max(w,h)*0.95);vignette.addColorStop(0,"rgba(0,0,0,0)");vignette.addColorStop(1,"rgba(0,0,0,0.55)");ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);ctx.restore();ctx.save();let nowMs=performance.now();for(let msg of floatingMessages){let elapsed=nowMs-msg.created,progress=Math.min(1,elapsed/msg.duration),alpha=progress<0.3?progress/0.3:1-(progress-0.3)/0.7,oy=-20-progress*40,sx=(msg.worldX+camera.x)*camera.zoom+w/2,sy=(msg.worldY+camera.y)*camera.zoom+h/2;ctx.globalAlpha=alpha;ctx.font='14px "Segoe UI", system-ui, sans-serif';ctx.fillStyle='#ffe5b0';ctx.shadowColor='rgba(0,0,0,0.8)';ctx.shadowBlur=6;ctx.textAlign='center';ctx.fillText(msg.text,sx,sy+oy);}ctx.restore();}
 
-    function getStarColor(star, ageMs) {
-      if (star.isTemp) return { core: star.starColor.core, glow: star.starColor.glow, trailRGB: [255,160,80] };
-      let ageFactor = Math.min(1, ageMs / (86400000 * 30));
-      let base = star.starColor.core;
-      let r = parseInt(base.slice(1,3),16), g = parseInt(base.slice(3,5),16), b = parseInt(base.slice(5,7),16);
-      let targetR = Math.min(255, r + (255 - r) * ageFactor * 0.3);
-      let targetG = Math.max(50, g - g * ageFactor * 0.2);
-      let targetB = Math.max(50, b - b * ageFactor * 0.3);
-      let core = `rgb(${Math.floor(targetR)}, ${Math.floor(targetG)}, ${Math.floor(targetB)})`;
-      let glow = `rgba(${Math.floor(targetR)}, ${Math.floor(targetG)}, ${Math.floor(targetB)}, 0.55)`;
-      return { core, glow, trailRGB: [Math.floor(targetR), Math.floor(targetG), Math.floor(targetB)] };
-    }
+  let localPeerId=localStorage.getItem('stellaris_peer_id')||('peer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9));
+  localStorage.setItem('stellaris_peer_id',localPeerId);
+  let localPeerName=localStorage.getItem('stellaris_peer_name');
+  function createMemory(text=""){let starId=Date.now()+Math.random().toString(36),rng=makeSeededRandom(starId),x=(rng()-0.5)*SPAWN_RADIUS*2,y=(rng()-0.5)*SPAWN_RADIUS*2;let typeInfo=pickDeterministicType(rng,false),mass=1.5+rng()*8;let note={id:starId,created:Date.now(),opened:0,text:text.trim()===""?"a drifting thought":text,x,y,vx:(rng()-0.5)*0.06,vy:(rng()-0.5)*0.06,radius:3.5+rng()*3.5,mass,orbitPhase:0,pulsePhase:rng()*Math.PI*2,creatorId:localPeerId,creatorName:localPeerName,trail:[],isSun:false,orbitingSunId:null,orbitRadius:0,orbitAngle:0,orbitSpeed:0,orbitDirection:1,fadeIn:0,starTypeName:typeInfo.name,starTypeMul:typeInfo.sizeMul,starColor:typeInfo.color,hasRing:typeInfo.hasRing||false,gasGiant:typeInfo.gasGiant||false,systemId:null,initialMass:mass,initialRadius:3.5+rng()*3.5,isTemp:false};note.radius=note.initialRadius;notes.push(note);saveLocalStar(note);if(db)notesCollection.doc(note.id).set({id:note.id,created:note.created,text:note.text,creatorName:note.creatorName,starType:note.starTypeName,starTypeMul:note.starTypeMul,starColorCore:note.starColor.core,starColorGlow:note.starColor.glow,hasRing:note.hasRing,gasGiant:note.gasGiant,initialMass:note.initialMass,initialRadius:note.initialRadius,isTemp:false}).catch(()=>{});updateCounter();showToast(`${localPeerName} created a ${typeInfo.name}`,note);if(navigator.vibrate)navigator.vibrate(15);for(let i=0;i<35;i++)spawnBurst(x,y,false);return note;}
+  function deleteNote(id){let star=notes.find(n=>n.id===id);if(star)for(let i=0;i<55;i++){let a=Math.random()*Math.PI*2,s=0.4+Math.random()*1.4;decayParticles.push({x:star.x,y:star.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:2+Math.random()*3.5,size:1.2+Math.random()*3,color:`hsl(${30+Math.random()*40},80%,60%)`});}notes=notes.filter(n=>n.id!==id);deleteLocalStar(id);if(db)notesCollection.doc(id).delete().catch(()=>{});updateCounter();}
+  function updateCounter(){document.getElementById("starCountValue").innerText=notes.length+tempStars.length;}
+  function computeClusters(){let threshold=300,visited=new Set(),clusters=[];for(let i=0;i<notes.length;i++){if(visited.has(i))continue;let comp=[],queue=[i];visited.add(i);while(queue.length){let idx=queue.pop();comp.push(idx);for(let j=0;j<notes.length;j++){if(visited.has(j))continue;let dx=notes[idx].x-notes[j].x,dy=notes[idx].y-notes[j].y;if(dx*dx+dy*dy<threshold*threshold){visited.add(j);queue.push(j);}}}if(comp.length>=3){let cx=0,cy=0;for(let idx of comp){cx+=notes[idx].x;cy+=notes[idx].y;}cx/=comp.length;cy/=comp.length;let starIds=comp.map(i=>notes[i].id),name=namedConstellations.find(nc=>nc.starIds.length===starIds.length&&nc.starIds.every(id=>starIds.includes(id)))?.name||null;clusters.push({starIds,centroid:{x:cx,y:cy},name});}}currentClusters=clusters;}
+  function autoNameUnnamedClusters(){for(let cluster of currentClusters){if(!cluster.name&&cluster.starIds.length>=3){let existing=namedConstellations.find(c=>c.starIds.join(',')===cluster.starIds.join(','));if(!existing){let newName=autoNames[Math.floor(Math.random()*autoNames.length)];while(namedConstellations.some(c=>c.name===newName))newName+=" "+(Math.floor(Math.random()*100)+1);namedConstellations.push({starIds:cluster.starIds,name:newName});if(db)constellationsCollection.doc(cluster.starIds.join(',')).set({starIds:cluster.starIds,name:newName}).catch(()=>{});showToast(`New system: ${newName}`);}}}}
 
-    function getStarVisuals(star) {
-      const now = Date.now(); const age = Math.max(0, now - star.created);
-      let col = getStarColor(star, age);
-      let sizeFactor = star.starTypeMul || 1.0;
-      if (star.isSun) sizeFactor *= 1.4;
-      let isWhiteDwarf = (star.starTypeName === "White Dwarf");
-      return { sizeFactor, coreColor: col.core, glowColor: col.glow, pulseSpeed: 0.008, isWhiteDwarf, hasRing: star.hasRing||false, gasGiant: star.gasGiant||false };
-    }
+  async function spawnEphemeralBatch(count=0){if(count<=0)count=1+Math.floor(Math.random()*3);let specialIndex=Math.floor(Math.random()*count);for(let i=0;i<count;i++){let isSpecial=(i===specialIndex),expiryDays=1+Math.random()*30,expiresAt=Date.now()+expiryDays*86400000,starId='temp_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),rng=makeSeededRandom(starId),x=(rng()-0.5)*SPAWN_RADIUS*2,y=(rng()-0.5)*SPAWN_RADIUS*2,vx=(rng()-0.5)*0.06,vy=(rng()-0.5)*0.06,mass=1.0+rng()*4,typeInfo=pickDeterministicType(rng,true);let tempStar={id:starId,x,y,vx,vy,mass,createdAt:Date.now(),expiresAt,message:getRandomQuote(isSpecial),isSpecial,rewarded:false,creatorId:null,isTemp:true,systemId:null,initialMass:mass,initialRadius:4+rng()*3,starTypeName:typeInfo.name,starTypeMul:typeInfo.sizeMul,starColor:typeInfo.color,hasRing:false,gasGiant:false};tempStar.radius=tempStar.initialRadius;saveLocalStar(tempStar);if(db)tempStarsCollection.doc(tempStar.id).set(tempStar).catch(()=>{});}showToast(`${count} new ephemeral stars have appeared`);}
+  let ephemeralTimer=null;function scheduleEphemeralSpawns(){let fd=(10+Math.floor(Math.random()*20))*60000,imn=30*60000,imx=90*60000;function sn(){let d=imn+Math.random()*(imx-imn);ephemeralTimer=setTimeout(()=>{spawnEphemeralBatch();sn();},d);}ephemeralTimer=setTimeout(()=>{spawnEphemeralBatch();sn();},fd);}
 
-    function capVelocity(obj) { let spd = Math.hypot(obj.vx, obj.vy); if (spd > 1.5) { obj.vx = (obj.vx / spd) * 1.5; obj.vy = (obj.vy / spd) * 1.5; } }
-    function updateMassesAndRadii(nowSec) {
-      for (let star of [...notes, ...tempStars]) {
-        let ageSec = (nowSec - star.created / 1000); if (ageSec < 0) ageSec = 0;
-        let newMass = star.initialMass + 0.0005 * ageSec; if (newMass > 25) newMass = 25;
-        star.mass = newMass; star.radius = star.initialRadius * Math.pow(newMass / star.initialMass, 1/3);
-      }
-    }
+  // FIRESTORE LISTENERS
+  if(db){
+    notesCollection.onSnapshot(snap=>{snap.docChanges().forEach(ch=>{let data=ch.doc.data();if(ch.type==="added"||ch.type==="modified"){let idx=notes.findIndex(n=>n.id===data.id);if(idx!==-1){notes[idx].text=data.text;notes[idx].creatorName=data.creatorName;notes[idx].starTypeName=data.starType;notes[idx].starTypeMul=data.starTypeMul;notes[idx].starColor={core:data.starColorCore,glow:data.starColorGlow};notes[idx].hasRing=data.hasRing;notes[idx].gasGiant=data.gasGiant;notes[idx].initialMass=data.initialMass;notes[idx].initialRadius=data.initialRadius;}else{let rng=makeSeededRandom(data.id);notes.push({...data,x:(rng()-0.5)*SPAWN_RADIUS*2,y:(rng()-0.5)*SPAWN_RADIUS*2,vx:(rng()-0.5)*0.06,vy:(rng()-0.5)*0.06,radius:data.initialRadius,mass:data.initialMass,trail:[],fadeIn:1,systemId:null,pulsePhase:rng()*Math.PI*2,starTypeName:data.starType||"Main Sequence",starTypeMul:data.starTypeMul||1.0,starColor:{core:data.starColorCore||"#88aaff",glow:data.starColorGlow||"rgba(100,150,255,0.5)"},hasRing:data.hasRing||false,gasGiant:data.gasGiant||false,isTemp:false});}}else if(ch.type==="removed"){notes=notes.filter(n=>n.id!==ch.doc.id);}});updateCounter();computeClusters();autoNameUnnamedClusters();});
+    constellationsCollection.onSnapshot(snap=>{snap.docChanges().forEach(ch=>{let data=ch.doc.data();if(ch.type==="added"||ch.type==="modified"){let ex=namedConstellations.findIndex(c=>c.starIds.join(',')===data.starIds.join(','));if(ex!==-1)namedConstellations[ex]=data;else namedConstellations.push(data);}else if(ch.type==="removed"){namedConstellations=namedConstellations.filter(c=>c.starIds.join(',')!==data.starIds.join(','));}});});
+    presenceCollection.onSnapshot(snap=>{snap.docChanges().forEach(ch=>{let data=ch.doc.data();if(!data||data.peerId===localPeerId)return;if(ch.type==="removed")delete peerGlows[data.peerId];else peerGlows[data.peerId]={starId:data.starId,timestamp:data.timestamp,color:(hash=>{let h=0;for(let i=0;i<hash.length;i++)h=hash.charCodeAt(i)+((h<<5)-h);return`hsl(${h%360},70%,65%)`;})(data.peerId)};});});
+    tempStarsCollection.onSnapshot(snap=>{snap.docChanges().forEach(ch=>{let data=ch.doc.data();if(ch.type==="added"){let rng=makeSeededRandom(data.id);data.x=(rng()-0.5)*SPAWN_RADIUS*2;data.y=(rng()-0.5)*SPAWN_RADIUS*2;data.vx=(rng()-0.5)*0.06;data.vy=(rng()-0.5)*0.06;data.radius=data.initialRadius;data.starTypeName=data.starTypeName||'Ember Wisp';data.starTypeMul=data.starTypeMul||1.0;data.starColor=data.starColor||{core:"#ffaa66",glow:"rgba(255,160,80,0.6)"};tempStars.push(data);}else if(ch.type==="modified"){let idx=tempStars.findIndex(s=>s.id===data.id);if(idx!==-1)tempStars[idx]={...tempStars[idx],...data};}else if(ch.type==="removed"){tempStars=tempStars.filter(s=>s.id!==ch.doc.id);}});updateCounter();});
+  }
 
-    const GRAVITY_CONST = 0.00035, GRAVITY_RADIUS = 400;
-    function applyUniversalGravity() {
-      let allStars = [...notes, ...tempStars];
-      let acc = new Map(); for (let star of allStars) acc.set(star, { ax:0, ay:0 });
-      for (let i = 0; i < allStars.length; i++) {
-        let s1 = allStars[i];
-        for (let j = i+1; j < allStars.length; j++) {
-          let s2 = allStars[j];
-          let dx = s2.x - s1.x, dy = s2.y - s1.y, distSq = dx*dx + dy*dy;
-          if (distSq < GRAVITY_RADIUS * GRAVITY_RADIUS && distSq > 0.1) {
-            let dist = Math.sqrt(distSq), force = (GRAVITY_CONST * s1.mass * s2.mass) / distSq;
-            let fx = (dx / dist) * force, fy = (dy / dist) * force;
-            acc.get(s1).ax += fx / s1.mass; acc.get(s1).ay += fy / s1.mass;
-            acc.get(s2).ax -= fx / s2.mass; acc.get(s2).ay -= fy / s2.mass;
-          }
-        }
-      }
-      for (let star of allStars) { let a = acc.get(star); star.vx += a.ax; star.vy += a.ay; capVelocity(star); }
-    }
+  function showToast(msg,target){if(!w||!h)return;let wx,wy;if(target&&target.x!==undefined){wx=target.x;wy=target.y-(target.radius||5)*0.8;}else{wx=(w/2-w/2)/camera.zoom-camera.x;wy=(h*0.12-h/2)/camera.zoom-camera.y;}floatingMessages.push({worldX:wx,worldY:wy,text:msg,created:performance.now(),duration:Math.min(8000,Math.max(2000,msg.length*45+500)),life:1});}
 
-    function stabilizeSystemMotion() {
-      let allStars = [...notes, ...tempStars]; let systems = new Map();
-      for (let star of allStars) {
-        if (star.systemId) {
-          if (!systems.has(star.systemId)) systems.set(star.systemId, { stars:[], totalMass:0, momX:0, momY:0 });
-          let sys = systems.get(star.systemId); sys.stars.push(star);
-          sys.totalMass += star.mass; sys.momX += star.vx * star.mass; sys.momY += star.vy * star.mass;
-        }
-      }
-      for (let [id, sys] of systems.entries()) {
-        if (sys.stars.length < 2) continue;
-        let comVelX = sys.momX / sys.totalMass, comVelY = sys.momY / sys.totalMass;
-        for (let star of sys.stars) { star.vx -= comVelX * 0.02; star.vy -= comVelY * 0.02; }
-      }
-    }
+  let isPan=false,panStart={x:0,y:0},camStart={x:0,y:0},lastTapTime=0,pendingSingleClick=null;
+  function worldPos(px,py){return{x:(px-w/2)/camera.zoom-camera.x,y:(py-h/2)/camera.zoom-camera.y};}
+  function hitTest(px,py){let wp=worldPos(px,py),best=null,bestD=100;for(let n of notes){if(!isVisible(n.x,n.y,n.radius*4))continue;let d=(wp.x-n.x)**2+(wp.y-n.y)**2,th=Math.min(100,45+(n.radius||3.5)*3)**2;if(d<th&&d<bestD){bestD=d;best=n;}}for(let t of tempStars){let d=(wp.x-t.x)**2+(wp.y-t.y)**2;if(d<700&&d<bestD){bestD=d;best=t;}}return best;}
+  function hitTestConstellation(px,py){let wp=worldPos(px,py);for(let cl of currentClusters)if(cl.starIds.length>=3){let d=(wp.x-cl.centroid.x)**2+(wp.y-cl.centroid.y)**2;if(d<4000)return cl;}return null;}
+  async function showPreview(star,cx,cy){let creatorInfo="",text="";if(star.isTemp){if(star.isSpecial&&!star.rewarded){star.rewarded=true;currentStreak+=1;localStorage.setItem('stellaris_streak',currentStreak);updateStreakCounter();for(let i=0;i<55;i++){let a=Math.random()*Math.PI*2,s=0.4+Math.random()*1.4;decayParticles.push({x:star.x,y:star.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:2+Math.random()*3.5,size:1.2+Math.random()*3,color:`hsl(${30+Math.random()*40},80%,60%)`});}}creatorInfo=star.isSpecial?'✦ SPECIAL EPHEMERAL ✦':'✨ ephemeral star';text=star.message||"";}else{creatorInfo=(star.creatorName&&star.creatorName!==localPeerName)?`from ${star.creatorName}`:"";text=star.text.length>85?star.text.slice(0,82)+"…":star.text;}let full=creatorInfo;if(text)full+=" · "+text;showToast(full,star);}
 
-    function updateSolarSystems() {
-      let allStars = [...notes, ...tempStars]; let systems = new Map();
-      for (let star of allStars) {
-        if (star.systemId) {
-          if (!systems.has(star.systemId)) systems.set(star.systemId, { stars:[], totalMass:0, centerX:0, centerY:0, hasSun:false });
-          let sys = systems.get(star.systemId); sys.stars.push(star);
-          sys.totalMass += star.mass; sys.centerX += star.x; sys.centerY += star.y;
-          if (star.isSun) sys.hasSun = true;
-        }
-      }
-      for (let [id, sys] of systems.entries()) {
-        if (sys.stars.length === 0) { systems.delete(id); continue; }
-        sys.centerX /= sys.stars.length; sys.centerY /= sys.stars.length;
-        if (!sys.hasSun && sys.stars.length >= 3) {
-          let mostMassive = sys.stars.reduce((a,b) => (a.mass > b.mass) ? a : b);
-          mostMassive.isSun = true; sys.hasSun = true;
-          for (let s of sys.stars) if (s !== mostMassive) s.isSun = false;
-        }
-        if (sys.stars.length === 2) { for (let s of sys.stars) if (s.isSun) s.isSun = false; sys.hasSun = false; }
-        if (sys.stars.length === 2) {
-          let s1=sys.stars[0], s2=sys.stars[1]; let dx=s2.x-s1.x, dy=s2.y-s1.y; let dist=Math.hypot(dx,dy);
-          if (dist > 0.1) {
-            let totalMass=s1.mass+s2.mass, G=0.6, vOrbit=Math.sqrt(G*totalMass/dist);
-            let baryX=s1.x+(dx*(s1.mass/totalMass)), baryY=s1.y+(dy*(s1.mass/totalMass));
-            let angle1=Math.atan2(s1.y-baryY, s1.x-baryX), angle2=angle1+Math.PI;
-            let v1x_des=-Math.sin(angle1)*vOrbit*(s2.mass/totalMass), v1y_des=Math.cos(angle1)*vOrbit*(s2.mass/totalMass);
-            let v2x_des=-Math.sin(angle2)*vOrbit*(s1.mass/totalMass), v2y_des=Math.cos(angle2)*vOrbit*(s1.mass/totalMass);
-            s1.vx+=(v1x_des-s1.vx)*0.1; s1.vy+=(v1y_des-s1.vy)*0.1;
-            s2.vx+=(v2x_des-s2.vx)*0.1; s2.vy+=(v2y_des-s2.vy)*0.1;
-            capVelocity(s1); capVelocity(s2);
-          }
-        } else if (sys.stars.length >= 3 && sys.hasSun) {
-          let sun = sys.stars.find(s=>s.isSun===true) || sys.stars.reduce((a,b)=>(a.mass>b.mass)?a:b);
-          sun.isSun = true; sys.hasSun = true;
-          for (let s of sys.stars) if (s !== sun) {
-            let dx=s.x-sun.x, dy=s.y-sun.y, dist=Math.hypot(dx,dy);
-            if (dist > 0.1) {
-              let angleToSun=Math.atan2(dy,dx), perpAngle=angleToSun+Math.PI/2;
-              let desiredSpeed=Math.sqrt(sun.mass/dist)*0.12, correction=(desiredSpeed-Math.hypot(s.vx,s.vy))*0.02;
-              s.vx+=Math.cos(perpAngle)*correction; s.vy+=Math.sin(perpAngle)*correction;
-              s.vx+=Math.cos(angleToSun)*(s.mass/(sun.mass+s.mass))*0.002;
-              s.vy+=Math.sin(angleToSun)*(s.mass/(sun.mass+s.mass))*0.002;
-              capVelocity(s);
-            }
-          }
-        }
-      }
-      for (let star of allStars) {
-        if (star.systemId) continue;
-        let nearestSys=null, nearestDistSq=Infinity;
-        for (let [id,sys] of systems.entries()) {
-          let dx=sys.centerX-star.x, dy=sys.centerY-star.y, distSq=dx*dx+dy*dy;
-          if (distSq<nearestDistSq && distSq<250000) { nearestDistSq=distSq; nearestSys=sys; }
-        }
-        if (nearestSys) {
-          let dx=nearestSys.centerX-star.x, dy=nearestSys.centerY-star.y, dist=Math.sqrt(nearestDistSq);
-          star.vx=(star.vx||0)+dx*0.003*(star.mass*nearestSys.totalMass)/(dist*dist);
-          star.vy=(star.vy||0)+dy*0.003*(star.mass*nearestSys.totalMass)/(dist*dist);
-          capVelocity(star); if (dist<250) star.systemId=nearestSys.stars[0].systemId;
-        }
-      }
-      for (let i=0;i<allStars.length;i++) {
-        let s1=allStars[i]; if (s1.systemId) continue;
-        for (let j=i+1;j<allStars.length;j++) {
-          let s2=allStars[j]; if (s2.systemId) continue;
-          let dx=s1.x-s2.x, dy=s1.y-s2.y;
-          if (dx*dx+dy*dy<202500) {
-            let newSysId='sys_'+Date.now()+'_'+Math.random().toString(36).substr(2,6);
-            s1.systemId=newSysId; s2.systemId=newSysId;
-            let totalMass=s1.mass+s2.mass, dist=Math.hypot(dx,dy);
-            let baryX=s1.x+(dx*(s1.mass/totalMass)), baryY=s1.y+(dy*(s1.mass/totalMass));
-            let G=0.6, vOrbit=Math.sqrt(G*totalMass/dist);
-            let angle1=Math.atan2(s1.y-baryY,s1.x-baryX), angle2=angle1+Math.PI;
-            s1.vx=-Math.sin(angle1)*vOrbit*(s2.mass/totalMass); s1.vy=Math.cos(angle1)*vOrbit*(s2.mass/totalMass);
-            s2.vx=-Math.sin(angle2)*vOrbit*(s1.mass/totalMass); s2.vy=Math.cos(angle2)*vOrbit*(s1.mass/totalMass);
-            capVelocity(s1); capVelocity(s2); break;
-          }
-        }
-      }
-    }
+  function openEdit(id){let star=notes.find(s=>s.id===id);if(!star)return;if(star.creatorId!==localPeerId){showToast("you can only edit your own stars",star);return;}activeId=id;document.getElementById("editCreator").innerText=star.creatorName?`created by ${star.creatorName}`:"";document.getElementById("memoryEditor").value=star.text;let m=document.getElementById("editModal");m.style.display="flex";requestAnimationFrame(()=>m.classList.add("visible"));}
+  function saveEdit(){if(activeId){let star=notes.find(s=>s.id===activeId);if(star&&star.creatorId===localPeerId){star.text=document.getElementById("memoryEditor").value;if(!star.text.trim())star.text="a distant echo";saveLocalStar(star);if(db)notesCollection.doc(star.id).set({text:star.text},{merge:true}).catch(()=>{});}activeId=null;}closeModal(document.getElementById("editModal"));}
+  function closeModal(m){m.classList.remove("visible");setTimeout(()=>m.style.display="none",250);}
 
-    let viewportLeft, viewportRight, viewportTop, viewportBottom, margin;
-    function updateViewportBounds(){
-      margin=200; let halfW=w/(2*camera.zoom), halfH=h/(2*camera.zoom);
-      viewportLeft=-camera.x-halfW-margin; viewportRight=-camera.x+halfW+margin;
-      viewportTop=-camera.y-halfH-margin; viewportBottom=-camera.y+halfH+margin;
-    }
-    function isVisible(x,y,size){ return x+size>viewportLeft && x-size<viewportRight && y+size>viewportTop && y-size<viewportBottom; }
+  let clearBtn=document.getElementById('clearStarsBtn');
+  let starCountBtn=document.getElementById('starCountBtn');
+  starCountBtn.addEventListener('click',()=>{if(clearBtn.style.display==='block'){clearBtn.style.display='none';}else{clearBtn.style.display='block';setTimeout(()=>{clearBtn.style.display='none';},4000);}});
+  clearBtn.addEventListener('click',()=>{localStorage.removeItem('stellaris_localStars');localStorage.removeItem('stellaris_starPositions');if(db){let batch=db.batch();for(let star of[...notes,...tempStars]){batch.delete(db.collection('starPositions').doc(star.id));if(star.isTemp)batch.delete(tempStarsCollection.doc(star.id));else batch.delete(notesCollection.doc(star.id));}batch.commit().then(()=>location.reload()).catch(()=>location.reload());}else{location.reload();}});
 
-    // ========== OBJECT POOLS ==========
-    burstPool = Array.from({length:MAX_BURST},()=>({active:false,x:0,y:0,vx:0,vy:0,life:0,size:0,color:''}));
-    function spawnBurst(x,y,isEphemeral=false){
-      for(let i=0;i<MAX_BURST;i++) if(!burstPool[i].active){
-        let angle=Math.random()*Math.PI*2, speed=1+Math.random()*4;
-        burstPool[i].active=true; burstPool[i].x=x; burstPool[i].y=y;
-        burstPool[i].vx=Math.cos(angle)*speed; burstPool[i].vy=Math.sin(angle)*speed;
-        burstPool[i].life=50+Math.random()*40; burstPool[i].size=1.5+Math.random()*3;
-        let r=isEphemeral?255:120+Math.floor(Math.random()*100);
-        let g=isEphemeral?150+Math.floor(Math.random()*105):110+Math.floor(Math.random()*100);
-        let b=isEphemeral?70+Math.floor(Math.random()*90):200+Math.floor(Math.random()*55);
-        burstPool[i].color=`rgba(${r},${g},${b},1)`; return;
-      }
-    }
-    cometPool = Array.from({length:MAX_COMETS},()=>({active:false,x:0,y:0,vx:0,vy:0,life:0,tailLength:0}));
-    function spawnComet(){
-      for(let i=0;i<MAX_COMETS;i++) if(!cometPool[i].active){
-        let a=Math.random()*Math.PI*2, sp=2+Math.random()*4;
-        cometPool[i].active=true; cometPool[i].x=Math.cos(a)*(WORLD_SIZE/2-500);
-        cometPool[i].y=Math.sin(a)*(WORLD_SIZE/2-500);
-        cometPool[i].vx=Math.cos(a+Math.PI)*sp; cometPool[i].vy=Math.sin(a+Math.PI)*sp;
-        cometPool[i].life=1000+Math.random()*500; cometPool[i].tailLength=80+Math.random()*100; return;
-      }
-    }
+  function startApp(name){localPeerName=name;localStorage.setItem('stellaris_peer_name',name);document.getElementById('nameModal').classList.remove('visible');setTimeout(()=>document.getElementById('nameModal').style.display='none',350);initApp();}
+  function initApp(){
+    setTimeout(hideLoader,2500);
+    try{initWorld();}catch(e){console.error('World:',e);}
+    canvasElem=document.getElementById("cosmicCanvas");
+    function resize(){w=innerWidth;h=innerHeight;canvasElem.width=w*devicePixelRatio;canvasElem.height=h*devicePixelRatio;canvasElem.style.width=w+"px";canvasElem.style.height=h+"px";ctx=canvasElem.getContext("2d");ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
+    resize();window.addEventListener("resize",resize);
+    try{loadLocalStars();}catch(e){console.error('Local stars:',e);}
+    updateCounter();updateStreakCounter();
+    try{scheduleEphemeralSpawns();}catch(e){console.error('Ephemeral:',e);}
+    try{loadStarPositions();}catch(e){console.error('Positions:',e);}
 
-    // ----- Background creation (optimized) -----
-    function createStarLayer(count,spread,minSize,maxSize,minBright,maxBright,colorRange,parallax){
-      let layer=new Array(count);
-      for(let i=0;i<count;i++) layer[i]={x:(Math.random()-0.5)*spread,y:(Math.random()-0.5)*spread,size:minSize+Math.random()*(maxSize-minSize),brightness:minBright+Math.random()*(maxBright-minBright),colorTemp:[colorRange[0]+Math.random()*(colorRange[1]-colorRange[0]),colorRange[2]+Math.random()*(colorRange[3]-colorRange[2]),colorRange[4]+Math.random()*(colorRange[5]-colorRange[4])],parallax,phase:Math.random()*Math.PI*2};
-      return layer;
-    }
-    function wrapPosition(obj,radius=0){ const limit=WORLD_SIZE/2-200; if(obj.x>limit)obj.x=-limit; if(obj.x<-limit)obj.x=limit; if(obj.y>limit)obj.y=-limit; if(obj.y<-limit)obj.y=limit; }
-    function initWorld(){
-      const spread=WORLD_SIZE*0.98;
-      starLayers=[createStarLayer(3000,spread,0.2,0.8,0.6,0.9,[210,255,220,255,230,255],0.05),createStarLayer(4000,spread,0.25,1.0,0.65,0.95,[190,255,200,255,210,255],0.1),createStarLayer(5000,spread,0.35,1.4,0.7,1.0,[170,250,180,250,190,250],0.2),createStarLayer(4000,spread,0.6,1.8,0.75,1.0,[150,240,160,240,170,240],0.35),createStarLayer(3000,spread,0.8,2.2,0.8,1.0,[130,230,140,230,150,230],0.5),createStarLayer(2000,spread,1.0,2.8,0.85,1.0,[110,220,120,220,130,220],0.7),createStarLayer(1500,spread,1.4,3.4,0.9,1.0,[90,210,100,210,110,210],0.85),createStarLayer(1000,spread,1.8,4.0,0.95,1.0,[70,200,80,200,90,200],1.0)];
-      nebulaLayers=[]; let baseColors=[[[60,40,120],[80,50,150],[100,60,180]],[[50,70,110],[70,90,140],[90,110,170]],[[100,50,90],[130,70,120],[160,90,150]],[[40,80,70],[60,100,100],[90,130,130]],[[110,60,40],[140,80,70],[170,100,100]]];
-      for(let i=0;i<150;i++){let cs=baseColors[Math.floor(Math.random()*baseColors.length)]; nebulaLayers.push({x:(Math.random()-0.5)*spread,y:(Math.random()-0.5)*spread,radius:200+Math.random()*500,baseColor1:cs[0],baseColor2:cs[1],baseColor3:cs[2],color1:[...cs[0]],color2:[...cs[1]],color3:[...cs[2]],pulseSpeed:0.001+Math.random()*0.002,phase:Math.random()*Math.PI*2});}
-      dustClouds=[]; function gaussianRandom(){let u=0,v=0;while(u===0)u=Math.random();while(v===0)v=Math.random();return Math.sqrt(-2.0*Math.log(u))*Math.cos(2.0*Math.PI*v);}
-      for(let i=0;i<50;i++){let cloud={x:(Math.random()-0.5)*spread,y:(Math.random()-0.5)*spread,color:[80+Math.random()*100,70+Math.random()*100,100+Math.random()*80],particles:[]};for(let j=0;j<100;j++){let ox=Math.min(Math.max(gaussianRandom()*300,-800),800),oy=Math.min(Math.max(gaussianRandom()*300,-800),800);cloud.particles.push({offsetX:ox,offsetY:oy,size:2+Math.random()*6,alpha:0.15+Math.random()*0.4});}dustClouds.push(cloud);}
-      let centerCloud={x:0,y:0,color:[150,130,200],particles:[]};for(let j=0;j<150;j++){let ox=Math.min(Math.max(gaussianRandom()*300,-900),900),oy=Math.min(Math.max(gaussianRandom()*300,-900),900);centerCloud.particles.push({offsetX:ox,offsetY:oy,size:2+Math.random()*6,alpha:0.2+Math.random()*0.5});}dustClouds.push(centerCloud);
-      flowParticles=[]; for(let i=0;i<2000;i++) flowParticles.push({x:(Math.random()-0.5)*spread,y:(Math.random()-0.5)*spread,vx:(Math.random()-0.5)*0.3,vy:(Math.random()-0.5)*0.3,life:Math.random()*100,size:1+Math.random()*4});
-      galacticClusters=SEED_CLUSTERS.map(c=>({...c})); window._flowGrid={cellSize:120,cols:200,rows:200,angles:new Float32Array(40000)};
-      dustMotes=[]; for(let i=0;i<200;i++) dustMotes.push({x:(Math.random()-0.5)*spread,y:(Math.random()-0.5)*spread,size:0.5+Math.random()*1.5,speed:0.01+Math.random()*0.04,angle:Math.random()*Math.PI*2,alpha:0.2+Math.random()*0.5,phase:Math.random()*Math.PI*2});
-      initRD();
-    }
+    document.getElementById("resetViewBtn").onclick=()=>{camera.x=0;camera.y=0;camera.targetZoom=1.0;showToast("view reset to center");};
+    document.getElementById("novaBtn").onclick=()=>{let ns=createMemory("");openEdit(ns.id);};
+    document.getElementById("saveMemoryBtn").onclick=saveEdit;
+    document.getElementById("cancelEditBtn").onclick=()=>closeModal(document.getElementById("editModal"));
+    document.getElementById("closeViewBtn").onclick=()=>closeModal(document.getElementById("viewModal"));
+    document.getElementById("editFromViewBtn").onclick=()=>{closeModal(document.getElementById("viewModal"));setTimeout(()=>{if(activeId)openEdit(activeId);},100);};
 
-    function updateNebulaColors(){
-      for(let neb of nebulaLayers){
-        let ir=0,ig=0,ib=0,tw=0;
-        for(let star of notes){let dx=star.x-neb.x,dy=star.y-neb.y; if(dx*dx+dy*dy<90000){let w=(1-Math.sqrt(dx*dx+dy*dy)/300)*(star.mass||2); let age=Date.now()-star.created; let r=age<7*86400000?100:age<28*86400000?160:120,g=age<7*86400000?120:age<28*86400000?110:90,b=age<7*86400000?200:age<28*86400000?180:150; ir+=r*w;ig+=g*w;ib+=b*w;tw+=w;}}
-        if(tw>0.1){neb.color1=[Math.floor(neb.baseColor1[0]*0.4+ir/tw*0.6),Math.floor(neb.baseColor1[1]*0.4+ig/tw*0.6),Math.floor(neb.baseColor1[2]*0.4+ib/tw*0.6)];neb.color2=[Math.floor(neb.baseColor2[0]*0.4+ir/tw*0.6),Math.floor(neb.baseColor2[1]*0.4+ig/tw*0.6),Math.floor(neb.baseColor2[2]*0.4+ib/tw*0.6)];neb.color3=[Math.floor(neb.baseColor3[0]*0.4+ir/tw*0.6),Math.floor(neb.baseColor3[1]*0.4+ig/tw*0.6),Math.floor(neb.baseColor3[2]*0.4+ib/tw*0.6)];}else{neb.color1=[...neb.baseColor1];neb.color2=[...neb.baseColor2];neb.color3=[...neb.baseColor3];}
-      }
-    }
-    function updateFlowField(t){let g=window._flowGrid;for(let i=0;i<g.cols;i++)for(let j=0;j<g.rows;j++){let x=(i-g.cols/2)*g.cellSize,y=(j-g.rows/2)*g.cellSize;g.angles[i+j*g.cols]=noise.noise3(x*0.0008,y*0.0008,t*0.0002)*Math.PI*5;}}
-    function getFlowAngle(px,py){let g=window._flowGrid;let cx=Math.floor((px+WORLD_SIZE/2)/g.cellSize)%g.cols,cy=Math.floor((py+WORLD_SIZE/2)/g.cellSize)%g.rows; if(cx<0||cy<0||cx>=g.cols||cy>=g.rows)return 0; return g.angles[cx+cy*g.cols]||0;}
-    function updateOrganic(t){
-      for(let layer of starLayers) for(let s of layer){s.x+=(Math.random()-0.5)*0.06;s.y+=(Math.random()-0.5)*0.06;wrapPosition(s);}
-      for(let cloud of dustClouds){let angle=noise.noise3(cloud.x*0.0006,cloud.y*0.0006,t*0.00009)*Math.PI*2;cloud.x+=Math.cos(angle)*0.12;cloud.y+=Math.sin(angle)*0.12;wrapPosition(cloud);}
-      for(let neb of nebulaLayers){let angle=noise.noise3(neb.x*0.00025,neb.y*0.00025,t*0.00005)*Math.PI*2;neb.x+=Math.cos(angle)*0.06;neb.y+=Math.sin(angle)*0.06;wrapPosition(neb);neb.phase=(neb.phase||0)+0.005;}
-      for(let mote of dustMotes){mote.x+=Math.cos(mote.angle)*mote.speed;mote.y+=Math.sin(mote.angle)*mote.speed;mote.angle+=(Math.random()-0.5)*0.02;wrapPosition(mote);}
-    }
-    function updateFlowParticles(){for(let p of flowParticles){let angle=getFlowAngle(p.x,p.y);p.vx+=Math.cos(angle)*0.025;p.vy+=Math.sin(angle)*0.025;let spd=p.vx*p.vx+p.vy*p.vy;if(spd>4.0){p.vx*=0.97;p.vy*=0.97;}p.x+=p.vx;p.y+=p.vy;wrapPosition(p,100);p.life=(p.life+0.4)%100;}}
+    let currentClusterForName=null;
+    function promptConstellationName(cl){currentClusterForName=cl;document.getElementById("constellationNameInput").value=cl.name||"";let m=document.getElementById("constellationNameModal");m.style.display="flex";requestAnimationFrame(()=>m.classList.add("visible"));}
+    document.getElementById("saveConstellationName").onclick=()=>{let name=document.getElementById("constellationNameInput").value.trim();if(name&&currentClusterForName){let ex=namedConstellations.findIndex(c=>c.starIds.join(',')===currentClusterForName.starIds.join(','));if(ex!==-1)namedConstellations[ex].name=name;else namedConstellations.push({starIds:currentClusterForName.starIds,name});if(db)constellationsCollection.doc(currentClusterForName.starIds.join(',')).set({starIds:currentClusterForName.starIds,name}).catch(()=>{});showToast(`System named: ${name}`);}closeModal(document.getElementById("constellationNameModal"));currentClusterForName=null;};
+    document.getElementById("cancelConstellationName").onclick=()=>{closeModal(document.getElementById("constellationNameModal"));currentClusterForName=null;};
 
-    // ========== POSITION SAVING (every 60 seconds + beforeunload) ==========
-    let lastSavedPositions=new Map(),positionSaveInterval=null;
-    async function saveStarPositions(){
-      if(!isOnline)return;
-      let allStars=[...notes,...tempStars];
-      let batch=db.batch(),writes=0,now=firebase.firestore.FieldValue.serverTimestamp();
-      for(let star of allStars){
-        let last=lastSavedPositions.get(star.id);
-        let dx=last?Math.abs(star.x-last.x):5,dy=last?Math.abs(star.y-last.y):5;
-        if(dx>5||dy>5||!last){
-          batch.set(db.collection('starPositions').doc(star.id),{x:star.x,y:star.y,vx:star.vx,vy:star.vy,mass:star.mass,radius:star.radius,updatedAt:now},{merge:true});
-          lastSavedPositions.set(star.id,{x:star.x,y:star.y,updatedAt:Date.now()});
-          writes++;
-        }
-      }
-      if(writes>0) await batch.commit();
-    }
+    canvasElem.addEventListener("touchstart",e=>{e.preventDefault();let t=e.touches[0],star=hitTest(t.clientX,t.clientY),cl=hitTestConstellation(t.clientX,t.clientY);if(cl){promptConstellationName(cl);return;}if(star){let now=Date.now();if(now-lastTapTime<300){if(pendingSingleClick)clearTimeout(pendingSingleClick);if(!star.isTemp)openEdit(star.id);else showToast("ephemeral stars cannot be edited.",star);lastTapTime=0;}else{lastTapTime=now;pendingSingleClick=setTimeout(()=>{showPreview(star,t.clientX,t.clientY);pendingSingleClick=null;},150);}}else{lastTapTime=0;isPan=true;panStart={x:t.clientX,y:t.clientY};camStart={x:camera.x,y:camera.y};if(pendingSingleClick){clearTimeout(pendingSingleClick);pendingSingleClick=null;}}},{passive:false});
+    canvasElem.addEventListener("touchmove",e=>{if(isPan&&e.touches.length===1){let dx=e.touches[0].clientX-panStart.x,dy=e.touches[0].clientY-panStart.y;camera.x=camStart.x+dx/camera.zoom;camera.y=camStart.y+dy/camera.zoom;e.preventDefault();}if(pendingSingleClick){clearTimeout(pendingSingleClick);pendingSingleClick=null;}},{passive:false});
+    canvasElem.addEventListener("touchend",()=>{isPan=false;});
+    canvasElem.addEventListener("mousedown",e=>{let star=hitTest(e.clientX,e.clientY),cl=hitTestConstellation(e.clientX,e.clientY);if(cl){promptConstellationName(cl);return;}if(star){if(e.detail===2){if(!star.isTemp)openEdit(star.id);else showToast("ephemeral stars cannot be edited.",star);}else showPreview(star,e.clientX,e.clientY);}else{isPan=true;panStart={x:e.clientX,y:e.clientY};camStart={x:camera.x,y:camera.y};}});
+    window.addEventListener("mousemove",e=>{if(isPan){camera.x=camStart.x+(e.clientX-panStart.x)/camera.zoom;camera.y=camStart.y+(e.clientY-panStart.y)/camera.zoom;}});
+    window.addEventListener("mouseup",()=>{isPan=false;});
+    canvasElem.addEventListener("wheel",e=>{e.preventDefault();camera.targetZoom=Math.min(MAX_ZOOM,Math.max(MIN_ZOOM,camera.targetZoom*(e.deltaY>0?0.92:1.08)));},{passive:false});
 
-    // ========== POSITION LOADING WITH 15-SECOND DRIFT ==========
-    async function loadStarPositions(){
-      if(!isOnline)return;
-      let snapshot=await db.collection('starPositions').get(),updates=[];
-      snapshot.forEach(doc=>{
-        let data=doc.data();
-        let star=[...notes,...tempStars].find(s=>s.id===doc.id);
-        if(star) updates.push({star,targetX:data.x,targetY:data.y,targetVx:data.vx,targetVy:data.vy});
-      });
-      if(updates.length===0)return;
+    let ipd=0,iz=1.0;function gpd(t){if(t.length<2)return 0;let dx=t[0].clientX-t[1].clientX,dy=t[0].clientY-t[1].clientY;return Math.hypot(dx,dy);}
+    canvasElem.addEventListener('touchstart',e=>{if(e.touches.length===2){e.preventDefault();ipd=gpd(e.touches);iz=camera.zoom;}});
+    canvasElem.addEventListener('touchmove',e=>{if(e.touches.length===2){e.preventDefault();let nd=gpd(e.touches);if(ipd>0)camera.targetZoom=Math.min(MAX_ZOOM,Math.max(MIN_ZOOM,iz*(nd/ipd)));}});
+    canvasElem.addEventListener('touchend',()=>{ipd=0;});
 
-      interpolating=true;
-      interpolStart={};
-      interpolTarget={};
-      interpolStartTime=performance.now();
-      for(let u of updates){
-        interpolStart[u.star.id]={x:u.star.x,y:u.star.y,vx:u.star.vx,vy:u.star.vy};
-        interpolTarget[u.star.id]={x:u.targetX,y:u.targetY,vx:u.targetVx,vy:u.targetVy};
-      }
-      showToast("Universe positions drifting into place...");
-    }
+    setInterval(saveStarPositions,60000);
+    window.addEventListener('pagehide',saveStarPositions);
 
-    function updateInterpolation(now){
-      if(!interpolating)return;
-      let elapsed=now-interpolStartTime;
-      let t=Math.min(1,elapsed/interpolDuration);
-      let ease=t<0.5?4*t*t*t:1-Math.pow(-2*t+2,3)/2;
-      for(let star of[...notes,...tempStars]){
-        let s=interpolStart[star.id],tgt=interpolTarget[star.id];
-        if(s&&tgt){
-          star.x=s.x+(tgt.x-s.x)*ease;
-          star.y=s.y+(tgt.y-s.y)*ease;
-          star.vx=s.vx+(tgt.vx-s.vx)*ease;
-          star.vy=s.vy+(tgt.vy-s.vy)*ease;
-        }
-      }
-      if(t>=1) interpolating=false;
-    }
+    let lastFrameTime=performance.now()/1000;
+    function animateLoop(){let nowSec=performance.now()/1000;lastFrameTime=nowSec;updateFlowField(nowSec);updateOrganic(nowSec);updateFlowParticles();updateNebulaColors();simulate(nowSec);render();requestAnimationFrame(animateLoop);}
+    requestAnimationFrame(animateLoop);
+  }
 
-    // ========== SIMULATION ==========
-    function simulate(nowSec){
-      let now=Date.now();
-      updateInterpolation(now);
-      if(!interpolating){
-        updateMassesAndRadii(nowSec);
-        for(let note of notes){
-          if(!note.trail)note.trail=[]; note.trail.push({x:note.x,y:note.y}); if(note.trail.length>25)note.trail.shift();
-          if(note.fadeIn!=null&&note.fadeIn<1)note.fadeIn+=0.02;
-          if(!note.systemId){let fa=getFlowAngle(note.x,note.y);note.vx=(note.vx||0)+Math.cos(fa)*0.006;note.vy=(note.vy||0)+Math.sin(fa)*0.006;}
-          else{note.vx+=(Math.random()-0.5)*0.015;note.vy+=(Math.random()-0.5)*0.015;}
-          note.vx=(note.vx||0)*0.995;note.vy=(note.vy||0)*0.995;note.x+=note.vx;note.y+=note.vy;wrapPosition(note,note.radius);capVelocity(note);
-          note.pulsePhase=(note.pulsePhase||0)+0.008;let ageMs=now-note.created;note._isBirthday=(ageMs>=561600000&&ageMs<=648000000)||(ageMs>=2548800000&&ageMs<=2635200000);note._ageMonths=ageMs/2592000000;
-        }
-        for(let ts of tempStars){if(!ts.isTemp)continue;if(!ts.systemId){let fa=getFlowAngle(ts.x,ts.y);ts.vx=(ts.vx||0)+Math.cos(fa)*0.006;ts.vy=(ts.vy||0)+Math.sin(fa)*0.006;}else{ts.vx+=(Math.random()-0.5)*0.015;ts.vy+=(Math.random()-0.5)*0.015;}ts.vx=(ts.vx||0)*0.995;ts.vy=(ts.vy||0)*0.995;ts.x+=ts.vx;ts.y+=ts.vy;wrapPosition(ts,20);capVelocity(ts);}
-        applyUniversalGravity();updateSolarSystems();stabilizeSystemMotion();
-      }
-      // Temp star expiry, birthdays, particles, etc. always run
-      for(let i=0;i<tempStars.length;i++){let ts=tempStars[i];if(ts.expiresAt<Date.now()){if(ts.systemId){let sys=[...notes.filter(s=>s.systemId===ts.systemId),...tempStars.filter(t=>t.systemId===ts.systemId&&t!==ts)];for(let s of sys){let a=Math.random()*Math.PI*2,sp=1.5+Math.random()*1.5;s.vx=(s.vx||0)+Math.cos(a)*sp;s.vy=(s.vy||0)+Math.sin(a)*sp;capVelocity(s);s.systemId=null;if(s.isSun)s.isSun=false;}}try{if(isOnline)tempStarsCollection.doc(ts.id).delete();}catch(e){}tempStars.splice(i,1);i--;for(let p=0;p<55;p++){let a=Math.random()*Math.PI*2,sp=0.4+Math.random()*1.4;decayParticles.push({x:ts.x,y:ts.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:2+Math.random()*3.5,size:1.2+Math.random()*3,color:`hsl(${30+Math.random()*40},80%,60%)`});}}}
-      for(let i=birthdaySparkles.length-1;i>=0;i--){birthdaySparkles[i].life-=0.02;if(birthdaySparkles[i].life<=0)birthdaySparkles.splice(i,1);}
-      if(Math.random()<0.3){for(let note of notes)if(note._isBirthday&&Math.random()<0.1)birthdaySparkles.push({x:note.x+(Math.random()-0.5)*note.radius*2,y:note.y+(Math.random()-0.5)*note.radius*2,life:1+Math.random(),size:0.5+Math.random()*1.5});}
-      for(let i=0;i<MAX_BURST;i++){let b=burstPool[i];if(!b.active)continue;b.x+=b.vx;b.y+=b.vy;b.life--;if(b.life<=0)b.active=false;}
-      for(let i=sparks.length-1;i>=0;i--){sparks[i].x+=sparks[i].vx;sparks[i].y+=sparks[i].vy;sparks[i].life-=0.02;if(sparks[i].life<=0)sparks.splice(i,1);}
-      for(let i=decayParticles.length-1;i>=0;i--){decayParticles[i].x+=decayParticles[i].vx;decayParticles[i].y+=decayParticles[i].vy;decayParticles[i].life-=0.02;if(decayParticles[i].life<=0)decayParticles.splice(i,1);}
-      if(Math.random()<0.0006)spawnComet();
-      for(let i=0;i<MAX_COMETS;i++){let c=cometPool[i];if(!c.active)continue;c.x+=c.vx;c.y+=c.vy;c.life--;if(c.life<=0)c.active=false;}
-      camera.zoom+=(camera.targetZoom-camera.zoom)*0.08;camera.targetZoom=Math.min(MAX_ZOOM,Math.max(MIN_ZOOM,camera.targetZoom));
-      for(let pid in peerGlows)if(Date.now()-peerGlows[pid].timestamp>15000)delete peerGlows[pid];
-      updateRD();
-      let nowMs=performance.now();for(let i=floatingMessages.length-1;i>=0;i--){let msg=floatingMessages[i];msg.life=Math.max(0,1-(nowMs-msg.created)/msg.duration);if(msg.life<=0)floatingMessages.splice(i,1);}
-    }
-
-    // ========== RENDER ==========
-    function render(){
-      ctx.clearRect(0,0,w,h);ctx.fillStyle="#000000";ctx.fillRect(0,0,w,h);
-      let hueBase=(camera.x*0.0008+camera.y*0.0008+performance.now()*0.00003)%360;
-      let skyGrad=ctx.createRadialGradient(w/2,h/2,0,w/2,h/2,Math.max(w,h));skyGrad.addColorStop(0,`hsla(${hueBase+Math.min(1,currentStreak/30)*60},65%,10%,0.35)`);skyGrad.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=skyGrad;ctx.fillRect(0,0,w,h);
-      ctx.save();ctx.translate(w/2,h/2);ctx.scale(camera.zoom,camera.zoom);ctx.translate(camera.x,camera.y);updateViewportBounds();
-      ctx.globalAlpha=0.06;ctx.drawImage(rdCanvas,-WORLD_SIZE/2,-WORLD_SIZE/2,WORLD_SIZE,WORLD_SIZE);ctx.globalAlpha=1.0;
-      const nowPerf=performance.now();
-      for(let layer of starLayers){let pxo=layer[0].parallax*0.1,cxOff=camera.x*pxo,cyOff=camera.y*pxo;for(let s of layer){if(!isVisible(s.x,s.y,s.size))continue;let tw=0.7+0.2*Math.sin(nowPerf*0.003+s.phase)+0.1*Math.sin(nowPerf*0.011+s.phase*2.7);ctx.fillStyle=`rgba(${s.colorTemp[0]},${s.colorTemp[1]},${s.colorTemp[2]},${s.brightness*tw*0.9})`;ctx.beginPath();ctx.arc(s.x-cxOff,s.y-cyOff,s.size,0,Math.PI*2);ctx.fill();}}
-      for(let neb of nebulaLayers){if(!isVisible(neb.x,neb.y,neb.radius*1.8))continue;let pulse=0.7+0.3*Math.sin(nowPerf*0.002*neb.pulseSpeed+neb.phase),rad=neb.radius*(0.9+0.1*Math.sin(nowPerf*0.001+neb.phase));let go=ctx.createRadialGradient(neb.x,neb.y,rad*0.2,neb.x,neb.y,rad*1.8);go.addColorStop(0,`rgba(${neb.color1[0]},${neb.color1[1]},${neb.color1[2]},${0.06*pulse})`);go.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=go;ctx.beginPath();ctx.arc(neb.x,neb.y,rad*1.8,0,Math.PI*2);ctx.fill();let gn=ctx.createRadialGradient(neb.x,neb.y,rad*0.2,neb.x,neb.y,rad);gn.addColorStop(0,`rgba(${neb.color1[0]},${neb.color1[1]},${neb.color1[2]},${0.12*pulse})`);gn.addColorStop(0.5,`rgba(${neb.color2[0]},${neb.color2[1]},${neb.color2[2]},${0.06*pulse})`);gn.addColorStop(1,`rgba(${neb.color3[0]},${neb.color3[1]},${neb.color3[2]},0)`);ctx.fillStyle=gn;ctx.beginPath();ctx.arc(neb.x,neb.y,rad,0,Math.PI*2);ctx.fill();}
-      for(let cloud of dustClouds){if(!isVisible(cloud.x,cloud.y,300))continue;for(let p of cloud.particles){let wx=cloud.x+p.offsetX,wy=cloud.y+p.offsetY,alpha=p.alpha*(0.5+0.5*Math.sin(nowPerf*0.001+wx*0.02));ctx.fillStyle=`rgba(${cloud.color[0]},${cloud.color[1]},${cloud.color[2]},${alpha*0.5})`;ctx.beginPath();ctx.arc(wx,wy,p.size,0,Math.PI*2);ctx.fill();}}
-      for(let mote of dustMotes){if(!isVisible(mote.x,mote.y,mote.size))continue;let tw=0.4+0.6*Math.sin(nowPerf*0.001+mote.phase);ctx.fillStyle=`rgba(210,230,255,${mote.alpha*tw*0.7})`;ctx.beginPath();ctx.arc(mote.x,mote.y,mote.size,0,Math.PI*2);ctx.fill();}
-      for(let p of flowParticles){if(isVisible(p.x,p.y,p.size)){let alpha=0.3+0.2*Math.sin(p.life*0.2);ctx.fillStyle=`rgba(200,220,255,${alpha*0.7})`;ctx.beginPath();ctx.arc(p.x,p.y,p.size*0.7,0,Math.PI*2);ctx.fill();}}
-      for(let gc of galacticClusters){let glow=ctx.createRadialGradient(gc.x,gc.y,20,gc.x,gc.y,500);glow.addColorStop(0,`rgba(${gc.color[0]},${gc.color[1]},${gc.color[2]},0.15)`);glow.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=glow;ctx.beginPath();ctx.arc(gc.x,gc.y,500,0,Math.PI*2);ctx.fill();if(camera.zoom>0.55){ctx.font=`${Math.max(12,18*camera.zoom)}px "Segoe UI",system-ui,sans-serif`;ctx.fillStyle=`rgba(230,240,255,${0.8*Math.min(1,(camera.zoom-0.45)/0.4)})`;ctx.shadowBlur=8;ctx.fillText(gc.name,gc.x-40,gc.y-70);ctx.shadowBlur=0;}}
-      ctx.strokeStyle="rgba(160,180,240,0.4)";ctx.lineWidth=0.9;
-      for(let cluster of currentClusters){if(cluster.name){let key=cluster.starIds.join(',');if(!fractalPatterns[key])fractalPatterns[key]=generateLSystem(cluster.name);let lines=fractalPatterns[key];ctx.beginPath();for(let line of lines){ctx.moveTo(cluster.centroid.x+line.x1,cluster.centroid.y+line.y1);ctx.lineTo(cluster.centroid.x+line.x2,cluster.centroid.y+line.y2);}ctx.stroke();}}
-      if(camera.zoom>0.5){let vn=notes.filter(n=>isVisible(n.x,n.y,n.radius*4));ctx.strokeStyle="rgba(100,140,220,0.15)";ctx.lineWidth=0.5;for(let i=0;i<vn.length;i++){let a=vn[i];for(let j=i+1;j<vn.length;j++){let b=vn[j],dx=a.x-b.x,dy=a.y-b.y,dist=Math.hypot(dx,dy);if(dist<400){ctx.globalAlpha=Math.max(0,(1-dist/400)*0.4);ctx.beginPath();ctx.moveTo(a.x,a.y);ctx.lineTo(b.x,b.y);ctx.stroke();}}}ctx.globalAlpha=1;}
-      let allStars=[...notes,...tempStars],systems=new Map();for(let star of allStars)if(star.systemId){if(!systems.has(star.systemId))systems.set(star.systemId,[]);systems.get(star.systemId).push(star);}
-      for(let[id,stars]of systems.entries()){if(stars.length===2){let s1=stars[0],s2=stars[1],tm=s1.mass+s2.mass,bx=s1.x+(s2.x-s1.x)*(s1.mass/tm),by=s1.y+(s2.y-s1.y)*(s1.mass/tm);ctx.beginPath();ctx.arc(bx,by,5,0,Math.PI*2);ctx.fillStyle="rgba(255,200,100,0.4)";ctx.fill();ctx.beginPath();ctx.arc(bx,by,2,0,Math.PI*2);ctx.fillStyle="rgba(255,220,150,0.8)";ctx.fill();ctx.setLineDash([5,8]);ctx.beginPath();ctx.moveTo(s1.x,s1.y);ctx.lineTo(s2.x,s2.y);ctx.strokeStyle="rgba(200,180,255,0.5)";ctx.stroke();ctx.setLineDash([]);}}
-      for(let star of notes){
-        if(!isVisible(star.x,star.y,star.radius*8))continue;let vs=getStarVisuals(star),pulse=Math.sin(star.pulsePhase||0)*0.5+0.5,size=Math.max(2.0,(star.radius||3.0)*vs.sizeFactor+pulse*0.6);if(star.isSun)size*=1.2;let fa=(star.fadeIn!=null)?star.fadeIn:1;if(fa<=0)continue;ctx.globalAlpha=fa;
-        if(star.mass>5&&camera.zoom>0.6){ctx.save();ctx.globalAlpha*=0.08;for(let ray=0;ray<5;ray++){let angle=(nowPerf*0.0004+ray*Math.PI/2.5)%(Math.PI*2),length=size*(3+Math.sin(nowPerf*0.001+ray)*2);let gr=ctx.createLinearGradient(star.x,star.y,star.x+Math.cos(angle)*length,star.y+Math.sin(angle)*length);gr.addColorStop(0,vs.glowColor);gr.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=gr;ctx.beginPath();ctx.moveTo(star.x,star.y);ctx.lineTo(star.x+Math.cos(angle-0.15)*length,star.y+Math.sin(angle-0.15)*length);ctx.lineTo(star.x+Math.cos(angle+0.15)*length,star.y+Math.sin(angle+0.15)*length);ctx.closePath();ctx.fill();}ctx.restore();}
-        ctx.save();ctx.globalAlpha=0.3*fa;ctx.strokeStyle=vs.glowColor;ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(star.x,star.y,size*1.6,0,Math.PI*2);ctx.stroke();ctx.globalAlpha=0.15*fa;ctx.lineWidth=0.8;ctx.beginPath();ctx.arc(star.x,star.y,size*2.4,0,Math.PI*2);ctx.stroke();ctx.restore();
-        let glow=ctx.createRadialGradient(star.x,star.y,size*0.6,star.x,star.y,size*7);glow.addColorStop(0,vs.glowColor);glow.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=glow;ctx.beginPath();ctx.arc(star.x,star.y,size*7,0,Math.PI*2);ctx.fill();
-        let inner=ctx.createRadialGradient(star.x-2,star.y-2,1,star.x,star.y,size*1.8);inner.addColorStop(0,vs.coreColor);inner.addColorStop(0.5,vs.isWhiteDwarf?"#eeddff":"#aaccff");inner.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=inner;ctx.beginPath();ctx.arc(star.x,star.y,size*1.4,0,Math.PI*2);ctx.fill();
-        ctx.fillStyle=vs.isWhiteDwarf?"#ffffff":"#cceeff";ctx.shadowBlur=8;ctx.shadowColor=vs.isWhiteDwarf?"rgba(220,220,255,0.9)":"rgba(100,150,255,0.6)";ctx.beginPath();ctx.arc(star.x-1,star.y-1,size*0.35,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;
-        if(star.hasRing){ctx.save();ctx.translate(star.x,star.y);ctx.rotate(star.ringTilt||0);ctx.beginPath();ctx.ellipse(0,0,size*1.4,size*0.4,0,0,Math.PI*2);ctx.strokeStyle="rgba(200,220,255,0.5)";ctx.lineWidth=1.5;ctx.stroke();ctx.restore();}
-        if(star.gasGiant){if(!star._gasBands){let bands=[];for(let b=0;b<4+Math.floor(Math.random()*4);b++)bands.push({offset:(b-2)*size*0.18,height:size*0.07+Math.random()*size*0.12,color:`hsl(${200+Math.random()*60},${60+Math.random()*30}%,${55+Math.random()*25}%)`});star._gasBands=bands;}ctx.globalAlpha=0.45*fa;for(let band of star._gasBands){ctx.fillStyle=band.color;ctx.beginPath();ctx.ellipse(star.x,star.y+band.offset,size*0.9,band.height,0,0,Math.PI*2);ctx.fill();}}
-        if(star._ageMonths>1){ctx.beginPath();ctx.arc(star.x,star.y,size*2.0,0,Math.PI*2);ctx.strokeStyle="rgba(200,220,255,0.25)";ctx.lineWidth=1.2;ctx.stroke();}
-        if(star._ageMonths>2)for(let m=0;m<2;m++){let angle=nowPerf*0.001+m*Math.PI;ctx.fillStyle="rgba(200,220,255,0.4)";ctx.beginPath();ctx.arc(star.x+Math.cos(angle)*size*1.8,star.y+Math.sin(angle)*size*1.8,1.2,0,Math.PI*2);ctx.fill();}
-        if(star._ageMonths>3){ctx.beginPath();ctx.arc(star.x,star.y,size*2.5,0,Math.PI*2);ctx.strokeStyle="rgba(160,180,240,0.2)";ctx.lineWidth=1.0;ctx.stroke();}
-        if(star.isSun){ctx.globalAlpha*=0.15;for(let ray=0;ray<10;ray++){let angle=(nowPerf*0.0005+ray*Math.PI/5)%(Math.PI*2),len=size*(5+Math.sin(nowPerf*0.002+ray)*3);let gr=ctx.createLinearGradient(star.x,star.y,star.x+Math.cos(angle)*len,star.y+Math.sin(angle)*len);gr.addColorStop(0,"rgba(200,220,255,0.7)");gr.addColorStop(1,"rgba(200,220,255,0)");ctx.fillStyle=gr;ctx.beginPath();ctx.moveTo(star.x,star.y);ctx.lineTo(star.x+Math.cos(angle-0.1)*len,star.y+Math.sin(angle-0.1)*len);ctx.lineTo(star.x+Math.cos(angle+0.1)*len,star.y+Math.sin(angle+0.1)*len);ctx.closePath();ctx.fill();}}
-        for(let pid in peerGlows)if(peerGlows[pid].starId===star.id){ctx.save();ctx.globalAlpha=0.5;ctx.beginPath();ctx.arc(star.x,star.y,size*3.5,0,Math.PI*2);ctx.strokeStyle=peerGlows[pid].color;ctx.lineWidth=3;ctx.shadowColor=peerGlows[pid].color;ctx.shadowBlur=12;ctx.stroke();ctx.restore();}
-        ctx.globalAlpha=fa;
-      }
-      for(let star of tempStars){let vs=getStarVisuals(star),pulse=0.96+0.04*Math.sin(nowPerf*(star.isSpecial?0.0015:0.002)),size=(star.isSpecial?5.0:4.5)*vs.sizeFactor*pulse;if(star.isSun)size*=1.3;let g=ctx.createRadialGradient(star.x,star.y,size*0.5,star.x,star.y,size*6);g.addColorStop(0,vs.glowColor);g.addColorStop(1,"rgba(255,100,50,0)");ctx.fillStyle=g;ctx.beginPath();ctx.arc(star.x,star.y,size*6,0,Math.PI*2);ctx.fill();ctx.fillStyle=vs.coreColor;ctx.shadowBlur=12;ctx.shadowColor=star.isSpecial?"rgba(255,120,60,0.8)":"rgba(255,140,80,0.7)";ctx.beginPath();ctx.arc(star.x,star.y,size*0.9,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(star.x,star.y,size*1.3+pulse*0.2,0,Math.PI*2);ctx.strokeStyle=vs.glowColor;ctx.lineWidth=1.5;ctx.stroke();ctx.shadowBlur=0;}
-      for(let i=0;i<MAX_COMETS;i++){let c=cometPool[i];if(!c.active)continue;if(!isVisible(c.x,c.y,c.tailLength))continue;let tx=c.x-c.vx*80,ty=c.y-c.vy*80,gc=ctx.createLinearGradient(c.x,c.y,tx,ty);gc.addColorStop(0,"rgba(255,220,140,0.8)");gc.addColorStop(1,"rgba(140,100,60,0)");ctx.beginPath();ctx.moveTo(c.x,c.y);ctx.lineTo(tx,ty);ctx.strokeStyle=gc;ctx.lineWidth=3;ctx.stroke();ctx.fillStyle="#ffdd99";ctx.beginPath();ctx.arc(c.x,c.y,3,0,Math.PI*2);ctx.fill();}
-      for(let p of sparks)if(isVisible(p.x,p.y,2)){ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,2.5*p.life,0,Math.PI*2);ctx.fill();}
-      for(let p of decayParticles)if(isVisible(p.x,p.y,p.size)){ctx.fillStyle=p.color;ctx.beginPath();ctx.arc(p.x,p.y,p.size*(p.life*0.6+0.3),0,Math.PI*2);ctx.fill();}
-      for(let i=0;i<MAX_BURST;i++){let p=burstPool[i];if(!p.active)continue;if(!isVisible(p.x,p.y,p.size))continue;ctx.fillStyle=p.color.replace('1)',`${p.life/90})`);ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fill();}
-      for(let sp of birthdaySparkles)if(isVisible(sp.x,sp.y,sp.size)){ctx.fillStyle=`rgba(220,200,255,${sp.life*0.6})`;ctx.beginPath();ctx.arc(sp.x,sp.y,sp.size,0,Math.PI*2);ctx.fill();}
-      ctx.restore();
-      ctx.save();let vignette=ctx.createRadialGradient(w/2,h/2,Math.max(w,h)*0.5,w/2,h/2,Math.max(w,h)*0.95);vignette.addColorStop(0,"rgba(0,0,0,0)");vignette.addColorStop(1,"rgba(0,0,0,0.55)");ctx.fillStyle=vignette;ctx.fillRect(0,0,w,h);ctx.restore();
-      ctx.save();let nowMs=performance.now();for(let msg of floatingMessages){let elapsed=nowMs-msg.created,progress=Math.min(1,elapsed/msg.duration),alpha=progress<0.3?progress/0.3:1-(progress-0.3)/0.7,oy=-20-progress*40,sx=(msg.worldX+camera.x)*camera.zoom+w/2,sy=(msg.worldY+camera.y)*camera.zoom+h/2;ctx.globalAlpha=alpha;ctx.font='14px "Segoe UI", system-ui, sans-serif';ctx.fillStyle='#ffe5b0';ctx.shadowColor='rgba(0,0,0,0.8)';ctx.shadowBlur=6;ctx.textAlign='center';ctx.fillText(msg.text,sx,sy+oy);}ctx.restore();
-    }
-
-    // ========== FIREBASE HELPERS ==========
-    async function saveNoteToFirestore(note){if(!isOnline){saveLocalStar(note);return;}let data={id:note.id,created:note.created,text:note.text,creatorName:note.creatorName,starType:note.starTypeName,starTypeMul:note.starTypeMul,starColorCore:note.starColor.core,starColorGlow:note.starColor.glow,hasRing:note.hasRing,gasGiant:note.gasGiant,initialMass:note.initialMass,initialRadius:note.initialRadius,isTemp:false};try{await notesCollection.doc(note.id).set(data);}catch(e){saveLocalStar(note);}}
-    function debouncedSave(note){if(saveTimer)clearTimeout(saveTimer);saveTimer=setTimeout(()=>saveNoteToFirestore(note),500);}
-    async function deleteNoteFromFirestore(id){if(!isOnline){deleteLocalStar(id);return;}try{await notesCollection.doc(id).delete();}catch(e){deleteLocalStar(id);}}
-    function updatePresence(starId){if(!isOnline)return;let now=Date.now();if(now-lastPresenceUpdate<2000)return;lastPresenceUpdate=now;try{presenceCollection.doc(localPeerId).set({peerId:localPeerId,starId,timestamp:now});}catch(e){}}
-    function getPeerColor(peerId){let hash=0;for(let i=0;i<peerId.length;i++)hash=peerId.charCodeAt(i)+((hash<<5)-hash);return`hsl(${hash%360},70%,65%)`;}
-
-    // ========== CREATE / DELETE STARS ==========
-    function createMemory(text=""){
-      let starId=Date.now()+Math.random().toString(36),rng=makeSeededRandom(starId),x=(rng()-0.5)*SPAWN_RADIUS*2,y=(rng()-0.5)*SPAWN_RADIUS*2;
-      let typeInfo=pickDeterministicType(rng,false),mass=1.5+rng()*8;
-      let note={id:starId,created:Date.now(),opened:0,text:text.trim()===""?"a drifting thought":text,x,y,vx:(rng()-0.5)*0.06,vy:(rng()-0.5)*0.06,radius:3.5+rng()*3.5,mass,orbitPhase:0,pulsePhase:rng()*Math.PI*2,creatorId:localPeerId,creatorName:localPeerName,trail:[],isSun:false,orbitingSunId:null,orbitRadius:0,orbitAngle:0,orbitSpeed:0,orbitDirection:1,fadeIn:0,starTypeName:typeInfo.name,starTypeMul:typeInfo.sizeMul,starColor:typeInfo.color,hasRing:typeInfo.hasRing||false,gasGiant:typeInfo.gasGiant||false,systemId:null,initialMass:mass,initialRadius:3.5+rng()*3.5,isTemp:false};
-      note.radius=note.initialRadius;notes.push(note);debouncedSave(note);updateCounter();showToast(`${localPeerName} created a ${typeInfo.name}`,note);if(navigator.vibrate)navigator.vibrate(15);for(let i=0;i<35;i++)spawnBurst(x,y,false);updatePresence(note.id);return note;
-    }
-    function deleteNote(id){let star=notes.find(n=>n.id===id);if(star)for(let i=0;i<55;i++){let a=Math.random()*Math.PI*2,s=0.4+Math.random()*1.4;decayParticles.push({x:star.x,y:star.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:2+Math.random()*3.5,size:1.2+Math.random()*3,color:`hsl(${30+Math.random()*40},80%,60%)`});}notes=notes.filter(n=>n.id!==id);deleteNoteFromFirestore(id);updateCounter();}
-    function updateCounter(){document.getElementById("starCountValue").innerText=notes.length+tempStars.length;}
-
-    function computeClusters(){
-      let threshold=300,visited=new Set(),clusters=[];for(let i=0;i<notes.length;i++){if(visited.has(i))continue;let comp=[],queue=[i];visited.add(i);while(queue.length){let idx=queue.pop();comp.push(idx);for(let j=0;j<notes.length;j++){if(visited.has(j))continue;let dx=notes[idx].x-notes[j].x,dy=notes[idx].y-notes[j].y;if(dx*dx+dy*dy<threshold*threshold){visited.add(j);queue.push(j);}}}if(comp.length>=3){let cx=0,cy=0;for(let idx of comp){cx+=notes[idx].x;cy+=notes[idx].y;}cx/=comp.length;cy/=comp.length;let starIds=comp.map(i=>notes[i].id),name=namedConstellations.find(nc=>nc.starIds.length===starIds.length&&nc.starIds.every(id=>starIds.includes(id)))?.name||null;clusters.push({starIds,centroid:{x:cx,y:cy},name});}}currentClusters=clusters;
-    }
-    function autoNameUnnamedClusters(){for(let cluster of currentClusters){if(!cluster.name&&cluster.starIds.length>=3){let existing=namedConstellations.find(c=>c.starIds.join(',')===cluster.starIds.join(','));if(!existing){let newName=autoNames[Math.floor(Math.random()*autoNames.length)];while(namedConstellations.some(c=>c.name===newName))newName+=" "+(Math.floor(Math.random()*100)+1);namedConstellations.push({starIds:cluster.starIds,name:newName});if(isOnline)try{constellationsCollection.doc(cluster.starIds.join(',')).set({starIds:cluster.starIds,name:newName});}catch(e){}showToast(`New system: ${newName}`);}}}}
-
-    async function spawnEphemeralBatch(count=0){if(!quotesLoaded)return;if(count<=0)count=1+Math.floor(Math.random()*3);let specialIndex=Math.floor(Math.random()*count);for(let i=0;i<count;i++){let isSpecial=(i===specialIndex),expiryDays=1+Math.random()*30,expiresAt=Date.now()+expiryDays*86400000,starId='temp_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),rng=makeSeededRandom(starId),x=(rng()-0.5)*SPAWN_RADIUS*2,y=(rng()-0.5)*SPAWN_RADIUS*2,vx=(rng()-0.5)*0.06,vy=(rng()-0.5)*0.06,mass=1.0+rng()*4,typeInfo=pickDeterministicType(rng,true);let tempStar={id:starId,x,y,vx,vy,mass,createdAt:Date.now(),expiresAt,message:getRandomQuote(isSpecial),isSpecial,rewarded:false,creatorId:null,isTemp:true,systemId:null,initialMass:mass,initialRadius:4+rng()*3,starTypeName:typeInfo.name,starTypeMul:typeInfo.sizeMul,starColor:typeInfo.color,hasRing:false,gasGiant:false};tempStar.radius=tempStar.initialRadius;if(isOnline)try{await tempStarsCollection.doc(tempStar.id).set(tempStar);}catch(e){saveLocalStar(tempStar);}else saveLocalStar(tempStar);}showToast(`${count} new ephemeral stars have appeared`);}
-    let ephemeralTimer=null;function scheduleEphemeralSpawns(){let fd=(10+Math.floor(Math.random()*20))*60000,imn=30*60000,imx=90*60000;function sn(){let d=imn+Math.random()*(imx-imn);ephemeralTimer=setTimeout(()=>{spawnEphemeralBatch();sn();},d);}ephemeralTimer=setTimeout(()=>{spawnEphemeralBatch();sn();},fd);}
-
-    function listenToFirestore(){
-      notesCollection.onSnapshot(snap=>{snap.docChanges().forEach(ch=>{let data=ch.doc.data();if(ch.type==="added"||ch.type==="modified"){let idx=notes.findIndex(n=>n.id===data.id);if(idx!==-1){notes[idx].text=data.text;notes[idx].creatorName=data.creatorName;notes[idx].starTypeName=data.starType;notes[idx].starTypeMul=data.starTypeMul;notes[idx].starColor={core:data.starColorCore,glow:data.starColorGlow};notes[idx].hasRing=data.hasRing;notes[idx].gasGiant=data.gasGiant;notes[idx].initialMass=data.initialMass;notes[idx].initialRadius=data.initialRadius;}else{let rng=makeSeededRandom(data.id);notes.push({...data,x:(rng()-0.5)*SPAWN_RADIUS*2,y:(rng()-0.5)*SPAWN_RADIUS*2,vx:(rng()-0.5)*0.06,vy:(rng()-0.5)*0.06,radius:data.initialRadius,mass:data.initialMass,trail:[],fadeIn:1,systemId:null,isSun:false,pulsePhase:rng()*Math.PI*2,starTypeName:data.starType||"Main Sequence",starTypeMul:data.starTypeMul||1.0,starColor:{core:data.starColorCore||"#88aaff",glow:data.starColorGlow||"rgba(100,150,255,0.5)"},hasRing:data.hasRing||false,gasGiant:data.gasGiant||false,isTemp:false});}}else if(ch.type==="removed"){let r=notes.find(n=>n.id===ch.doc.id);if(r)for(let i=0;i<55;i++){let a=Math.random()*Math.PI*2,s=0.4+Math.random()*1.4;decayParticles.push({x:r.x,y:r.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:2+Math.random()*3.5,size:1.2+Math.random()*3,color:`hsl(${30+Math.random()*40},80%,60%)`});}notes=notes.filter(n=>n.id!==ch.doc.id);}});updateCounter();computeClusters();autoNameUnnamedClusters();});
-      constellationsCollection.onSnapshot(snap=>{snap.docChanges().forEach(ch=>{let data=ch.doc.data();if(ch.type==="added"||ch.type==="modified"){let ex=namedConstellations.findIndex(c=>c.starIds.join(',')===data.starIds.join(','));if(ex!==-1)namedConstellations[ex]=data;else namedConstellations.push(data);}else if(ch.type==="removed")namedConstellations=namedConstellations.filter(c=>c.starIds.join(',')!==data.starIds.join(','));});});
-      presenceCollection.onSnapshot(snap=>{snap.docChanges().forEach(ch=>{let data=ch.doc.data();if(!data||data.peerId===localPeerId)return;if(ch.type==="removed")delete peerGlows[data.peerId];else peerGlows[data.peerId]={starId:data.starId,timestamp:data.timestamp,color:getPeerColor(data.peerId)};});});
-    }
-    function listenToTempStars(){
-      tempStarsCollection.onSnapshot(snap=>{snap.docChanges().forEach(ch=>{let data=ch.doc.data();if(ch.type==="added"){let rng=makeSeededRandom(data.id);data.x=(rng()-0.5)*SPAWN_RADIUS*2;data.y=(rng()-0.5)*SPAWN_RADIUS*2;data.vx=(rng()-0.5)*0.06;data.vy=(rng()-0.5)*0.06;data.radius=data.initialRadius;data.starTypeName=data.starTypeName||'Ember Wisp';data.starTypeMul=data.starTypeMul||1.0;data.starColor=data.starColor||{core:"#ffaa66",glow:"rgba(255,160,80,0.6)"};tempStars.push(data);}else if(ch.type==="modified"){let idx=tempStars.findIndex(s=>s.id===data.id);if(idx!==-1)tempStars[idx]={...tempStars[idx],...data};}else if(ch.type==="removed"){let r=tempStars.find(s=>s.id===ch.doc.id);if(r)for(let i=0;i<55;i++){let a=Math.random()*Math.PI*2,s=0.4+Math.random()*1.4;decayParticles.push({x:r.x,y:r.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:2+Math.random()*3.5,size:1.2+Math.random()*3,color:`hsl(${30+Math.random()*40},80%,60%)`});}tempStars=tempStars.filter(s=>s.id!==ch.doc.id);}});updateCounter();});
-    }
-
-    // ========== UI HELPERS ==========
-    function showToast(msg,target){let wx,wy;if(target&&target.x!==undefined){wx=target.x;wy=target.y-(target.radius||5)*0.8;}else{wx=(w/2-w/2)/camera.zoom-camera.x;wy=(h*0.12-h/2)/camera.zoom-camera.y;}let duration=Math.min(8000,Math.max(2000,msg.length*45+500));floatingMessages.push({worldX:wx,worldY:wy,text:msg,created:performance.now(),duration,life:1});}
-
-    let isPan=false,panStart={x:0,y:0},camStart={x:0,y:0},lastTapTime=0,pendingSingleClick=null;
-    function worldPos(px,py){return{x:(px-w/2)/camera.zoom-camera.x,y:(py-h/2)/camera.zoom-camera.y};}
-    function hitTest(px,py){let wp=worldPos(px,py),best=null,bestD=100;for(let n of notes){if(!isVisible(n.x,n.y,n.radius*4))continue;let d=(wp.x-n.x)**2+(wp.y-n.y)**2,th=Math.min(100,45+(n.radius||3.5)*3)**2;if(d<th&&d<bestD){bestD=d;best=n;}}for(let t of tempStars){let d=(wp.x-t.x)**2+(wp.y-t.y)**2;if(d<700&&d<bestD){bestD=d;best=t;}}return best;}
-    function hitTestConstellation(px,py){let wp=worldPos(px,py);for(let cl of currentClusters)if(cl.starIds.length>=3){let d=(wp.x-cl.centroid.x)**2+(wp.y-cl.centroid.y)**2;if(d<4000)return cl;}return null;}
-
-    async function showPreview(star,cx,cy){
-      let creatorInfo="",text="";if(star.isTemp){if(star.isSpecial&&!star.rewarded){if(isOnline)try{await tempStarsCollection.doc(star.id).update({rewarded:true});}catch(e){}star.rewarded=true;currentStreak+=1;localStorage.setItem('stellaris_streak',currentStreak);updateStreakCounter();for(let i=0;i<55;i++){let a=Math.random()*Math.PI*2,s=0.4+Math.random()*1.4;decayParticles.push({x:star.x,y:star.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:2+Math.random()*3.5,size:1.2+Math.random()*3,color:`hsl(${30+Math.random()*40},80%,60%)`});}}creatorInfo=star.isSpecial?'✦ SPECIAL EPHEMERAL ✦':'✨ ephemeral star';text=star.message||"";}else{creatorInfo=(star.creatorName&&star.creatorName!==localPeerName)?`from ${star.creatorName}`:"";text=star.text.length>85?star.text.slice(0,82)+"…":star.text;}let full=creatorInfo;if(text)full+=" · "+text;showToast(full,star);updatePresence(star.id);}
-
-    // ========== EDIT ONLY YOUR OWN STARS ==========
-    function openEdit(id){
-      let star=notes.find(s=>s.id===id);
-      if(!star) return;
-      if(star.creatorId !== localPeerId) {
-        showToast("you can only edit your own stars", star);
-        return;
-      }
-      activeId=id;
-      document.getElementById("editCreator").innerText=star.creatorName?`created by ${star.creatorName}`:"";
-      document.getElementById("memoryEditor").value=star.text;
-      let m=document.getElementById("editModal");
-      m.style.display="flex";
-      requestAnimationFrame(()=>m.classList.add("visible"));
-    }
-    function saveEdit(){
-      if(activeId){
-        let star=notes.find(s=>s.id===activeId);
-        if(star && star.creatorId === localPeerId){
-          star.text=document.getElementById("memoryEditor").value;
-          if(!star.text.trim())star.text="a distant echo";
-          debouncedSave(star);
-        }
-        activeId=null;
-      }
-      closeModal(document.getElementById("editModal"));
-    }
-    function closeModal(m){m.classList.remove("visible");setTimeout(()=>m.style.display="none",250);}
-
-    // ========== INITIALIZATION ==========
-    function startApp(name){localPeerName=name;localStorage.setItem('stellaris_peer_name',name);document.getElementById('nameModal').classList.remove('visible');setTimeout(()=>document.getElementById('nameModal').style.display='none',350);initApp();}
-    function initApp(){
-      try{db.enablePersistence({synchronizeTabs:true}).catch(err=>console.warn('Offline persistence error:',err));}catch(e){}
-      initWorld();canvasElem=document.getElementById("cosmicCanvas");
-      function resize(){w=innerWidth;h=innerHeight;canvasElem.width=w*devicePixelRatio;canvasElem.height=h*devicePixelRatio;canvasElem.style.width=w+"px";canvasElem.style.height=h+"px";ctx=canvasElem.getContext("2d");ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
-      resize();window.addEventListener("resize",resize);
-      loadLocalStars();listenToFirestore();listenToTempStars();updateCounter();updateStreakCounter();
-      loadQuotes().then(()=>{scheduleEphemeralSpawns();});
-      setTimeout(()=>loadStarPositions(),2000);
-
-      // Hide loading overlay after 2.5 seconds
-      setTimeout(() => {
-        const loader = document.getElementById('loadingOverlay');
-        if (loader) loader.classList.add('hidden');
-      }, 2500);
-
-      document.getElementById("resetViewBtn").onclick=()=>{camera.x=0;camera.y=0;camera.targetZoom=1.0;showToast("view reset to center");};
-      document.getElementById("novaBtn").onclick=()=>{let ns=createMemory("");openEdit(ns.id);};
-      document.getElementById("saveMemoryBtn").onclick=saveEdit;
-      document.getElementById("cancelEditBtn").onclick=()=>closeModal(document.getElementById("editModal"));
-      document.getElementById("closeViewBtn").onclick=()=>closeModal(document.getElementById("viewModal"));
-      document.getElementById("editFromViewBtn").onclick=()=>{closeModal(document.getElementById("viewModal"));setTimeout(()=>{if(activeId)openEdit(activeId);},100);};
-
-      let currentClusterForName=null;
-      function promptConstellationName(cl){currentClusterForName=cl;document.getElementById("constellationNameInput").value=cl.name||"";let m=document.getElementById("constellationNameModal");m.style.display="flex";requestAnimationFrame(()=>m.classList.add("visible"));}
-      document.getElementById("saveConstellationName").onclick=()=>{let name=document.getElementById("constellationNameInput").value.trim();if(name&&currentClusterForName){let ex=namedConstellations.findIndex(c=>c.starIds.join(',')===currentClusterForName.starIds.join(','));if(ex!==-1)namedConstellations[ex].name=name;else namedConstellations.push({starIds:currentClusterForName.starIds,name});if(isOnline)try{constellationsCollection.doc(currentClusterForName.starIds.join(',')).set({starIds:currentClusterForName.starIds,name});}catch(e){}showToast(`System named: ${name}`);}closeModal(document.getElementById("constellationNameModal"));currentClusterForName=null;};
-      document.getElementById("cancelConstellationName").onclick=()=>{closeModal(document.getElementById("constellationNameModal"));currentClusterForName=null;};
-
-      canvasElem.addEventListener("touchstart",e=>{e.preventDefault();let t=e.touches[0],star=hitTest(t.clientX,t.clientY),cl=hitTestConstellation(t.clientX,t.clientY);if(cl){promptConstellationName(cl);return;}if(star){let now=Date.now();if(now-lastTapTime<300){if(pendingSingleClick)clearTimeout(pendingSingleClick);if(!star.isTemp)openEdit(star.id);else showToast("ephemeral stars cannot be edited.",star);lastTapTime=0;}else{lastTapTime=now;pendingSingleClick=setTimeout(()=>{showPreview(star,t.clientX,t.clientY);pendingSingleClick=null;},150);}}else{lastTapTime=0;isPan=true;panStart={x:t.clientX,y:t.clientY};camStart={x:camera.x,y:camera.y};if(pendingSingleClick){clearTimeout(pendingSingleClick);pendingSingleClick=null;}}},{passive:false});
-      canvasElem.addEventListener("touchmove",e=>{if(isPan&&e.touches.length===1){let dx=e.touches[0].clientX-panStart.x,dy=e.touches[0].clientY-panStart.y;camera.x=camStart.x+dx/camera.zoom;camera.y=camStart.y+dy/camera.zoom;e.preventDefault();}if(pendingSingleClick){clearTimeout(pendingSingleClick);pendingSingleClick=null;}},{passive:false});
-      canvasElem.addEventListener("touchend",()=>{isPan=false;});
-      canvasElem.addEventListener("mousedown",e=>{let star=hitTest(e.clientX,e.clientY),cl=hitTestConstellation(e.clientX,e.clientY);if(cl){promptConstellationName(cl);return;}if(star){if(e.detail===2){if(!star.isTemp)openEdit(star.id);else showToast("ephemeral stars cannot be edited.",star);}else showPreview(star,e.clientX,e.clientY);}else{isPan=true;panStart={x:e.clientX,y:e.clientY};camStart={x:camera.x,y:camera.y};}});
-      window.addEventListener("mousemove",e=>{if(isPan){camera.x=camStart.x+(e.clientX-panStart.x)/camera.zoom;camera.y=camStart.y+(e.clientY-panStart.y)/camera.zoom;}});
-      window.addEventListener("mouseup",()=>{isPan=false;});
-      canvasElem.addEventListener("wheel",e=>{e.preventDefault();camera.targetZoom=Math.min(MAX_ZOOM,Math.max(MIN_ZOOM,camera.targetZoom*(e.deltaY>0?0.92:1.08)));},{passive:false});
-
-      let ipd=0,iz=1.0;function gpd(t){if(t.length<2)return 0;let dx=t[0].clientX-t[1].clientX,dy=t[0].clientY-t[1].clientY;return Math.hypot(dx,dy);}
-      canvasElem.addEventListener('touchstart',e=>{if(e.touches.length===2){e.preventDefault();ipd=gpd(e.touches);iz=camera.zoom;}});
-      canvasElem.addEventListener('touchmove',e=>{if(e.touches.length===2){e.preventDefault();let nd=gpd(e.touches);if(ipd>0)camera.targetZoom=Math.min(MAX_ZOOM,Math.max(MIN_ZOOM,iz*(nd/ipd)));}});
-      canvasElem.addEventListener('touchend',()=>{ipd=0;});
-
-      positionSaveInterval=setInterval(()=>{saveStarPositions();},60000);
-      window.addEventListener('beforeunload',()=>{saveStarPositions();});
-
-      let lastFrameTime=performance.now()/1000;
-      function animateLoop(){let nowSec=performance.now()/1000;lastFrameTime=nowSec;updateFlowField(nowSec);updateOrganic(nowSec);updateFlowParticles();updateNebulaColors();simulate(nowSec);render();requestAnimationFrame(animateLoop);}
-      requestAnimationFrame(animateLoop);
-    }
-
-    if(!localPeerName){document.getElementById('nameModal').style.display='flex';requestAnimationFrame(()=>document.getElementById('nameModal').classList.add('visible'));document.getElementById('saveNameBtn').onclick=()=>{let name=document.getElementById('nameInput').value.trim();if(!name)name='stargazer';startApp(name);};}
-    else initApp();
-  })();
+  if(!localPeerName){document.getElementById('nameModal').style.display='flex';requestAnimationFrame(()=>document.getElementById('nameModal').classList.add('visible'));document.getElementById('saveNameBtn').onclick=()=>{let name=document.getElementById('nameInput').value.trim();if(!name)name='stargazer';startApp(name);};}
+  else initApp();
+})();
 </script>
 </body>
 </html>
