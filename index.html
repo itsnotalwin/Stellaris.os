@@ -23,10 +23,21 @@
       opacity:1;transition:opacity 0.6s ease-out;
     }
     #loadingOverlay.hidden{opacity:0;pointer-events:none}
-    .loading-star{font-size:60px;color:#ffd966;animation:pulse 1.2s ease-in-out infinite;text-shadow:0 0 20px rgba(255,200,100,0.6)}
-    @keyframes pulse{0%,100%{transform:scale(1);opacity:0.8}50%{transform:scale(1.15);opacity:1}}
-    .loading-text{margin-top:20px;color:#888;font-size:14px;letter-spacing:2px;text-transform:uppercase}
-    .loading-ring{margin-top:30px;width:40px;height:40px;border:2px solid rgba(255,255,255,0.1);border-top-color:#ffd966;border-radius:50%;animation:spin 1s linear infinite}
+    .loading-star{
+      font-size:60px;color:#ffd966;animation:pulse 1.2s ease-in-out infinite;
+      text-shadow:0 0 20px rgba(255,200,100,0.6);
+    }
+    @keyframes pulse{
+      0%,100%{transform:scale(1);opacity:0.8}
+      50%{transform:scale(1.15);opacity:1}
+    }
+    .loading-text{
+      margin-top:20px;color:#888;font-size:14px;letter-spacing:2px;text-transform:uppercase;
+    }
+    .loading-ring{
+      margin-top:30px;width:40px;height:40px;border:2px solid rgba(255,255,255,0.1);
+      border-top-color:#ffd966;border-radius:50%;animation:spin 1s linear infinite;
+    }
     @keyframes spin{to{transform:rotate(360deg)}}
     .float-btn,.bottom-btn{
       position:absolute;display:flex;align-items:center;justify-content:center;z-index:120;cursor:pointer;
@@ -72,9 +83,6 @@
     .actions button:active{transform:scale(0.96);background:rgba(48,48,52,0.9)}
     .name-input{width:100%;background:rgba(0,0,10,0.6);border:0.5px solid rgba(120,120,128,0.3);border-radius:24px;padding:12px 20px;color:#fff;font-size:16px;text-align:center;outline:none}
   </style>
-  <!-- Firebase SDKs -- optional, app works without them -->
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
 </head>
 <body>
 <div id="app">
@@ -96,11 +104,34 @@
 </div>
 
 <script>
-  // Inline service worker
+  // Inline service worker registration
   if ('serviceWorker' in navigator) {
-    const swCode = `const CACHE_NAME='stellaris-v3';const urlsToCache=['.'];self.addEventListener('install',e=>{e.waitUntil(caches.open(CACHE_NAME).then(c=>c.addAll(urlsToCache).catch(()=>{})))});self.addEventListener('fetch',e=>{e.respondWith(fetch(e.request).then(r=>{let rc=r.clone();caches.open(CACHE_NAME).then(c=>c.put(e.request,rc));return r}).catch(()=>caches.match(e.request)))});self.addEventListener('activate',e=>{e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k!==CACHE_NAME).map(k=>caches.delete(k)))))});`;
+    const swCode = `
+      const CACHE_NAME = 'stellaris-v2';
+      const urlsToCache = ['.'];
+      self.addEventListener('install', event => {
+        event.waitUntil(
+          caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache).catch(err => console.log('Cache error:', err)))
+        );
+      });
+      self.addEventListener('fetch', event => {
+        event.respondWith(
+          fetch(event.request).then(response => {
+            let responseClone = response.clone();
+            caches.open(CACHE_NAME).then(cache => cache.put(event.request, responseClone));
+            return response;
+          }).catch(() => caches.match(event.request))
+        );
+      });
+      self.addEventListener('activate', event => {
+        event.waitUntil(
+          caches.keys().then(cacheNames => Promise.all(cacheNames.filter(name => name !== CACHE_NAME).map(name => caches.delete(name))))
+        );
+      });
+    `;
     const blob = new Blob([swCode], { type: 'application/javascript' });
-    navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+    const swUrl = URL.createObjectURL(blob);
+    navigator.serviceWorker.register(swUrl).catch(err => console.warn('SW failed', err));
   }
 
   (function(){
@@ -110,38 +141,8 @@
     // ========== OFFLINE DETECTION ==========
     let isOnline = navigator.onLine;
     const offlineIndicator = document.getElementById('offlineIndicator');
-    window.addEventListener('online', () => { isOnline = true; offlineIndicator.classList.remove('show'); syncLocalData(); });
+    window.addEventListener('online', () => { isOnline = true; offlineIndicator.classList.remove('show'); });
     window.addEventListener('offline', () => { isOnline = false; offlineIndicator.classList.add('show'); });
-
-    // ========== FIREBASE (optional) ==========
-    let db = null;
-    let notesCollection = null;
-    let constellationsCollection = null;
-    let tempStarsCollection = null;
-    let presenceCollection = null;
-    let firebaseReady = false;
-    try {
-      if (typeof firebase !== 'undefined') {
-        const firebaseConfig = {
-          apiKey: "AIzaSyA07--fyHuHINmX8wd182RHqpPNyDmumDE",
-          authDomain: "farts-c8c49.firebaseapp.com",
-          projectId: "farts-c8c49",
-          storageBucket: "farts-c8c49.firebasestorage.app",
-          messagingSenderId: "143589845026",
-          appId: "1:143589845026:web:b8c8cddeefc266bf52c27b"
-        };
-        firebase.initializeApp(firebaseConfig);
-        db = firebase.firestore();
-        notesCollection = db.collection("notes");
-        constellationsCollection = db.collection("constellations");
-        tempStarsCollection = db.collection("tempStars");
-        presenceCollection = db.collection("presence");
-        db.enablePersistence({ synchronizeTabs: true }).catch(() => {});
-        firebaseReady = true;
-      }
-    } catch (e) {
-      console.warn('Firebase not available – running in offline mode');
-    }
 
     // ========== LOCAL STORAGE HELPERS ==========
     function saveLocalStar(note) {
@@ -161,9 +162,8 @@
       local.forEach(data => {
         if (!notes.find(n => n.id === data.id) && !tempStars.find(t => t.id === data.id)) {
           let rng = makeSeededRandom(data.id);
-          let radius = SPAWN_RADIUS;
-          data.x = data.x || (rng() - 0.5) * radius * 2;
-          data.y = data.y || (rng() - 0.5) * radius * 2;
+          data.x = data.x || (rng() - 0.5) * SPAWN_RADIUS * 2;
+          data.y = data.y || (rng() - 0.5) * SPAWN_RADIUS * 2;
           data.vx = data.vx || (rng() - 0.5) * 0.06;
           data.vy = data.vy || (rng() - 0.5) * 0.06;
           data.radius = data.initialRadius || 4;
@@ -181,19 +181,6 @@
         }
       });
       updateCounter();
-    }
-    async function syncLocalData() {
-      if (!isOnline || !firebaseReady) return;
-      let local = JSON.parse(localStorage.getItem('stellaris_localStars') || '[]');
-      if (local.length === 0) return;
-      for (let star of local) {
-        try {
-          if (star.isTemp) await tempStarsCollection.doc(star.id).set(star, { merge: true });
-          else await notesCollection.doc(star.id).set(star, { merge: true });
-        } catch (e) {}
-      }
-      localStorage.removeItem('stellaris_localStars');
-      showToast('Local stars synced to the cosmos ✦');
     }
 
     // ========== SEEDED PRNG ==========
@@ -224,7 +211,6 @@
       fetch('quotes.json').then(r=>r.json()).then(d=>{
         if(d.regular) quoteLibrary = d.regular;
         if(d.special) specialQuotes = d.special;
-        quotesLoaded = true;
       }).catch(()=>{});
     }
     function getRandomQuote(isSpecial) {
@@ -314,6 +300,13 @@
     let fractalPatterns = {};
     let floatingMessages = [];
     let dustMotes = [];
+
+    // ---- Interpolation state ----
+    let interpolating = false;
+    let interpolStart = {};
+    let interpolTarget = {};
+    let interpolDuration = 15000; // 15 seconds
+    let interpolStartTime = 0;
 
     // Reaction‑diffusion
     const RD_SIZE = 80;
@@ -641,102 +634,148 @@
     }
     function updateFlowParticles(){for(let p of flowParticles){let angle=getFlowAngle(p.x,p.y);p.vx+=Math.cos(angle)*0.025;p.vy+=Math.sin(angle)*0.025;let spd=p.vx*p.vx+p.vy*p.vy;if(spd>4.0){p.vx*=0.97;p.vy*=0.97;}p.x+=p.vx;p.y+=p.vy;wrapPosition(p,100);p.life=(p.life+0.4)%100;}}
 
-    // ========== FIREBASE HELPERS (hybrid) ==========
-    async function saveNoteToFirestore(note) {
-      saveLocalStar(note);
-      if (firebaseReady) try { await notesCollection.doc(note.id).set({...note, isTemp:false}); } catch(e) {}
+    // ========== POSITION SAVING / LOADING (localStorage) ==========
+    function saveStarPositions() {
+      let positions = {};
+      for (let star of [...notes, ...tempStars]) {
+        positions[star.id] = { x: star.x, y: star.y, vx: star.vx, vy: star.vy };
+      }
+      localStorage.setItem('stellaris_starPositions', JSON.stringify(positions));
     }
-    function debouncedSave(note){ if(saveTimer)clearTimeout(saveTimer); saveTimer=setTimeout(()=>saveNoteToFirestore(note),500); }
-    async function deleteNoteFromFirestore(id) {
-      deleteLocalStar(id);
-      if (firebaseReady) try { await notesCollection.doc(id).delete(); } catch(e) {}
-    }
-    function updatePresence(starId) {
-      if (!firebaseReady) return;
-      let now=Date.now(); if(now-lastPresenceUpdate<2000) return; lastPresenceUpdate=now;
-      try { presenceCollection.doc(localPeerId).set({peerId:localPeerId,starId,timestamp:now}); } catch(e) {}
-    }
-    let lastPresenceUpdate = 0;
-    function getPeerColor(peerId){ let hash=0; for(let i=0;i<peerId.length;i++) hash=peerId.charCodeAt(i)+((hash<<5)-hash); return `hsl(${hash%360},70%,65%)`; }
 
-    // ========== POSITION SAVING/LOADING ==========
-    let lastSavedPositions = new Map();
-    async function saveStarPositions() {
-      if (!firebaseReady || !isOnline) return;
-      let allStars = [...notes, ...tempStars];
-      let batch = db.batch(), writes = 0, now = firebase.firestore.FieldValue.serverTimestamp();
-      for (let star of allStars) {
-        let last = lastSavedPositions.get(star.id);
-        let dx = last ? Math.abs(star.x - last.x) : 5, dy = last ? Math.abs(star.y - last.y) : 5;
-        if (dx > 5 || dy > 5 || !last) {
-          batch.set(db.collection('starPositions').doc(star.id), {x:star.x,y:star.y,vx:star.vx,vy:star.vy,mass:star.mass,radius:star.radius,updatedAt:now}, {merge:true});
-          lastSavedPositions.set(star.id, {x:star.x, y:star.y, updatedAt:Date.now()});
-          writes++;
-        }
+    function loadStarPositions() {
+      let saved = localStorage.getItem('stellaris_starPositions');
+      if (!saved) return;
+      let positions = JSON.parse(saved);
+      let updates = [];
+      for (let star of [...notes, ...tempStars]) {
+        let pos = positions[star.id];
+        if (pos) updates.push({ star, targetX: pos.x, targetY: pos.y, targetVx: pos.vx, targetVy: pos.vy });
       }
-      if (writes > 0) await batch.commit();
-    }
-    async function loadStarPositions() {
-      if (!firebaseReady || !isOnline) return;
-      let snapshot = await db.collection('starPositions').get(), updates = [];
-      snapshot.forEach(doc => {
-        let data = doc.data();
-        let star = [...notes, ...tempStars].find(s => s.id === doc.id);
-        if (star) updates.push({star, targetX:data.x, targetY:data.y, targetVx:data.vx, targetVy:data.vy});
-      });
       if (updates.length === 0) return;
-      let start = {}, target = {}, startTime = performance.now(), duration = 15000;
+
+      interpolating = true;
+      interpolStart = {};
+      interpolTarget = {};
+      interpolStartTime = performance.now();
       for (let u of updates) {
-        start[u.star.id] = {x:u.star.x, y:u.star.y, vx:u.star.vx, vy:u.star.vy};
-        target[u.star.id] = {x:u.targetX, y:u.targetY, vx:u.targetVx, vy:u.targetVy};
+        interpolStart[u.star.id] = { x: u.star.x, y: u.star.y, vx: u.star.vx, vy: u.star.vy };
+        interpolTarget[u.star.id] = { x: u.targetX, y: u.targetY, vx: u.targetVx, vy: u.targetVy };
       }
-      let interpolating = true;
-      function step() {
-        let t = Math.min(1, (performance.now() - startTime) / duration);
-        let ease = t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2, 3)/2;
-        for (let star of [...notes, ...tempStars]) {
-          let s = start[star.id], tgt = target[star.id];
-          if (s && tgt) {
-            star.x = s.x + (tgt.x - s.x) * ease;
-            star.y = s.y + (tgt.y - s.y) * ease;
-            star.vx = s.vx + (tgt.vx - s.vx) * ease;
-            star.vy = s.vy + (tgt.vy - s.vy) * ease;
-          }
-        }
-        if (t < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
       showToast("Universe positions drifting into place...");
+    }
+
+    function updateInterpolation(now) {
+      if (!interpolating) return;
+      let elapsed = now - interpolStartTime;
+      let t = Math.min(1, elapsed / interpolDuration);
+      let ease = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+      for (let star of [...notes, ...tempStars]) {
+        let s = interpolStart[star.id], tgt = interpolTarget[star.id];
+        if (s && tgt) {
+          star.x = s.x + (tgt.x - s.x) * ease;
+          star.y = s.y + (tgt.y - s.y) * ease;
+          star.vx = s.vx + (tgt.vx - s.vx) * ease;
+          star.vy = s.vy + (tgt.vy - s.vy) * ease;
+        }
+      }
+      if (t >= 1) interpolating = false;
     }
 
     // ========== SIMULATION ==========
     function simulate(nowSec){
-      updateMassesAndRadii(nowSec);
-      for(let note of notes){
-        if(!note.trail)note.trail=[]; note.trail.push({x:note.x,y:note.y}); if(note.trail.length>25)note.trail.shift();
-        if(note.fadeIn!=null&&note.fadeIn<1)note.fadeIn+=0.02;
-        if(!note.systemId){let fa=getFlowAngle(note.x,note.y);note.vx=(note.vx||0)+Math.cos(fa)*0.006;note.vy=(note.vy||0)+Math.sin(fa)*0.006;}
-        else{note.vx+=(Math.random()-0.5)*0.015;note.vy+=(Math.random()-0.5)*0.015;}
-        note.vx=(note.vx||0)*0.995;note.vy=(note.vy||0)*0.995;note.x+=note.vx;note.y+=note.vy;wrapPosition(note,note.radius);capVelocity(note);
-        note.pulsePhase=(note.pulsePhase||0)+0.008;let ageMs=Date.now()-note.created;note._isBirthday=(ageMs>=561600000&&ageMs<=648000000)||(ageMs>=2548800000&&ageMs<=2635200000);note._ageMonths=ageMs/2592000000;
+      let now = Date.now();
+      updateInterpolation(now);
+      if (!interpolating) {
+        updateMassesAndRadii(nowSec);
+        for (let note of notes) {
+          if (!note.trail) note.trail = [];
+          note.trail.push({x: note.x, y: note.y});
+          if (note.trail.length > 25) note.trail.shift();
+          if (note.fadeIn != null && note.fadeIn < 1) note.fadeIn += 0.02;
+          if (!note.systemId) {
+            let fa = getFlowAngle(note.x, note.y);
+            note.vx = (note.vx || 0) + Math.cos(fa) * 0.006;
+            note.vy = (note.vy || 0) + Math.sin(fa) * 0.006;
+          } else {
+            note.vx += (Math.random() - 0.5) * 0.015;
+            note.vy += (Math.random() - 0.5) * 0.015;
+          }
+          note.vx = (note.vx || 0) * 0.995;
+          note.vy = (note.vy || 0) * 0.995;
+          note.x += note.vx;
+          note.y += note.vy;
+          wrapPosition(note, note.radius);
+          capVelocity(note);
+          note.pulsePhase = (note.pulsePhase || 0) + 0.008;
+          let ageMs = now - note.created;
+          note._isBirthday = (ageMs >= 561600000 && ageMs <= 648000000) || (ageMs >= 2548800000 && ageMs <= 2635200000);
+          note._ageMonths = ageMs / 2592000000;
+        }
+        for (let ts of tempStars) {
+          if (!ts.isTemp) continue;
+          if (!ts.systemId) {
+            let fa = getFlowAngle(ts.x, ts.y);
+            ts.vx = (ts.vx || 0) + Math.cos(fa) * 0.006;
+            ts.vy = (ts.vy || 0) + Math.sin(fa) * 0.006;
+          } else {
+            ts.vx += (Math.random() - 0.5) * 0.015;
+            ts.vy += (Math.random() - 0.5) * 0.015;
+          }
+          ts.vx = (ts.vx || 0) * 0.995;
+          ts.vy = (ts.vy || 0) * 0.995;
+          ts.x += ts.vx;
+          ts.y += ts.vy;
+          wrapPosition(ts, 20);
+          capVelocity(ts);
+        }
+        applyUniversalGravity();
+        updateSolarSystems();
+        stabilizeSystemMotion();
       }
-      for(let ts of tempStars){if(!ts.isTemp)continue;if(!ts.systemId){let fa=getFlowAngle(ts.x,ts.y);ts.vx=(ts.vx||0)+Math.cos(fa)*0.006;ts.vy=(ts.vy||0)+Math.sin(fa)*0.006;}else{ts.vx+=(Math.random()-0.5)*0.015;ts.vy+=(Math.random()-0.5)*0.015;}ts.vx=(ts.vx||0)*0.995;ts.vy=(ts.vy||0)*0.995;ts.x+=ts.vx;ts.y+=ts.vy;wrapPosition(ts,20);capVelocity(ts);}
-      applyUniversalGravity();updateSolarSystems();stabilizeSystemMotion();
-      for(let i=0;i<tempStars.length;i++){let ts=tempStars[i];if(ts.expiresAt<Date.now()){if(ts.systemId){let sys=[...notes.filter(s=>s.systemId===ts.systemId),...tempStars.filter(t=>t.systemId===ts.systemId&&t!==ts)];for(let s of sys){let a=Math.random()*Math.PI*2,sp=1.5+Math.random()*1.5;s.vx=(s.vx||0)+Math.cos(a)*sp;s.vy=(s.vy||0)+Math.sin(a)*sp;capVelocity(s);s.systemId=null;if(s.isSun)s.isSun=false;}}if(firebaseReady)try{tempStarsCollection.doc(ts.id).delete();}catch(e){}tempStars.splice(i,1);i--;for(let p=0;p<55;p++){let a=Math.random()*Math.PI*2,sp=0.4+Math.random()*1.4;decayParticles.push({x:ts.x,y:ts.y,vx:Math.cos(a)*sp,vy:Math.sin(a)*sp,life:2+Math.random()*3.5,size:1.2+Math.random()*3,color:`hsl(${30+Math.random()*40},80%,60%)`});}}}
-      for(let i=birthdaySparkles.length-1;i>=0;i--){birthdaySparkles[i].life-=0.02;if(birthdaySparkles[i].life<=0)birthdaySparkles.splice(i,1);}
-      if(Math.random()<0.3){for(let note of notes)if(note._isBirthday&&Math.random()<0.1)birthdaySparkles.push({x:note.x+(Math.random()-0.5)*note.radius*2,y:note.y+(Math.random()-0.5)*note.radius*2,life:1+Math.random(),size:0.5+Math.random()*1.5});}
-      for(let i=0;i<MAX_BURST;i++){let b=burstPool[i];if(!b.active)continue;b.x+=b.vx;b.y+=b.vy;b.life--;if(b.life<=0)b.active=false;}
-      for(let i=sparks.length-1;i>=0;i--){sparks[i].x+=sparks[i].vx;sparks[i].y+=sparks[i].vy;sparks[i].life-=0.02;if(sparks[i].life<=0)sparks.splice(i,1);}
-      for(let i=decayParticles.length-1;i>=0;i--){decayParticles[i].x+=decayParticles[i].vx;decayParticles[i].y+=decayParticles[i].vy;decayParticles[i].life-=0.02;if(decayParticles[i].life<=0)decayParticles.splice(i,1);}
-      if(Math.random()<0.0006)spawnComet();
-      for(let i=0;i<MAX_COMETS;i++){let c=cometPool[i];if(!c.active)continue;c.x+=c.vx;c.y+=c.vy;c.life--;if(c.life<=0)c.active=false;}
-      camera.zoom+=(camera.targetZoom-camera.zoom)*0.08;camera.targetZoom=Math.min(MAX_ZOOM,Math.max(MIN_ZOOM,camera.targetZoom));
-      for(let pid in peerGlows)if(Date.now()-peerGlows[pid].timestamp>15000)delete peerGlows[pid];
+      // Temp star expiry, birthdays, particles, etc. always run
+      for (let i = 0; i < tempStars.length; i++) {
+        let ts = tempStars[i];
+        if (ts.expiresAt < Date.now()) {
+          if (ts.systemId) {
+            let sys = [...notes.filter(s => s.systemId === ts.systemId), ...tempStars.filter(t => t.systemId === ts.systemId && t !== ts)];
+            for (let s of sys) {
+              let a = Math.random() * Math.PI * 2, sp = 1.5 + Math.random() * 1.5;
+              s.vx = (s.vx || 0) + Math.cos(a) * sp;
+              s.vy = (s.vy || 0) + Math.sin(a) * sp;
+              capVelocity(s);
+              s.systemId = null;
+              if (s.isSun) s.isSun = false;
+            }
+          }
+          tempStars.splice(i, 1);
+          i--;
+          for (let p = 0; p < 55; p++) {
+            let a = Math.random() * Math.PI * 2, sp = 0.4 + Math.random() * 1.4;
+            decayParticles.push({ x: ts.x, y: ts.y, vx: Math.cos(a) * sp, vy: Math.sin(a) * sp, life: 2 + Math.random() * 3.5, size: 1.2 + Math.random() * 3, color: `hsl(${30+Math.random()*40},80%,60%)` });
+          }
+        }
+      }
+      for (let i = birthdaySparkles.length - 1; i >= 0; i--) { birthdaySparkles[i].life -= 0.02; if (birthdaySparkles[i].life <= 0) birthdaySparkles.splice(i, 1); }
+      if (Math.random() < 0.3) { for (let note of notes) if (note._isBirthday && Math.random() < 0.1) birthdaySparkles.push({ x: note.x + (Math.random() - 0.5) * note.radius * 2, y: note.y + (Math.random() - 0.5) * note.radius * 2, life: 1 + Math.random(), size: 0.5 + Math.random() * 1.5 }); }
+      for (let i = 0; i < MAX_BURST; i++) { let b = burstPool[i]; if (!b.active) continue; b.x += b.vx; b.y += b.vy; b.life--; if (b.life <= 0) b.active = false; }
+      for (let i = sparks.length - 1; i >= 0; i--) { sparks[i].x += sparks[i].vx; sparks[i].y += sparks[i].vy; sparks[i].life -= 0.02; if (sparks[i].life <= 0) sparks.splice(i, 1); }
+      for (let i = decayParticles.length - 1; i >= 0; i--) { decayParticles[i].x += decayParticles[i].vx; decayParticles[i].y += decayParticles[i].vy; decayParticles[i].life -= 0.02; if (decayParticles[i].life <= 0) decayParticles.splice(i, 1); }
+      if (Math.random() < 0.0006) spawnComet();
+      for (let i = 0; i < MAX_COMETS; i++) { let c = cometPool[i]; if (!c.active) continue; c.x += c.vx; c.y += c.vy; c.life--; if (c.life <= 0) c.active = false; }
+      camera.zoom += (camera.targetZoom - camera.zoom) * 0.08;
+      camera.targetZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, camera.targetZoom));
+      for (let pid in peerGlows) if (Date.now() - peerGlows[pid].timestamp > 15000) delete peerGlows[pid];
       updateRD();
-      let nowMs=performance.now();for(let i=floatingMessages.length-1;i>=0;i--){let msg=floatingMessages[i];msg.life=Math.max(0,1-(nowMs-msg.created)/msg.duration);if(msg.life<=0)floatingMessages.splice(i,1);}
+      let nowMs = performance.now();
+      for (let i = floatingMessages.length - 1; i >= 0; i--) {
+        let msg = floatingMessages[i];
+        msg.life = Math.max(0, 1 - (nowMs - msg.created) / msg.duration);
+        if (msg.life <= 0) floatingMessages.splice(i, 1);
+      }
     }
 
-    // ========== RENDER (abbreviated – same as before) ==========
+    // ========== RENDER ==========
     function render(){
       ctx.clearRect(0,0,w,h);ctx.fillStyle="#000000";ctx.fillRect(0,0,w,h);
       let hueBase=(camera.x*0.0008+camera.y*0.0008+performance.now()*0.00003)%360;
@@ -782,334 +821,118 @@
       ctx.save();let nowMs=performance.now();for(let msg of floatingMessages){let elapsed=nowMs-msg.created,progress=Math.min(1,elapsed/msg.duration),alpha=progress<0.3?progress/0.3:1-(progress-0.3)/0.7,oy=-20-progress*40,sx=(msg.worldX+camera.x)*camera.zoom+w/2,sy=(msg.worldY+camera.y)*camera.zoom+h/2;ctx.globalAlpha=alpha;ctx.font='14px "Segoe UI", system-ui, sans-serif';ctx.fillStyle='#ffe5b0';ctx.shadowColor='rgba(0,0,0,0.8)';ctx.shadowBlur=6;ctx.textAlign='center';ctx.fillText(msg.text,sx,sy+oy);}ctx.restore();
     }
 
-    // ========== LISTENERS (only if Firebase ready) ==========
-    function listenToFirestore() {
-      if (!firebaseReady) return;
-      notesCollection.onSnapshot(snap => {
-        snap.docChanges().forEach(ch => {
-          let data = ch.doc.data();
-          if (ch.type === "added" || ch.type === "modified") {
-            let idx = notes.findIndex(n => n.id === data.id);
-            if (idx !== -1) {
-              notes[idx].text = data.text;
-              notes[idx].creatorName = data.creatorName;
-              notes[idx].starTypeName = data.starType;
-              notes[idx].starTypeMul = data.starTypeMul;
-              notes[idx].starColor = { core: data.starColorCore, glow: data.starColorGlow };
-              notes[idx].hasRing = data.hasRing;
-              notes[idx].gasGiant = data.gasGiant;
-              notes[idx].initialMass = data.initialMass;
-              notes[idx].initialRadius = data.initialRadius;
-            } else {
-              let rng = makeSeededRandom(data.id);
-              notes.push({
-                ...data,
-                x: (rng() - 0.5) * SPAWN_RADIUS * 2,
-                y: (rng() - 0.5) * SPAWN_RADIUS * 2,
-                vx: (rng() - 0.5) * 0.06,
-                vy: (rng() - 0.5) * 0.06,
-                radius: data.initialRadius,
-                mass: data.initialMass,
-                trail: [],
-                fadeIn: 1,
-                systemId: null,
-                isSun: false,
-                pulsePhase: rng() * Math.PI * 2,
-                starTypeName: data.starType || "Main Sequence",
-                starTypeMul: data.starTypeMul || 1.0,
-                starColor: { core: data.starColorCore || "#88aaff", glow: data.starColorGlow || "rgba(100,150,255,0.5)" },
-                hasRing: data.hasRing || false,
-                gasGiant: data.gasGiant || false,
-                isTemp: false
-              });
-            }
-          } else if (ch.type === "removed") {
-            let r = notes.find(n => n.id === ch.doc.id);
-            if (r) for (let i = 0; i < 55; i++) {
-              let a = Math.random() * Math.PI * 2, s = 0.4 + Math.random() * 1.4;
-              decayParticles.push({ x: r.x, y: r.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 2 + Math.random() * 3.5, size: 1.2 + Math.random() * 3, color: `hsl(${30 + Math.random() * 40},80%,60%)` });
-            }
-            notes = notes.filter(n => n.id !== ch.doc.id);
-          }
-        });
-        updateCounter(); computeClusters(); autoNameUnnamedClusters();
-      });
-      constellationsCollection.onSnapshot(snap => {
-        snap.docChanges().forEach(ch => {
-          let data = ch.doc.data();
-          if (ch.type === "added" || ch.type === "modified") {
-            let ex = namedConstellations.findIndex(c => c.starIds.join(',') === data.starIds.join(','));
-            if (ex !== -1) namedConstellations[ex] = data;
-            else namedConstellations.push(data);
-          } else if (ch.type === "removed") {
-            namedConstellations = namedConstellations.filter(c => c.starIds.join(',') !== data.starIds.join(','));
-          }
-        });
-      });
-      presenceCollection.onSnapshot(snap => {
-        snap.docChanges().forEach(ch => {
-          let data = ch.doc.data();
-          if (!data || data.peerId === localPeerId) return;
-          if (ch.type === "removed") delete peerGlows[data.peerId];
-          else peerGlows[data.peerId] = { starId: data.starId, timestamp: data.timestamp, color: getPeerColor(data.peerId) };
-        });
-      });
-    }
-    function listenToTempStars() {
-      if (!firebaseReady) return;
-      tempStarsCollection.onSnapshot(snap => {
-        snap.docChanges().forEach(ch => {
-          let data = ch.doc.data();
-          if (ch.type === "added") {
-            let rng = makeSeededRandom(data.id);
-            data.x = (rng() - 0.5) * SPAWN_RADIUS * 2;
-            data.y = (rng() - 0.5) * SPAWN_RADIUS * 2;
-            data.vx = (rng() - 0.5) * 0.06;
-            data.vy = (rng() - 0.5) * 0.06;
-            data.radius = data.initialRadius;
-            data.starTypeName = data.starTypeName || 'Ember Wisp';
-            data.starTypeMul = data.starTypeMul || 1.0;
-            data.starColor = data.starColor || { core: "#ffaa66", glow: "rgba(255,160,80,0.6)" };
-            tempStars.push(data);
-          } else if (ch.type === "modified") {
-            let idx = tempStars.findIndex(s => s.id === data.id);
-            if (idx !== -1) tempStars[idx] = { ...tempStars[idx], ...data };
-          } else if (ch.type === "removed") {
-            let r = tempStars.find(s => s.id === ch.doc.id);
-            if (r) for (let i = 0; i < 55; i++) {
-              let a = Math.random() * Math.PI * 2, s = 0.4 + Math.random() * 1.4;
-              decayParticles.push({ x: r.x, y: r.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 2 + Math.random() * 3.5, size: 1.2 + Math.random() * 3, color: `hsl(${30 + Math.random() * 40},80%,60%)` });
-            }
-            tempStars = tempStars.filter(s => s.id !== ch.doc.id);
-          }
-        });
-        updateCounter();
-      });
-    }
-
     // ========== CREATE / DELETE STARS ==========
-    let localPeerId = localStorage.getItem('stellaris_peer_id') || ('peer_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9));
+    let localPeerId = localStorage.getItem('stellaris_peer_id') || ('peer_'+Date.now()+'_'+Math.random().toString(36).substr(2,9));
     localStorage.setItem('stellaris_peer_id', localPeerId);
     let localPeerName = localStorage.getItem('stellaris_peer_name');
-    function createMemory(text="") {
-      let starId = Date.now() + Math.random().toString(36), rng = makeSeededRandom(starId), x = (rng() - 0.5) * SPAWN_RADIUS * 2, y = (rng() - 0.5) * SPAWN_RADIUS * 2;
-      let typeInfo = pickDeterministicType(rng, false), mass = 1.5 + rng() * 8;
-      let note = {
-        id: starId, created: Date.now(), opened: 0, text: text.trim() === "" ? "a drifting thought" : text,
-        x, y, vx: (rng() - 0.5) * 0.06, vy: (rng() - 0.5) * 0.06, radius: 3.5 + rng() * 3.5, mass,
-        orbitPhase: 0, pulsePhase: rng() * Math.PI * 2,
-        creatorId: localPeerId, creatorName: localPeerName, trail: [], isSun: false,
-        starTypeName: typeInfo.name, starTypeMul: typeInfo.sizeMul, starColor: typeInfo.color,
-        hasRing: typeInfo.hasRing || false, gasGiant: typeInfo.gasGiant || false, systemId: null,
-        initialMass: mass, initialRadius: 3.5 + rng() * 3.5, isTemp: false
-      };
-      note.radius = note.initialRadius;
-      notes.push(note);
-      debouncedSave(note);
-      updateCounter();
-      showToast(`${localPeerName} created a ${typeInfo.name}`, note);
-      if (navigator.vibrate) navigator.vibrate(15);
-      for (let i = 0; i < 35; i++) spawnBurst(x, y, false);
-      updatePresence(note.id);
-      return note;
+    function createMemory(text=""){
+      let starId=Date.now()+Math.random().toString(36),rng=makeSeededRandom(starId),x=(rng()-0.5)*SPAWN_RADIUS*2,y=(rng()-0.5)*SPAWN_RADIUS*2;
+      let typeInfo=pickDeterministicType(rng,false),mass=1.5+rng()*8;
+      let note={id:starId,created:Date.now(),opened:0,text:text.trim()===""?"a drifting thought":text,x,y,vx:(rng()-0.5)*0.06,vy:(rng()-0.5)*0.06,radius:3.5+rng()*3.5,mass,orbitPhase:0,pulsePhase:rng()*Math.PI*2,creatorId:localPeerId,creatorName:localPeerName,trail:[],isSun:false,orbitingSunId:null,orbitRadius:0,orbitAngle:0,orbitSpeed:0,orbitDirection:1,fadeIn:0,starTypeName:typeInfo.name,starTypeMul:typeInfo.sizeMul,starColor:typeInfo.color,hasRing:typeInfo.hasRing||false,gasGiant:typeInfo.gasGiant||false,systemId:null,initialMass:mass,initialRadius:3.5+rng()*3.5,isTemp:false};
+      note.radius=note.initialRadius;notes.push(note);saveLocalStar(note);updateCounter();showToast(`${localPeerName} created a ${typeInfo.name}`,note);if(navigator.vibrate)navigator.vibrate(15);for(let i=0;i<35;i++)spawnBurst(x,y,false);return note;
     }
-    function deleteNote(id) {
-      let star = notes.find(n => n.id === id);
-      if (star) for (let i = 0; i < 55; i++) {
-        let a = Math.random() * Math.PI * 2, s = 0.4 + Math.random() * 1.4;
-        decayParticles.push({ x: star.x, y: star.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 2 + Math.random() * 3.5, size: 1.2 + Math.random() * 3, color: `hsl(${30 + Math.random() * 40},80%,60%)` });
-      }
-      notes = notes.filter(n => n.id !== id);
-      deleteNoteFromFirestore(id);
-      updateCounter();
-    }
-    function updateCounter() { document.getElementById("starCountValue").innerText = notes.length + tempStars.length; }
+    function deleteNote(id){let star=notes.find(n=>n.id===id);if(star)for(let i=0;i<55;i++){let a=Math.random()*Math.PI*2,s=0.4+Math.random()*1.4;decayParticles.push({x:star.x,y:star.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:2+Math.random()*3.5,size:1.2+Math.random()*3,color:`hsl(${30+Math.random()*40},80%,60%)`});}notes=notes.filter(n=>n.id!==id);deleteLocalStar(id);updateCounter();}
+    function updateCounter(){document.getElementById("starCountValue").innerText=notes.length+tempStars.length;}
 
-    function computeClusters() {
-      let threshold = 300, visited = new Set(), clusters = [];
-      for (let i = 0; i < notes.length; i++) {
-        if (visited.has(i)) continue;
-        let comp = [], queue = [i]; visited.add(i);
-        while (queue.length) {
-          let idx = queue.pop(); comp.push(idx);
-          for (let j = 0; j < notes.length; j++) {
-            if (visited.has(j)) continue;
-            let dx = notes[idx].x - notes[j].x, dy = notes[idx].y - notes[j].y;
-            if (dx * dx + dy * dy < threshold * threshold) { visited.add(j); queue.push(j); }
-          }
-        }
-        if (comp.length >= 3) {
-          let cx = 0, cy = 0;
-          for (let idx of comp) { cx += notes[idx].x; cy += notes[idx].y; }
-          cx /= comp.length; cy /= comp.length;
-          let starIds = comp.map(i => notes[i].id);
-          let name = namedConstellations.find(nc => nc.starIds.length === starIds.length && nc.starIds.every(id => starIds.includes(id)))?.name || null;
-          clusters.push({ starIds, centroid: { x: cx, y: cy }, name });
-        }
-      }
-      currentClusters = clusters;
+    function computeClusters(){
+      let threshold=300,visited=new Set(),clusters=[];for(let i=0;i<notes.length;i++){if(visited.has(i))continue;let comp=[],queue=[i];visited.add(i);while(queue.length){let idx=queue.pop();comp.push(idx);for(let j=0;j<notes.length;j++){if(visited.has(j))continue;let dx=notes[idx].x-notes[j].x,dy=notes[idx].y-notes[j].y;if(dx*dx+dy*dy<threshold*threshold){visited.add(j);queue.push(j);}}}if(comp.length>=3){let cx=0,cy=0;for(let idx of comp){cx+=notes[idx].x;cy+=notes[idx].y;}cx/=comp.length;cy/=comp.length;let starIds=comp.map(i=>notes[i].id),name=namedConstellations.find(nc=>nc.starIds.length===starIds.length&&nc.starIds.every(id=>starIds.includes(id)))?.name||null;clusters.push({starIds,centroid:{x:cx,y:cy},name});}}currentClusters=clusters;
     }
-    function autoNameUnnamedClusters() {
-      for (let cluster of currentClusters) {
-        if (!cluster.name && cluster.starIds.length >= 3) {
-          let existing = namedConstellations.find(c => c.starIds.join(',') === cluster.starIds.join(','));
-          if (!existing) {
-            let newName = autoNames[Math.floor(Math.random() * autoNames.length)];
-            while (namedConstellations.some(c => c.name === newName)) newName += " " + (Math.floor(Math.random() * 100) + 1);
-            namedConstellations.push({ starIds: cluster.starIds, name: newName });
-            if (firebaseReady) try { constellationsCollection.doc(cluster.starIds.join(',')).set({ starIds: cluster.starIds, name: newName }); } catch (e) {}
-            showToast(`New system: ${newName}`);
-          }
-        }
-      }
-    }
+    function autoNameUnnamedClusters(){for(let cluster of currentClusters){if(!cluster.name&&cluster.starIds.length>=3){let existing=namedConstellations.find(c=>c.starIds.join(',')===cluster.starIds.join(','));if(!existing){let newName=autoNames[Math.floor(Math.random()*autoNames.length)];while(namedConstellations.some(c=>c.name===newName))newName+=" "+(Math.floor(Math.random()*100)+1);namedConstellations.push({starIds:cluster.starIds,name:newName});showToast(`New system: ${newName}`);}}}}
 
-    async function spawnEphemeralBatch(count = 0) {
-      if (!quotesLoaded) return;
-      if (count <= 0) count = 1 + Math.floor(Math.random() * 3);
-      let specialIndex = Math.floor(Math.random() * count);
-      for (let i = 0; i < count; i++) {
-        let isSpecial = (i === specialIndex);
-        let expiryDays = 1 + Math.random() * 30;
-        let expiresAt = Date.now() + expiryDays * 86400000;
-        let starId = 'temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
-        let rng = makeSeededRandom(starId), x = (rng() - 0.5) * SPAWN_RADIUS * 2, y = (rng() - 0.5) * SPAWN_RADIUS * 2;
-        let vx = (rng() - 0.5) * 0.06, vy = (rng() - 0.5) * 0.06, mass = 1.0 + rng() * 4;
-        let typeInfo = pickDeterministicType(rng, true);
-        let tempStar = {
-          id: starId, x, y, vx, vy, mass, createdAt: Date.now(), expiresAt,
-          message: getRandomQuote(isSpecial), isSpecial, rewarded: false, creatorId: null, isTemp: true,
-          systemId: null, initialMass: mass, initialRadius: 4 + rng() * 3,
-          starTypeName: typeInfo.name, starTypeMul: typeInfo.sizeMul, starColor: typeInfo.color,
-          hasRing: false, gasGiant: false
-        };
-        tempStar.radius = tempStar.initialRadius;
-        saveLocalStar(tempStar);
-        if (firebaseReady) try { await tempStarsCollection.doc(tempStar.id).set(tempStar); } catch (e) {}
-      }
-      showToast(`${count} new ephemeral stars have appeared`);
-    }
-    let ephemeralTimer = null;
-    function scheduleEphemeralSpawns() {
-      let fd = (10 + Math.floor(Math.random() * 20)) * 60000, imn = 30 * 60000, imx = 90 * 60000;
-      function sn() { let d = imn + Math.random() * (imx - imn); ephemeralTimer = setTimeout(() => { spawnEphemeralBatch(); sn(); }, d); }
-      ephemeralTimer = setTimeout(() => { spawnEphemeralBatch(); sn(); }, fd);
-    }
+    async function spawnEphemeralBatch(count=0){if(!quotesLoaded)return;if(count<=0)count=1+Math.floor(Math.random()*3);let specialIndex=Math.floor(Math.random()*count);for(let i=0;i<count;i++){let isSpecial=(i===specialIndex),expiryDays=1+Math.random()*30,expiresAt=Date.now()+expiryDays*86400000,starId='temp_'+Date.now()+'_'+Math.random().toString(36).substr(2,6),rng=makeSeededRandom(starId),x=(rng()-0.5)*SPAWN_RADIUS*2,y=(rng()-0.5)*SPAWN_RADIUS*2,vx=(rng()-0.5)*0.06,vy=(rng()-0.5)*0.06,mass=1.0+rng()*4,typeInfo=pickDeterministicType(rng,true);let tempStar={id:starId,x,y,vx,vy,mass,createdAt:Date.now(),expiresAt,message:getRandomQuote(isSpecial),isSpecial,rewarded:false,creatorId:null,isTemp:true,systemId:null,initialMass:mass,initialRadius:4+rng()*3,starTypeName:typeInfo.name,starTypeMul:typeInfo.sizeMul,starColor:typeInfo.color,hasRing:false,gasGiant:false};tempStar.radius=tempStar.initialRadius;saveLocalStar(tempStar);}showToast(`${count} new ephemeral stars have appeared`);}
+    let ephemeralTimer=null;function scheduleEphemeralSpawns(){let fd=(10+Math.floor(Math.random()*20))*60000,imn=30*60000,imx=90*60000;function sn(){let d=imn+Math.random()*(imx-imn);ephemeralTimer=setTimeout(()=>{spawnEphemeralBatch();sn();},d);}ephemeralTimer=setTimeout(()=>{spawnEphemeralBatch();sn();},fd);}
 
     // ========== UI HELPERS ==========
-    function showToast(msg, target) {
-      let wx, wy;
-      if (target && target.x !== undefined) { wx = target.x; wy = target.y - (target.radius || 5) * 0.8; }
-      else { wx = (w / 2 - w / 2) / camera.zoom - camera.x; wy = (h * 0.12 - h / 2) / camera.zoom - camera.y; }
-      let duration = Math.min(8000, Math.max(2000, msg.length * 45 + 500));
-      floatingMessages.push({ worldX: wx, worldY: wy, text: msg, created: performance.now(), duration, life: 1 });
-    }
+    function showToast(msg,target){let wx,wy;if(target&&target.x!==undefined){wx=target.x;wy=target.y-(target.radius||5)*0.8;}else{wx=(w/2-w/2)/camera.zoom-camera.x;wy=(h*0.12-h/2)/camera.zoom-camera.y;}let duration=Math.min(8000,Math.max(2000,msg.length*45+500));floatingMessages.push({worldX:wx,worldY:wy,text:msg,created:performance.now(),duration,life:1});}
 
-    let isPan = false, panStart = { x: 0, y: 0 }, camStart = { x: 0, y: 0 }, lastTapTime = 0, pendingSingleClick = null;
-    function worldPos(px, py) { return { x: (px - w / 2) / camera.zoom - camera.x, y: (py - h / 2) / camera.zoom - camera.y }; }
-    function hitTest(px, py) {
-      let wp = worldPos(px, py), best = null, bestD = 100;
-      for (let n of notes) { if (!isVisible(n.x, n.y, n.radius * 4)) continue; let d = (wp.x - n.x) ** 2 + (wp.y - n.y) ** 2, th = Math.min(100, 45 + (n.radius || 3.5) * 3) ** 2; if (d < th && d < bestD) { bestD = d; best = n; } }
-      for (let t of tempStars) { let d = (wp.x - t.x) ** 2 + (wp.y - t.y) ** 2; if (d < 700 && d < bestD) { bestD = d; best = t; } }
-      return best;
-    }
-    function hitTestConstellation(px, py) {
-      let wp = worldPos(px, py);
-      for (let cl of currentClusters) if (cl.starIds.length >= 3) { let d = (wp.x - cl.centroid.x) ** 2 + (wp.y - cl.centroid.y) ** 2; if (d < 4000) return cl; }
-      return null;
-    }
+    let isPan=false,panStart={x:0,y:0},camStart={x:0,y:0},lastTapTime=0,pendingSingleClick=null;
+    function worldPos(px,py){return{x:(px-w/2)/camera.zoom-camera.x,y:(py-h/2)/camera.zoom-camera.y};}
+    function hitTest(px,py){let wp=worldPos(px,py),best=null,bestD=100;for(let n of notes){if(!isVisible(n.x,n.y,n.radius*4))continue;let d=(wp.x-n.x)**2+(wp.y-n.y)**2,th=Math.min(100,45+(n.radius||3.5)*3)**2;if(d<th&&d<bestD){bestD=d;best=n;}}for(let t of tempStars){let d=(wp.x-t.x)**2+(wp.y-t.y)**2;if(d<700&&d<bestD){bestD=d;best=t;}}return best;}
+    function hitTestConstellation(px,py){let wp=worldPos(px,py);for(let cl of currentClusters)if(cl.starIds.length>=3){let d=(wp.x-cl.centroid.x)**2+(wp.y-cl.centroid.y)**2;if(d<4000)return cl;}return null;}
 
-    async function showPreview(star, cx, cy) {
-      let creatorInfo = "", text = "";
-      if (star.isTemp) {
-        if (star.isSpecial && !star.rewarded) {
-          star.rewarded = true;
-          currentStreak += 1; localStorage.setItem('stellaris_streak', currentStreak);
-          updateStreakCounter();
-          for (let i = 0; i < 55; i++) { let a = Math.random() * Math.PI * 2, s = 0.4 + Math.random() * 1.4; decayParticles.push({ x: star.x, y: star.y, vx: Math.cos(a) * s, vy: Math.sin(a) * s, life: 2 + Math.random() * 3.5, size: 1.2 + Math.random() * 3, color: `hsl(${30 + Math.random() * 40},80%,60%)` }); }
-          if (firebaseReady) try { await tempStarsCollection.doc(star.id).update({ rewarded: true }); } catch (e) {}
-        }
-        creatorInfo = star.isSpecial ? '✦ SPECIAL EPHEMERAL ✦' : '✨ ephemeral star';
-        text = star.message || "";
-      } else {
-        creatorInfo = (star.creatorName && star.creatorName !== localPeerName) ? `from ${star.creatorName}` : "";
-        text = star.text.length > 85 ? star.text.slice(0, 82) + "…" : star.text;
+    async function showPreview(star,cx,cy){
+      let creatorInfo="",text="";if(star.isTemp){if(star.isSpecial&&!star.rewarded){star.rewarded=true;currentStreak+=1;localStorage.setItem('stellaris_streak',currentStreak);updateStreakCounter();for(let i=0;i<55;i++){let a=Math.random()*Math.PI*2,s=0.4+Math.random()*1.4;decayParticles.push({x:star.x,y:star.y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:2+Math.random()*3.5,size:1.2+Math.random()*3,color:`hsl(${30+Math.random()*40},80%,60%)`});}}creatorInfo=star.isSpecial?'✦ SPECIAL EPHEMERAL ✦':'✨ ephemeral star';text=star.message||"";}else{creatorInfo=(star.creatorName&&star.creatorName!==localPeerName)?`from ${star.creatorName}`:"";text=star.text.length>85?star.text.slice(0,82)+"…":star.text;}let full=creatorInfo;if(text)full+=" · "+text;showToast(full,star);}
+
+    // ========== EDIT ONLY YOUR OWN STARS ==========
+    function openEdit(id){
+      let star=notes.find(s=>s.id===id);
+      if(!star) return;
+      if(star.creatorId !== localPeerId) {
+        showToast("you can only edit your own stars", star);
+        return;
       }
-      let full = creatorInfo; if (text) full += " · " + text;
-      showToast(full, star);
-      updatePresence(star.id);
+      activeId=id;
+      document.getElementById("editCreator").innerText=star.creatorName?`created by ${star.creatorName}`:"";
+      document.getElementById("memoryEditor").value=star.text;
+      let m=document.getElementById("editModal");
+      m.style.display="flex";
+      requestAnimationFrame(()=>m.classList.add("visible"));
     }
-
-    function openEdit(id) {
-      let star = notes.find(s => s.id === id);
-      if (!star) return;
-      if (star.creatorId !== localPeerId) { showToast("you can only edit your own stars", star); return; }
-      activeId = id;
-      document.getElementById("editCreator").innerText = star.creatorName ? `created by ${star.creatorName}` : "";
-      document.getElementById("memoryEditor").value = star.text;
-      let m = document.getElementById("editModal"); m.style.display = "flex";
-      requestAnimationFrame(() => m.classList.add("visible"));
-    }
-    function saveEdit() {
-      if (activeId) {
-        let star = notes.find(s => s.id === activeId);
-        if (star && star.creatorId === localPeerId) {
-          star.text = document.getElementById("memoryEditor").value;
-          if (!star.text.trim()) star.text = "a distant echo";
-          debouncedSave(star);
+    function saveEdit(){
+      if(activeId){
+        let star=notes.find(s=>s.id===activeId);
+        if(star && star.creatorId === localPeerId){
+          star.text=document.getElementById("memoryEditor").value;
+          if(!star.text.trim())star.text="a distant echo";
+          saveLocalStar(star);
         }
-        activeId = null;
+        activeId=null;
       }
       closeModal(document.getElementById("editModal"));
     }
-    function closeModal(m) { m.classList.remove("visible"); setTimeout(() => m.style.display = "none", 250); }
+    function closeModal(m){m.classList.remove("visible");setTimeout(()=>m.style.display="none",250);}
 
     // ========== INITIALIZATION ==========
-    function startApp(name) { localPeerName = name; localStorage.setItem('stellaris_peer_name', name); document.getElementById('nameModal').classList.remove('visible'); setTimeout(() => document.getElementById('nameModal').style.display = 'none', 350); initApp(); }
-    function initApp() {
-      initWorld(); canvasElem = document.getElementById("cosmicCanvas");
-      function resize() { w = innerWidth; h = innerHeight; canvasElem.width = w * devicePixelRatio; canvasElem.height = h * devicePixelRatio; canvasElem.style.width = w + "px"; canvasElem.style.height = h + "px"; ctx = canvasElem.getContext("2d"); ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0); }
-      resize(); window.addEventListener("resize", resize);
-      loadLocalStars(); listenToFirestore(); listenToTempStars(); updateCounter(); updateStreakCounter();
-      loadQuotes(); scheduleEphemeralSpawns();
+    function startApp(name){localPeerName=name;localStorage.setItem('stellaris_peer_name',name);document.getElementById('nameModal').classList.remove('visible');setTimeout(()=>document.getElementById('nameModal').style.display='none',350);initApp();}
+    function initApp(){
+      initWorld();canvasElem=document.getElementById("cosmicCanvas");
+      function resize(){w=innerWidth;h=innerHeight;canvasElem.width=w*devicePixelRatio;canvasElem.height=h*devicePixelRatio;canvasElem.style.width=w+"px";canvasElem.style.height=h+"px";ctx=canvasElem.getContext("2d");ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);}
+      resize();window.addEventListener("resize",resize);
+      loadLocalStars();updateCounter();updateStreakCounter();
+      loadQuotes();scheduleEphemeralSpawns();
+      loadStarPositions(); // load saved positions and start interpolation
 
-      setTimeout(() => { const loader = document.getElementById('loadingOverlay'); if (loader) loader.classList.add('hidden'); }, 2500);
-      setTimeout(() => loadStarPositions(), 3000);
+      // Hide loading overlay after 2.5 seconds
+      setTimeout(() => {
+        const loader = document.getElementById('loadingOverlay');
+        if (loader) loader.classList.add('hidden');
+      }, 2500);
 
-      document.getElementById("resetViewBtn").onclick = () => { camera.x = 0; camera.y = 0; camera.targetZoom = 1.0; showToast("view reset to center"); };
-      document.getElementById("novaBtn").onclick = () => { let ns = createMemory(""); openEdit(ns.id); };
-      document.getElementById("saveMemoryBtn").onclick = saveEdit;
-      document.getElementById("cancelEditBtn").onclick = () => closeModal(document.getElementById("editModal"));
-      document.getElementById("closeViewBtn").onclick = () => closeModal(document.getElementById("viewModal"));
-      document.getElementById("editFromViewBtn").onclick = () => { closeModal(document.getElementById("viewModal")); setTimeout(() => { if (activeId) openEdit(activeId); }, 100); };
+      document.getElementById("resetViewBtn").onclick=()=>{camera.x=0;camera.y=0;camera.targetZoom=1.0;showToast("view reset to center");};
+      document.getElementById("novaBtn").onclick=()=>{let ns=createMemory("");openEdit(ns.id);};
+      document.getElementById("saveMemoryBtn").onclick=saveEdit;
+      document.getElementById("cancelEditBtn").onclick=()=>closeModal(document.getElementById("editModal"));
+      document.getElementById("closeViewBtn").onclick=()=>closeModal(document.getElementById("viewModal"));
+      document.getElementById("editFromViewBtn").onclick=()=>{closeModal(document.getElementById("viewModal"));setTimeout(()=>{if(activeId)openEdit(activeId);},100);};
 
-      let currentClusterForName = null;
-      function promptConstellationName(cl) { currentClusterForName = cl; document.getElementById("constellationNameInput").value = cl.name || ""; let m = document.getElementById("constellationNameModal"); m.style.display = "flex"; requestAnimationFrame(() => m.classList.add("visible")); }
-      document.getElementById("saveConstellationName").onclick = () => { let name = document.getElementById("constellationNameInput").value.trim(); if (name && currentClusterForName) { let ex = namedConstellations.findIndex(c => c.starIds.join(',') === currentClusterForName.starIds.join(',')); if (ex !== -1) namedConstellations[ex].name = name; else namedConstellations.push({ starIds: currentClusterForName.starIds, name }); if (firebaseReady) try { constellationsCollection.doc(currentClusterForName.starIds.join(',')).set({ starIds: currentClusterForName.starIds, name }); } catch (e) {} showToast(`System named: ${name}`); } closeModal(document.getElementById("constellationNameModal")); currentClusterForName = null; };
-      document.getElementById("cancelConstellationName").onclick = () => { closeModal(document.getElementById("constellationNameModal")); currentClusterForName = null; };
+      let currentClusterForName=null;
+      function promptConstellationName(cl){currentClusterForName=cl;document.getElementById("constellationNameInput").value=cl.name||"";let m=document.getElementById("constellationNameModal");m.style.display="flex";requestAnimationFrame(()=>m.classList.add("visible"));}
+      document.getElementById("saveConstellationName").onclick=()=>{let name=document.getElementById("constellationNameInput").value.trim();if(name&&currentClusterForName){let ex=namedConstellations.findIndex(c=>c.starIds.join(',')===currentClusterForName.starIds.join(','));if(ex!==-1)namedConstellations[ex].name=name;else namedConstellations.push({starIds:currentClusterForName.starIds,name});showToast(`System named: ${name}`);}closeModal(document.getElementById("constellationNameModal"));currentClusterForName=null;};
+      document.getElementById("cancelConstellationName").onclick=()=>{closeModal(document.getElementById("constellationNameModal"));currentClusterForName=null;};
 
-      canvasElem.addEventListener("touchstart", e => { e.preventDefault(); let t = e.touches[0], star = hitTest(t.clientX, t.clientY), cl = hitTestConstellation(t.clientX, t.clientY); if (cl) { promptConstellationName(cl); return; } if (star) { let now = Date.now(); if (now - lastTapTime < 300) { if (pendingSingleClick) clearTimeout(pendingSingleClick); if (!star.isTemp) openEdit(star.id); else showToast("ephemeral stars cannot be edited.", star); lastTapTime = 0; } else { lastTapTime = now; pendingSingleClick = setTimeout(() => { showPreview(star, t.clientX, t.clientY); pendingSingleClick = null; }, 150); } } else { lastTapTime = 0; isPan = true; panStart = { x: t.clientX, y: t.clientY }; camStart = { x: camera.x, y: camera.y }; if (pendingSingleClick) { clearTimeout(pendingSingleClick); pendingSingleClick = null; } } }, { passive: false });
-      canvasElem.addEventListener("touchmove", e => { if (isPan && e.touches.length === 1) { let dx = e.touches[0].clientX - panStart.x, dy = e.touches[0].clientY - panStart.y; camera.x = camStart.x + dx / camera.zoom; camera.y = camStart.y + dy / camera.zoom; e.preventDefault(); } if (pendingSingleClick) { clearTimeout(pendingSingleClick); pendingSingleClick = null; } }, { passive: false });
-      canvasElem.addEventListener("touchend", () => { isPan = false; });
-      canvasElem.addEventListener("mousedown", e => { let star = hitTest(e.clientX, e.clientY), cl = hitTestConstellation(e.clientX, e.clientY); if (cl) { promptConstellationName(cl); return; } if (star) { if (e.detail === 2) { if (!star.isTemp) openEdit(star.id); else showToast("ephemeral stars cannot be edited.", star); } else showPreview(star, e.clientX, e.clientY); } else { isPan = true; panStart = { x: e.clientX, y: e.clientY }; camStart = { x: camera.x, y: camera.y }; } });
-      window.addEventListener("mousemove", e => { if (isPan) { camera.x = camStart.x + (e.clientX - panStart.x) / camera.zoom; camera.y = camStart.y + (e.clientY - panStart.y) / camera.zoom; } });
-      window.addEventListener("mouseup", () => { isPan = false; });
-      canvasElem.addEventListener("wheel", e => { e.preventDefault(); camera.targetZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, camera.targetZoom * (e.deltaY > 0 ? 0.92 : 1.08))); }, { passive: false });
+      canvasElem.addEventListener("touchstart",e=>{e.preventDefault();let t=e.touches[0],star=hitTest(t.clientX,t.clientY),cl=hitTestConstellation(t.clientX,t.clientY);if(cl){promptConstellationName(cl);return;}if(star){let now=Date.now();if(now-lastTapTime<300){if(pendingSingleClick)clearTimeout(pendingSingleClick);if(!star.isTemp)openEdit(star.id);else showToast("ephemeral stars cannot be edited.",star);lastTapTime=0;}else{lastTapTime=now;pendingSingleClick=setTimeout(()=>{showPreview(star,t.clientX,t.clientY);pendingSingleClick=null;},150);}}else{lastTapTime=0;isPan=true;panStart={x:t.clientX,y:t.clientY};camStart={x:camera.x,y:camera.y};if(pendingSingleClick){clearTimeout(pendingSingleClick);pendingSingleClick=null;}}},{passive:false});
+      canvasElem.addEventListener("touchmove",e=>{if(isPan&&e.touches.length===1){let dx=e.touches[0].clientX-panStart.x,dy=e.touches[0].clientY-panStart.y;camera.x=camStart.x+dx/camera.zoom;camera.y=camStart.y+dy/camera.zoom;e.preventDefault();}if(pendingSingleClick){clearTimeout(pendingSingleClick);pendingSingleClick=null;}},{passive:false});
+      canvasElem.addEventListener("touchend",()=>{isPan=false;});
+      canvasElem.addEventListener("mousedown",e=>{let star=hitTest(e.clientX,e.clientY),cl=hitTestConstellation(e.clientX,e.clientY);if(cl){promptConstellationName(cl);return;}if(star){if(e.detail===2){if(!star.isTemp)openEdit(star.id);else showToast("ephemeral stars cannot be edited.",star);}else showPreview(star,e.clientX,e.clientY);}else{isPan=true;panStart={x:e.clientX,y:e.clientY};camStart={x:camera.x,y:camera.y};}});
+      window.addEventListener("mousemove",e=>{if(isPan){camera.x=camStart.x+(e.clientX-panStart.x)/camera.zoom;camera.y=camStart.y+(e.clientY-panStart.y)/camera.zoom;}});
+      window.addEventListener("mouseup",()=>{isPan=false;});
+      canvasElem.addEventListener("wheel",e=>{e.preventDefault();camera.targetZoom=Math.min(MAX_ZOOM,Math.max(MIN_ZOOM,camera.targetZoom*(e.deltaY>0?0.92:1.08)));},{passive:false});
 
-      let ipd = 0, iz = 1.0; function gpd(t) { if (t.length < 2) return 0; let dx = t[0].clientX - t[1].clientX, dy = t[0].clientY - t[1].clientY; return Math.hypot(dx, dy); }
-      canvasElem.addEventListener('touchstart', e => { if (e.touches.length === 2) { e.preventDefault(); ipd = gpd(e.touches); iz = camera.zoom; } });
-      canvasElem.addEventListener('touchmove', e => { if (e.touches.length === 2) { e.preventDefault(); let nd = gpd(e.touches); if (ipd > 0) camera.targetZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, iz * (nd / ipd))); } });
-      canvasElem.addEventListener('touchend', () => { ipd = 0; });
+      let ipd=0,iz=1.0;function gpd(t){if(t.length<2)return 0;let dx=t[0].clientX-t[1].clientX,dy=t[0].clientY-t[1].clientY;return Math.hypot(dx,dy);}
+      canvasElem.addEventListener('touchstart',e=>{if(e.touches.length===2){e.preventDefault();ipd=gpd(e.touches);iz=camera.zoom;}});
+      canvasElem.addEventListener('touchmove',e=>{if(e.touches.length===2){e.preventDefault();let nd=gpd(e.touches);if(ipd>0)camera.targetZoom=Math.min(MAX_ZOOM,Math.max(MIN_ZOOM,iz*(nd/ipd)));}});
+      canvasElem.addEventListener('touchend',()=>{ipd=0;});
 
-      setInterval(() => { saveStarPositions(); }, 60000);
-      window.addEventListener('beforeunload', () => { saveStarPositions(); });
+      // Save positions periodically and on close
+      setInterval(saveStarPositions, 60000);
+      window.addEventListener('beforeunload', saveStarPositions);
 
-      let lastFrameTime = performance.now() / 1000;
-      function animateLoop() { let nowSec = performance.now() / 1000; lastFrameTime = nowSec; updateFlowField(nowSec); updateOrganic(nowSec); updateFlowParticles(); updateNebulaColors(); simulate(nowSec); render(); requestAnimationFrame(animateLoop); }
+      let lastFrameTime=performance.now()/1000;
+      function animateLoop(){let nowSec=performance.now()/1000;lastFrameTime=nowSec;updateFlowField(nowSec);updateOrganic(nowSec);updateFlowParticles();updateNebulaColors();simulate(nowSec);render();requestAnimationFrame(animateLoop);}
       requestAnimationFrame(animateLoop);
     }
 
-    if (!localPeerName) { document.getElementById('nameModal').style.display = 'flex'; requestAnimationFrame(() => document.getElementById('nameModal').classList.add('visible')); document.getElementById('saveNameBtn').onclick = () => { let name = document.getElementById('nameInput').value.trim(); if (!name) name = 'stargazer'; startApp(name); }; }
+    if(!localPeerName){document.getElementById('nameModal').style.display='flex';requestAnimationFrame(()=>document.getElementById('nameModal').classList.add('visible'));document.getElementById('saveNameBtn').onclick=()=>{let name=document.getElementById('nameInput').value.trim();if(!name)name='stargazer';startApp(name);};}
     else initApp();
   })();
 </script>
