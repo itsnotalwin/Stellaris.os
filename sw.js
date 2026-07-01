@@ -27,6 +27,7 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  // Don't try to cache POST requests (Firestore writes)
   if (event.request.method !== 'GET') return;
 
   event.respondWith(
