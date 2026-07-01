@@ -1,41 +1,48 @@
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
+// sw.js
+const CACHE_NAME = 'stellaris-v4';
 
-    // ---- notes (permanent stars) ----
-    match /notes/{noteId} {
-      allow read: if true;
-      allow create: if request.auth != null
-                    && request.resource.data.creatorId == request.auth.uid;
-      allow update: if request.auth != null
-                    && resource.data.creatorId == request.auth.uid;
-      allow delete: if request.auth != null
-                    && resource.data.creatorId == request.auth.uid;
-    }
+const PRECACHE_ASSETS = [
+  './',
+  'https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js',
+  'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js',
+  'https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js'
+];
 
-    // ---- tempStars (ephemeral stars) ----
-    match /tempStars/{tempId} {
-      allow read: if true;
-      allow create: if request.auth != null;
-      allow update, delete: if request.auth != null;
-    }
+self.addEventListener('install', event => {
+  event.waitUntil(
+    caches.open(CACHE_NAME).then(cache => {
+      return cache.addAll(PRECACHE_ASSETS);
+    })
+  );
+});
 
-    // ---- constellations (named star clusters) ----
-    match /constellations/{constId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
+self.addEventListener('activate', event => {
+  event.waitUntil(
+    caches.keys().then(keys => {
+      return Promise.all(
+        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+      );
+    })
+  );
+});
 
-    // ---- starPositions (live coordinates) ----
-    match /starPositions/{starId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
+self.addEventListener('fetch', event => {
+  // Ignore POST requests (Firestore writes) – only cache GET
+  if (event.request.method !== 'GET') return;
 
-    // ---- presence (peer glows) ----
-    match /presence/{peerId} {
-      allow read: if true;
-      allow write: if request.auth != null;
-    }
-  }
-}
+  event.respondWith(
+    fetch(event.request)
+      .then(response => {
+        if (response.status === 200) {
+          const responseClone = response.clone();
+          caches.open(CACHE_NAME).then(cache => {
+            cache.put(event.request, responseClone);
+          });
+        }
+        return response;
+      })
+      .catch(() => {
+        return caches.match(event.request);
+      })
+  );
+});
