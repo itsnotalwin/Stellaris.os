@@ -1,10 +1,11 @@
 // sw.js
-const CACHE_NAME = 'stellaris-v1';
+const CACHE_NAME = 'stellaris-v2';
 
 const PRECACHE_ASSETS = [
   './',                          // the main HTML page (your index.html)
   'https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js',
-  'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js'
+  'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js',
+  'https://www.gstatic.com/firebasejs/10.12.0/firebase-analytics-compat.js'   // added
 ];
 
 // Install event – pre‑cache all essential resources
