@@ -3,43 +3,400 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=yes">
-  <title>✦ AETHERIUM · STAR RARITY</title>
-  <meta name="theme-color" content="#000000">
-  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>✦ AETHERIUM</title>
+  <meta name="theme-color" content="#05050f">
+  <meta name="mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Aetherium">
   <link rel="manifest" href="manifest.json">
   <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>✦</text></svg>">
   <style>
-    *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none}
-    html,body{width:100%;height:100dvh;overflow:hidden;background:#000}
-    body{font-family:-apple-system,'SF Pro Text',system-ui,'Segoe UI',sans-serif}
-    #app{position:relative;width:100%;height:100%;overflow:hidden}
-    canvas{position:fixed;top:0;left:0;width:100%;height:100dvh;display:block;cursor:grab;background:#000;touch-action:none}
-    canvas:active{cursor:grabbing}
-    .float-btn{position:absolute;width:48px;height:48px;border-radius:48px;background:rgba(20,22,40,0.75);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border:0.5px solid rgba(120,140,220,0.6);box-shadow:0 4px 12px rgba(0,0,0,0.3),0 0 0 0.5px rgba(255,255,255,0.08) inset;display:flex;align-items:center;justify-content:center;z-index:120;cursor:pointer;transition:all 0.2s cubic-bezier(0.2,0.9,0.4,1.1);color:#eef3ff;font-size:22px;font-weight:400;text-shadow:0 0 4px rgba(0,0,0,0.5)}
-    .float-btn:active{transform:scale(0.92);background:rgba(30,35,65,0.9)}
-    .star-count-btn{top:max(20px,env(safe-area-inset-top));right:max(20px,env(safe-area-inset-right));width:auto;min-width:70px;padding:0 16px;gap:6px;font-size:15px;font-weight:500;backdrop-filter:blur(24px)}
-    .star-count-btn span:first-child{font-size:18px;margin-right:2px}
-    .add-star-btn{right:max(20px,env(safe-area-inset-right));bottom:max(30px,env(safe-area-inset-bottom));width:56px;height:56px;background:rgba(50,70,130,0.85);border:0.5px solid rgba(120,160,255,0.7);font-size:30px;font-weight:300}
-    .trash-btn{left:max(20px,env(safe-area-inset-left));bottom:max(100px,env(safe-area-inset-bottom)+20px);width:48px;height:48px;background:rgba(180,40,40,0.9);border-color:rgba(255,100,80,0.8);color:#ffccaa;font-size:20px;z-index:150;backdrop-filter:blur(12px)}
-    .reset-btn{left:max(20px,env(safe-area-inset-left));bottom:max(170px,env(safe-area-inset-bottom)+70px);width:48px;height:48px;background:rgba(30,40,70,0.8);border-color:rgba(100,140,220,0.6);font-size:20px}
-    .modal{position:absolute;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,8,0.85);backdrop-filter:blur(36px);z-index:300;opacity:0;transition:opacity 0.35s cubic-bezier(0.2,0.95,0.4,1)}
-    .modal.visible{opacity:1}
-    .panel{width:86%;max-width:440px;background:rgba(6,6,20,0.9);backdrop-filter:blur(32px);border:1px solid rgba(100,130,220,0.5);border-radius:56px;padding:32px 28px;transform:scale(0.96);transition:transform 0.35s cubic-bezier(0.16,1,0.3,1);box-shadow:0 30px 60px rgba(0,0,0,0.8)}
-    .modal.visible .panel{transform:scale(1)}
-    textarea,.viewer{width:100%;background:rgba(0,0,8,0.8);border:0.5px solid rgba(100,130,220,0.5);border-radius:40px;padding:22px 20px;font-family:'SF Mono','Menlo',monospace;font-size:15px;line-height:1.5;color:#e8f0ff;outline:none;resize:none}
-    .viewer{min-height:200px;white-space:pre-wrap;word-break:break-word}
-    .creator-info{font-size:11px;color:rgba(200,215,250,0.9);margin-bottom:10px;text-align:center;font-style:italic}
-    .actions{display:flex;gap:12px;margin-top:24px}
-    .actions button{flex:1;height:50px;border-radius:60px;background:rgba(15,15,35,0.85);border:0.5px solid rgba(100,130,220,0.5);color:#f0f4ff;font-size:13px;font-weight:500;cursor:pointer;transition:all 0.2s ease}
-    .actions button:active{transform:scale(0.96);background:rgba(30,35,70,0.9)}
-    .delete{color:#ffb09c!important;background:rgba(45,20,22,0.85)!important;border-color:rgba(255,130,100,0.6)!important}
-    .preview{position:absolute;max-width:280px;background:rgba(0,0,15,0.9);backdrop-filter:blur(32px);border-radius:28px;padding:12px 18px;border:0.5px solid rgba(120,150,240,0.7);font-size:12px;line-height:1.4;color:#e0e8ff;pointer-events:none;z-index:400;opacity:0;transform:translateY(8px) scale(0.96);transition:opacity 0.2s ease,transform 0.2s ease;box-shadow:0 15px 35px rgba(0,0,0,0.5)}
-    .preview.visible{opacity:1;transform:translateY(0) scale(1)}
-    .notification{position:absolute;bottom:140px;left:50%;transform:translateX(-50%);background:transparent;padding:10px 24px;border-radius:44px;font-size:13px;color:#ffe5b0;pointer-events:none;z-index:200;opacity:0;transition:opacity 0.3s,transform 0.3s;white-space:nowrap;text-shadow:0 0 6px #000;font-weight:500;letter-spacing:0.5px}
-    .notification.show{opacity:1;transform:translateX(-50%) translateY(-5px)}
-    .name-input{width:100%;background:rgba(0,0,10,0.8);border:0.5px solid rgba(100,130,220,0.7);border-radius:40px;padding:12px 20px;color:#fff;font-size:16px;text-align:center;outline:none}
+    /* ─── RESET & BASE ─── */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    html, body {
+      width: 100%;
+      height: 100dvh;
+      overflow: hidden;
+      background: #05050f;
+      font-family: -apple-system, 'SF Pro Display', 'SF Pro Text', system-ui, 'Helvetica Neue', sans-serif;
+      color: #f0f4ff;
+    }
+    #app {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    /* ─── CANVAS ─── */
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100dvh;
+      display: block;
+      cursor: grab;
+      background: #05050f;
+      touch-action: none;
+    }
+    canvas:active {
+      cursor: grabbing;
+    }
+
+    /* ─── GLASS BUTTONS ─── */
+    .glass-btn {
+      position: absolute;
+      border-radius: 64px;
+      background: rgba(255, 255, 255, 0.06);
+      backdrop-filter: blur(28px) saturate(1.4);
+      -webkit-backdrop-filter: blur(28px) saturate(1.4);
+      border: 0.5px solid rgba(255, 255, 255, 0.10);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), inset 0 0.5px 0 rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 120;
+      cursor: pointer;
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      color: #f0f4ff;
+      font-weight: 450;
+      letter-spacing: 0.01em;
+      text-shadow: 0 0 8px rgba(0, 0, 0, 0.3);
+    }
+    .glass-btn:active {
+      transform: scale(0.92);
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* ─── STAR COUNT ─── */
+    .star-count {
+      top: max(24px, env(safe-area-inset-top));
+      right: max(24px, env(safe-area-inset-right));
+      width: auto;
+      min-width: 80px;
+      padding: 10px 20px 10px 18px;
+      gap: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(24px) saturate(1.6);
+      -webkit-backdrop-filter: blur(24px) saturate(1.6);
+      border: 0.5px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    .star-count .icon {
+      font-size: 16px;
+      opacity: 0.8;
+    }
+    .star-count .count {
+      font-size: 18px;
+      font-weight: 600;
+      background: linear-gradient(135deg, #c8d8ff, #a8b8ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    /* ─── ADD STAR (FAB) ─── */
+    .fab {
+      right: max(28px, env(safe-area-inset-right));
+      bottom: max(40px, env(safe-area-inset-bottom));
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, rgba(80, 120, 255, 0.85), rgba(140, 90, 255, 0.85));
+      border: 0.5px solid rgba(180, 180, 255, 0.4);
+      box-shadow: 0 12px 40px rgba(80, 100, 255, 0.3), inset 0 0.5px 0 rgba(255, 255, 255, 0.2);
+      font-size: 32px;
+      font-weight: 300;
+      color: #fff;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .fab:active {
+      transform: scale(0.88);
+      box-shadow: 0 6px 20px rgba(80, 100, 255, 0.2);
+    }
+    .fab::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 64px;
+      padding: 1px;
+      background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    /* ─── RESET VIEW ─── */
+    .reset-view {
+      left: max(24px, env(safe-area-inset-left));
+      bottom: max(40px, env(safe-area-inset-bottom));
+      width: 52px;
+      height: 52px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 0.5px solid rgba(255, 255, 255, 0.08);
+      font-size: 18px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+    }
+    .reset-view:active {
+      transform: scale(0.88);
+    }
+
+    /* ─── MODALS ─── */
+    .modal {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(5, 5, 15, 0.7);
+      backdrop-filter: blur(48px) saturate(1.2);
+      -webkit-backdrop-filter: blur(48px) saturate(1.2);
+      z-index: 300;
+      opacity: 0;
+      transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      padding: 24px;
+    }
+    .modal.visible {
+      opacity: 1;
+    }
+    .modal-card {
+      width: 100%;
+      max-width: 400px;
+      background: rgba(12, 12, 30, 0.85);
+      backdrop-filter: blur(40px) saturate(1.6);
+      -webkit-backdrop-filter: blur(40px) saturate(1.6);
+      border: 0.5px solid rgba(255, 255, 255, 0.08);
+      border-radius: 48px;
+      padding: 36px 28px 32px;
+      transform: scale(0.94) translateY(12px);
+      transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 40px 80px rgba(0, 0, 0, 0.7), inset 0 0.5px 0 rgba(255, 255, 255, 0.04);
+    }
+    .modal.visible .modal-card {
+      transform: scale(1) translateY(0);
+    }
+    .modal-card .title {
+      font-size: 17px;
+      font-weight: 500;
+      text-align: center;
+      color: rgba(255, 255, 255, 0.85);
+      letter-spacing: 0.3px;
+      margin-bottom: 12px;
+    }
+    .modal-card .sub {
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.4);
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    textarea, .viewer {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 0.5px solid rgba(255, 255, 255, 0.06);
+      border-radius: 28px;
+      padding: 18px 20px;
+      font-family: 'SF Mono', 'Menlo', monospace;
+      font-size: 14px;
+      line-height: 1.6;
+      color: #e8f0ff;
+      outline: none;
+      resize: none;
+      transition: border 0.2s;
+    }
+    textarea:focus {
+      border-color: rgba(120, 160, 255, 0.3);
+    }
+    .viewer {
+      min-height: 160px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: rgba(0, 0, 0, 0.3);
+    }
+    .creator-info {
+      font-size: 12px;
+      color: rgba(255, 255, 255, 0.35);
+      margin-bottom: 10px;
+      text-align: center;
+      font-style: italic;
+      letter-spacing: 0.2px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 22px;
+    }
+    .modal-actions button {
+      flex: 1;
+      height: 48px;
+      border-radius: 60px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 0.5px solid rgba(255, 255, 255, 0.06);
+      color: #f0f4ff;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      letter-spacing: 0.2px;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+    .modal-actions button:active {
+      transform: scale(0.94);
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .modal-actions .primary {
+      background: linear-gradient(135deg, rgba(80, 120, 255, 0.5), rgba(140, 90, 255, 0.5));
+      border-color: rgba(180, 180, 255, 0.2);
+      font-weight: 550;
+    }
+    .modal-actions .primary:active {
+      background: linear-gradient(135deg, rgba(80, 120, 255, 0.7), rgba(140, 90, 255, 0.7));
+    }
+    .modal-actions .danger {
+      color: #ff8a7a;
+      border-color: rgba(255, 100, 80, 0.2);
+    }
+    .modal-actions .danger:active {
+      background: rgba(255, 80, 60, 0.15);
+    }
+
+    .name-input {
+      width: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      border: 0.5px solid rgba(255, 255, 255, 0.06);
+      border-radius: 32px;
+      padding: 14px 20px;
+      color: #fff;
+      font-size: 17px;
+      text-align: center;
+      outline: none;
+      transition: border 0.2s;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+    }
+    .name-input:focus {
+      border-color: rgba(120, 160, 255, 0.3);
+    }
+
+    /* ─── TOAST / NOTIFICATION ─── */
+    .toast-container {
+      position: absolute;
+      bottom: 140px;
+      left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none;
+      z-index: 200;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+    }
+    .toast {
+      background: rgba(8, 8, 24, 0.7);
+      backdrop-filter: blur(32px) saturate(1.4);
+      -webkit-backdrop-filter: blur(32px) saturate(1.4);
+      border: 0.5px solid rgba(255, 255, 255, 0.06);
+      border-radius: 40px;
+      padding: 12px 24px;
+      font-size: 14px;
+      color: #ffe5b0;
+      font-weight: 450;
+      letter-spacing: 0.3px;
+      text-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+      opacity: 0;
+      transform: translateY(12px) scale(0.94);
+      transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+      max-width: 90vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* ─── PREVIEW TOOLTIP ─── */
+    .preview-tip {
+      position: absolute;
+      max-width: 280px;
+      background: rgba(8, 8, 24, 0.8);
+      backdrop-filter: blur(36px) saturate(1.4);
+      -webkit-backdrop-filter: blur(36px) saturate(1.4);
+      border-radius: 28px;
+      padding: 12px 20px;
+      border: 0.5px solid rgba(255, 255, 255, 0.06);
+      font-size: 13px;
+      line-height: 1.5;
+      color: #e0e8ff;
+      pointer-events: none;
+      z-index: 400;
+      opacity: 0;
+      transform: translateY(8px) scale(0.94);
+      transition: opacity 0.3s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.6);
+    }
+    .preview-tip.visible {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 480px) {
+      .star-count {
+        padding: 8px 14px 8px 12px;
+        font-size: 12px;
+        min-width: 60px;
+      }
+      .star-count .count {
+        font-size: 15px;
+      }
+      .fab {
+        width: 56px;
+        height: 56px;
+        font-size: 28px;
+        bottom: max(28px, env(safe-area-inset-bottom));
+        right: max(20px, env(safe-area-inset-right));
+      }
+      .reset-view {
+        width: 46px;
+        height: 46px;
+        font-size: 16px;
+        left: max(16px, env(safe-area-inset-left));
+        bottom: max(28px, env(safe-area-inset-bottom));
+      }
+      .modal-card {
+        padding: 28px 20px 24px;
+        border-radius: 36px;
+      }
+      .toast {
+        font-size: 12px;
+        padding: 10px 18px;
+      }
+    }
+    @media (max-width: 380px) {
+      .star-count .count {
+        font-size: 13px;
+      }
+      .star-count {
+        min-width: 50px;
+        padding: 6px 10px;
+      }
+    }
   </style>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore-compat.js"></script>
@@ -47,25 +404,82 @@
 <body>
 <div id="app">
   <canvas id="cosmicCanvas"></canvas>
-  <div class="float-btn star-count-btn" id="starCountBtn"><span>✦</span> <span id="starCountValue">0</span></div>
-  <div class="float-btn add-star-btn" id="novaBtn">+</div>
-  <div class="float-btn trash-btn" id="clearAllBtn">🗑</div>
-  <div class="float-btn reset-btn" id="resetViewBtn">⦿</div>
-  <div class="preview" id="etherPreview"></div>
-  <div class="notification" id="toastMsg"></div>
-  <div class="modal" id="viewModal"><div class="panel"><div id="viewCreator" class="creator-info"></div><div class="viewer" id="memoryViewer"></div><div class="actions"><button id="closeViewBtn">close</button><button id="editFromViewBtn">edit</button></div></div></div>
-  <div class="modal" id="editModal"><div class="panel"><div id="editCreator" class="creator-info"></div><textarea id="memoryEditor" placeholder="...a thought drifts..."></textarea><div class="actions"><button id="saveMemoryBtn">engrave</button><button id="cancelEditBtn">drift</button><button id="deleteMemoryBtn" class="delete">obliterate</button></div></div></div>
-  <div class="modal" id="constellationNameModal"><div class="panel"><div style="text-align:center;color:#d0dcff;margin-bottom:12px">name this solar system</div><input type="text" class="name-input" id="constellationNameInput" placeholder="system name"><div class="actions"><button id="saveConstellationName">save</button><button id="cancelConstellationName">cancel</button></div></div></div>
-  <div class="modal" id="clearConfirmModal"><div class="panel" style="text-align:center"><div style="color:#ffb0a0;margin-bottom:15px;font-size:16px">clear all stars?</div><div style="color:#aaa;margin-bottom:20px">this will erase the entire galaxy</div><div class="actions"><button id="confirmClearBtn" class="delete">yes, clear</button><button id="cancelClearBtn">cancel</button></div></div></div>
-  <div class="modal" id="nameModal"><div class="panel" style="text-align:center"><div style="color:#d0dcff;margin-bottom:15px;font-size:16px">who are you, stargazer?</div><input type="text" id="nameInput" placeholder="your cosmic name" maxlength="20" class="name-input"><div class="actions" style="margin-top:20px"><button id="saveNameBtn">enter the nebula</button></div></div></div>
+
+  <!-- Star Count -->
+  <div class="glass-btn star-count" id="starCountBtn">
+    <span class="icon">✦</span>
+    <span class="count" id="starCountValue">0</span>
+  </div>
+
+  <!-- FAB -->
+  <div class="glass-btn fab" id="novaBtn">+</div>
+
+  <!-- Reset View -->
+  <div class="glass-btn reset-view" id="resetViewBtn">⌖</div>
+
+  <!-- Toast container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Preview Tooltip -->
+  <div class="preview-tip" id="previewTip"></div>
+
+  <!-- View Modal -->
+  <div class="modal" id="viewModal">
+    <div class="modal-card">
+      <div id="viewCreator" class="creator-info"></div>
+      <div class="viewer" id="memoryViewer"></div>
+      <div class="modal-actions">
+        <button id="closeViewBtn">Close</button>
+        <button class="primary" id="editFromViewBtn">Edit</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit Modal -->
+  <div class="modal" id="editModal">
+    <div class="modal-card">
+      <div id="editCreator" class="creator-info"></div>
+      <textarea id="memoryEditor" placeholder="…a thought drifts…"></textarea>
+      <div class="modal-actions">
+        <button id="cancelEditBtn">Cancel</button>
+        <button class="primary" id="saveMemoryBtn">Engrave</button>
+        <button class="danger" id="deleteMemoryBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Constellation Name Modal -->
+  <div class="modal" id="constellationNameModal">
+    <div class="modal-card">
+      <div class="title">Name this system</div>
+      <div class="sub">Give your solar system a name</div>
+      <input type="text" class="name-input" id="constellationNameInput" placeholder="System name…">
+      <div class="modal-actions">
+        <button id="cancelConstellationName">Cancel</button>
+        <button class="primary" id="saveConstellationName">Save</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Name Modal -->
+  <div class="modal" id="nameModal">
+    <div class="modal-card">
+      <div class="title">✦ Aetherium</div>
+      <div class="sub">Enter your cosmic name</div>
+      <input type="text" id="nameInput" placeholder="Stargazer…" maxlength="24" class="name-input">
+      <div class="modal-actions" style="margin-top:20px">
+        <button class="primary" id="saveNameBtn">Enter the nebula</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
-(function(){
-  // ========== GLOBAL UNIVERSE SEED ==========
+(function() {
+  // ─── UNIVERSE SEED ──────────────────────────────────────────────
   const UNIVERSE_SEED = "aetherium_cosmos_2024";
 
-  // ========== SEEDED PRNG ==========
+  // ─── PRNG ──────────────────────────────────────────────────────
   function mulberry32(a) {
     return function() {
       a |= 0; a = a + 0x6D2B79F5 | 0;
@@ -87,7 +501,7 @@
     return mulberry32(seed);
   }
 
-  // ========== FIREBASE CONFIG — UPDATED ==========
+  // ─── FIREBASE ──────────────────────────────────────────────────
   const firebaseConfig = {
     apiKey: "AIzaSyAyVhqdlNlEfpzvBwLJB2DmrCcHWPlJsKc",
     authDomain: "databasis-6a8fc.firebaseapp.com",
@@ -104,7 +518,7 @@
   const tempStarsCollection = db.collection("tempStars");
   const presenceCollection = db.collection("presence");
 
-  // ========== LOCAL PEER & NAME ==========
+  // ─── LOCAL PEER & NAME ──────────────────────────────────────────
   let localPeerId = localStorage.getItem('constellation_peer_id');
   if (!localPeerId) {
     localPeerId = 'peer_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
@@ -112,48 +526,40 @@
   }
   let localPeerName = localStorage.getItem('constellation_peer_name');
 
-  // ========== QUOTES (loaded externally) ==========
+  // ─── QUOTES ──────────────────────────────────────────────────────
   let quoteLibrary = [];
   let specialQuotes = [];
   let quotesLoaded = false;
+  const fallbackRegular = [
+    "a whisper between stars", "a forgotten constellation", "echoes of a distant light",
+    "a thought left behind", "the silence between moments", "dust that remembers",
+    "the shape of an unfinished thought", "a whisper painted in ultraviolet",
+    "gravity of almost", "the color of things not said"
+  ];
+  const fallbackSpecial = ["✦ a rare ember glows ✦", "✦ the universe blinks ✦"];
 
   function loadQuotes() {
     return fetch('quotes.json')
-      .then(response => response.json())
+      .then(r => { if (!r.ok) throw new Error(); return r.json(); })
       .then(data => {
         quoteLibrary = data.regular || [];
         specialQuotes = data.special || [];
         quotesLoaded = true;
       })
-      .catch(e => {
-        console.warn("Could not load quotes.json – using fallback quotes");
-        quoteLibrary = [
-          "a whisper between stars",
-          "a forgotten constellation",
-          "echoes of a distant light",
-          "a thought left behind",
-          "the silence between moments"
-        ];
-        specialQuotes = [
-          "✦ a rare ember glows ✦",
-          "✦ the universe blinks ✦"
-        ];
+      .catch(() => {
+        quoteLibrary = fallbackRegular.slice();
+        specialQuotes = fallbackSpecial.slice();
         quotesLoaded = true;
       });
   }
-
   function getRandomQuote(isSpecial) {
     if (!quotesLoaded) return "";
-    if (isSpecial && specialQuotes.length) {
-      return specialQuotes[Math.floor(Math.random() * specialQuotes.length)];
-    }
-    if (quoteLibrary.length) {
-      return quoteLibrary[Math.floor(Math.random() * quoteLibrary.length)];
-    }
+    if (isSpecial && specialQuotes.length) return specialQuotes[Math.floor(Math.random() * specialQuotes.length)];
+    if (quoteLibrary.length) return quoteLibrary[Math.floor(Math.random() * quoteLibrary.length)];
     return "";
   }
 
-  // ========== STREAK ==========
+  // ─── STREAK ──────────────────────────────────────────────────────
   let currentStreak = 0;
   function updateStreakCounter() {
     const lastVisit = localStorage.getItem('last_visit_date');
@@ -169,145 +575,226 @@
     localStorage.setItem('last_visit_date', today);
   }
 
-  // ========== SIMPLEX NOISE (unchanged) ==========
+  // ─── SIMPLEX NOISE ──────────────────────────────────────────────
   class SimplexNoise {
     constructor() {
       this.grad3 = [[1,1,0],[-1,1,0],[1,-1,0],[-1,-1,0],[1,0,1],[-1,0,1],[1,0,-1],[-1,0,-1],[0,1,1],[0,-1,1],[0,1,-1],[0,-1,-1]];
       let p = [151,160,137,91,90,15,131,13,201,95,96,53,194,233,7,225,140,36,103,30,69,142,8,99,37,240,21,10,23,190,6,148,247,120,234,75,0,26,197,62,94,252,219,203,117,35,11,32,57,177,33,88,237,149,56,87,174,20,125,136,171,168,68,175,74,165,71,134,139,48,27,166,77,146,158,231,83,111,229,122,60,211,133,230,220,105,92,41,55,46,245,40,244,102,143,54,65,25,63,161,1,216,80,73,209,76,132,187,208,89,18,169,200,196,135,130,116,188,159,86,164,100,109,198,173,186,3,64,52,217,226,250,124,123,5,202,38,147,118,126,255,82,85,212,207,206,59,227,47,16,58,17,182,189,28,42,223,183,170,213,119,248,152,2,44,154,163,70,221,153,101,155,167,43,172,9,129,22,39,253,19,98,108,110,79,113,224,232,178,185,112,104,218,246,97,228,251,34,242,193,238,210,144,12,191,179,162,241,81,51,145,235,249,14,239,107,49,192,214,31,181,199,106,157,184,84,204,176,115,121,50,45,127,4,150,254,138,236,205,93,222,114,67,29,24,72,243,141,128,195,78,66,215,61,156,180];
       this.perm = new Uint8Array(512);
-      for(let i=0;i<256;i++) { this.perm[i]=p[i]; this.perm[i+256]=p[i]; }
+      for (let i = 0; i < 256; i++) { this.perm[i] = p[i]; this.perm[i + 256] = p[i]; }
     }
-    dot(g,x,y,z) { return g[0]*x+g[1]*y+g[2]*z; }
-    noise3(x,y,z) {
-      let n0=0,n1=0,n2=0,n3=0;
-      let s=(x+y+z)/3.0;
-      let i=Math.floor(x+s),j=Math.floor(y+s),k=Math.floor(z+s);
-      let t=(i+j+k)/6.0;
-      let X0=i-t,Y0=j-t,Z0=k-t;
-      let x0=x-X0,y0=y-Y0,z0=z-Z0;
-      let i1,j1,k1,i2,j2,k2;
-      if(x0>=y0){if(y0>=z0){i1=1;j1=0;k1=0;i2=1;j2=1;k2=0;}else if(x0>=z0){i1=1;j1=0;k1=0;i2=1;j2=0;k2=1;}else{i1=0;j1=0;k1=1;i2=1;j2=0;k2=1;}}
-      else{if(y0<z0){i1=0;j1=0;k1=1;i2=0;j2=1;k2=1;}else if(x0<z0){i1=0;j1=1;k1=0;i2=0;j2=1;k2=1;}else{i1=0;j1=1;k1=0;i2=1;j2=1;k2=0;}}
-      let x1=x0-i1+1.0/6.0,y1=y0-j1+1.0/6.0,z1=z0-k1+1.0/6.0;
-      let x2=x0-i2+2.0/6.0,y2=y0-j2+2.0/6.0,z2=z0-k2+2.0/6.0;
-      let x3=x0-1.0,y3=y0-1.0,z3=z0-1.0;
-      let ii=i&255,jj=j&255,kk=k&255;
-      let gi0=this.perm[ii+this.perm[jj+this.perm[kk]]]%12;
-      let gi1=this.perm[ii+i1+this.perm[jj+j1+this.perm[kk+k1]]]%12;
-      let gi2=this.perm[ii+i2+this.perm[jj+j2+this.perm[kk+k2]]]%12;
-      let gi3=this.perm[ii+1+this.perm[jj+1+this.perm[kk+1]]]%12;
-      let t0=0.6-x0*x0-y0*y0-z0*z0;if(t0<0)n0=0;else{t0*=t0;n0=t0*t0*this.dot(this.grad3[gi0],x0,y0,z0);}
-      let t1=0.6-x1*x1-y1*y1-z1*z1;if(t1<0)n1=0;else{t1*=t1;n1=t1*t1*this.dot(this.grad3[gi1],x1,y1,z1);}
-      let t2=0.6-x2*x2-y2*y2-z2*z2;if(t2<0)n2=0;else{t2*=t2;n2=t2*t2*this.dot(this.grad3[gi2],x2,y2,z2);}
-      let t3=0.6-x3*x3-y3*y3-z3*z3;if(t3<0)n3=0;else{t3*=t3;n3=t3*t3*this.dot(this.grad3[gi3],x3,y3,z3);}
-      return 32.0*(n0+n1+n2+n3);
+    dot(g, x, y, z) { return g[0] * x + g[1] * y + g[2] * z; }
+    noise3(x, y, z) {
+      let n0 = 0, n1 = 0, n2 = 0, n3 = 0;
+      let s = (x + y + z) / 3.0;
+      let i = Math.floor(x + s), j = Math.floor(y + s), k = Math.floor(z + s);
+      let t = (i + j + k) / 6.0;
+      let X0 = i - t, Y0 = j - t, Z0 = k - t;
+      let x0 = x - X0, y0 = y - Y0, z0 = z - Z0;
+      let i1, j1, k1, i2, j2, k2;
+      if (x0 >= y0) { if (y0 >= z0) { i1 = 1;
+          j1 = 0;
+          k1 = 0;
+          i2 = 1;
+          j2 = 1;
+          k2 = 0; } else if (x0 >= z0) { i1 = 1;
+          j1 = 0;
+          k1 = 0;
+          i2 = 1;
+          j2 = 0;
+          k2 = 1; } else { i1 = 0;
+          j1 = 0;
+          k1 = 1;
+          i2 = 1;
+          j2 = 0;
+          k2 = 1; } } else { if (y0 < z0) { i1 = 0;
+          j1 = 0;
+          k1 = 1;
+          i2 = 0;
+          j2 = 1;
+          k2 = 1; } else if (x0 < z0) { i1 = 0;
+          j1 = 1;
+          k1 = 0;
+          i2 = 0;
+          j2 = 1;
+          k2 = 1; } else { i1 = 0;
+          j1 = 1;
+          k1 = 0;
+          i2 = 1;
+          j2 = 1;
+          k2 = 0; } }
+      let x1 = x0 - i1 + 1.0 / 6.0,
+        y1 = y0 - j1 + 1.0 / 6.0,
+        z1 = z0 - k1 + 1.0 / 6.0;
+      let x2 = x0 - i2 + 2.0 / 6.0,
+        y2 = y0 - j2 + 2.0 / 6.0,
+        z2 = z0 - k2 + 2.0 / 6.0;
+      let x3 = x0 - 1.0,
+        y3 = y0 - 1.0,
+        z3 = z0 - 1.0;
+      let ii = i & 255,
+        jj = j & 255,
+        kk = k & 255;
+      let gi0 = this.perm[ii + this.perm[jj + this.perm[kk]]] % 12;
+      let gi1 = this.perm[ii + i1 + this.perm[jj + j1 + this.perm[kk + k1]]] % 12;
+      let gi2 = this.perm[ii + i2 + this.perm[jj + j2 + this.perm[kk + k2]]] % 12;
+      let gi3 = this.perm[ii + 1 + this.perm[jj + 1 + this.perm[kk + 1]]] % 12;
+      let t0 = 0.6 - x0 * x0 - y0 * y0 - z0 * z0;
+      if (t0 < 0) n0 = 0;
+      else { t0 *= t0;
+        n0 = t0 * t0 * this.dot(this.grad3[gi0], x0, y0, z0); }
+      let t1 = 0.6 - x1 * x1 - y1 * y1 - z1 * z1;
+      if (t1 < 0) n1 = 0;
+      else { t1 *= t1;
+        n1 = t1 * t1 * this.dot(this.grad3[gi1], x1, y1, z1); }
+      let t2 = 0.6 - x2 * x2 - y2 * y2 - z2 * z2;
+      if (t2 < 0) n2 = 0;
+      else { t2 *= t2;
+        n2 = t2 * t2 * this.dot(this.grad3[gi2], x2, y2, z2); }
+      let t3 = 0.6 - x3 * x3 - y3 * y3 - z3 * z3;
+      if (t3 < 0) n3 = 0;
+      else { t3 *= t3;
+        n3 = t3 * t3 * this.dot(this.grad3[gi3], x3, y3, z3); }
+      return 32.0 * (n0 + n1 + n2 + n3);
     }
   }
   const noise = new SimplexNoise();
 
-  // ========== GLOBAL STATE ==========
-  let notes = [], tempStars = [], activeId = null;
-  let camera = { x:0, y:0, zoom:1.0, targetZoom:1.0 };
+  // ─── STATE ──────────────────────────────────────────────────────
+  let notes = [],
+    tempStars = [],
+    activeId = null;
+  let camera = { x: 0, y: 0, zoom: 1.0, targetZoom: 1.0 };
   let w, h, ctx, canvasElem;
-  let currentClusters = [], namedConstellations = [];
-  let galacticClusters = [], dustClouds = [], starLayers = [], nebulaLayers = [], flowParticles = [];
-  let sparks = [], decayParticles = [], burstPool = [];
+  let currentClusters = [],
+    namedConstellations = [];
+  let galacticClusters = [],
+    dustClouds = [],
+    starLayers = [],
+    nebulaLayers = [],
+    flowParticles = [];
+  let sparks = [],
+    decayParticles = [],
+    burstPool = [];
   let birthdaySparkles = [];
   let peerGlows = {};
-  const MAX_ZOOM = 6.0, MIN_ZOOM = 0.15;
+  const MAX_ZOOM = 6.0,
+    MIN_ZOOM = 0.15;
   const WORLD_SIZE = 24000;
   const SEED_CLUSTERS = [
-    { name:"Nyx System", x:-1200, y:-900, color:[60,70,140] },
-    { name:"Umbra System", x:1500, y:400, color:[75,55,120] },
-    { name:"Noctis System", x:2800, y:-1800, color:[80,65,105] },
-    { name:"Tenebris System", x:-3000, y:1900, color:[65,70,120] },
-    { name:"Stryx System", x:400, y:-2200, color:[55,60,125] },
-    { name:"Voidreach", x:-650, y:2500, color:[70,65,115] },
-    { name:"Erebus Drift", x:5000, y:800, color:[90,75,140] },
-    { name:"Obsidian Halo", x:-4800, y:-1200, color:[100,80,150] }
+    { name: "Nyx System", x: -1200, y: -900, color: [60, 70, 140] },
+    { name: "Umbra System", x: 1500, y: 400, color: [75, 55, 120] },
+    { name: "Noctis System", x: 2800, y: -1800, color: [80, 65, 105] },
+    { name: "Tenebris System", x: -3000, y: 1900, color: [65, 70, 120] },
+    { name: "Stryx System", x: 400, y: -2200, color: [55, 60, 125] },
+    { name: "Voidreach", x: -650, y: 2500, color: [70, 65, 115] },
+    { name: "Erebus Drift", x: 5000, y: 800, color: [90, 75, 140] },
+    { name: "Obsidian Halo", x: -4800, y: -1200, color: [100, 80, 150] }
   ];
-  const autoNames = ["Veil of Eternity","Cinder Hearth","Solace Drift","Aether's Kiss","Woven Sorrow","The Silent Bell","Forgotten Halo","Ember Wake","Strayed Loom","Votive Remains","Gilded Ruin","Pale Urn","The Unspoken Lyre","Raven's Compass","Thistle Crown","Omen of Dust","The Still Pyre","Hollow Sigil","Weeping Prism","Last Accord"];
-  const MAX_BURST = 200, MAX_COMETS = 10;
-  let cometPool = [], saveTimer = null, lastPresenceUpdate = 0;
+  const autoNames = ["Veil of Eternity", "Cinder Hearth", "Solace Drift", "Aether's Kiss", "Woven Sorrow", "The Silent Bell", "Forgotten Halo", "Ember Wake", "Strayed Loom", "Votive Remains", "Gilded Ruin", "Pale Urn", "The Unspoken Lyre", "Raven's Compass", "Thistle Crown", "Omen of Dust", "The Still Pyre", "Hollow Sigil", "Weeping Prism", "Last Accord"];
+  const MAX_BURST = 200,
+    MAX_COMETS = 10;
+  let cometPool = [],
+    saveTimer = null,
+    lastPresenceUpdate = 0;
   let fractalPatterns = {};
   let floatingMessages = [];
 
-  // Reaction‑diffusion (unchanged)
+  // Reaction-diffusion
   const RD_SIZE = 80;
-  let rdGridA = new Float32Array(RD_SIZE*RD_SIZE);
-  let rdGridB = new Float32Array(RD_SIZE*RD_SIZE);
-  let rdNextA = new Float32Array(RD_SIZE*RD_SIZE);
-  let rdNextB = new Float32Array(RD_SIZE*RD_SIZE);
-  const RD_DA = 1.0, RD_DB = 0.5, RD_F = 0.04, RD_K = 0.06;
+  let rdGridA = new Float32Array(RD_SIZE * RD_SIZE);
+  let rdGridB = new Float32Array(RD_SIZE * RD_SIZE);
+  let rdNextA = new Float32Array(RD_SIZE * RD_SIZE);
+  let rdNextB = new Float32Array(RD_SIZE * RD_SIZE);
+  const RD_DA = 1.0,
+    RD_DB = 0.5,
+    RD_F = 0.04,
+    RD_K = 0.06;
   let rdCanvas, rdCtx;
-  function initRD() { 
-    rdCanvas = document.createElement('canvas'); 
-    rdCanvas.width = RD_SIZE; rdCanvas.height = RD_SIZE; 
-    rdCtx = rdCanvas.getContext('2d'); 
-    for (let i=0; i<RD_SIZE*RD_SIZE; i++) { rdGridA[i] = 1.0; rdGridB[i] = 0.0; } 
+
+  function initRD() {
+    rdCanvas = document.createElement('canvas');
+    rdCanvas.width = RD_SIZE;
+    rdCanvas.height = RD_SIZE;
+    rdCtx = rdCanvas.getContext('2d');
+    for (let i = 0; i < RD_SIZE * RD_SIZE; i++) { rdGridA[i] = 1.0;
+      rdGridB[i] = 0.0; }
   }
+
   function updateRD() {
     const size = RD_SIZE;
-    for (let i=0; i<size; i++) {
-      for (let j=0; j<size; j++) {
-        let idx = i*size + j;
-        let A = rdGridA[idx], B = rdGridB[idx];
-        let lapA = -4*A, lapB = -4*B;
-        lapA += rdGridA[((i-1+size)%size)*size + j] + rdGridA[((i+1)%size)*size + j] + rdGridA[i*size + ((j-1+size)%size)] + rdGridA[i*size + ((j+1)%size)];
-        lapB += rdGridB[((i-1+size)%size)*size + j] + rdGridB[((i+1)%size)*size + j] + rdGridB[i*size + ((j-1+size)%size)] + rdGridB[i*size + ((j+1)%size)];
-        let da = RD_DA * lapA - A*B*B + RD_F*(1-A);
-        let db = RD_DB * lapB + A*B*B - (RD_K + RD_F)*B;
+    for (let i = 0; i < size; i++) {
+      for (let j = 0; j < size; j++) {
+        let idx = i * size + j;
+        let A = rdGridA[idx],
+          B = rdGridB[idx];
+        let lapA = -4 * A,
+          lapB = -4 * B;
+        lapA += rdGridA[((i - 1 + size) % size) * size + j] + rdGridA[((i + 1) % size) * size + j] + rdGridA[i * size + ((j - 1 + size) % size)] + rdGridA[i * size + ((j + 1) % size)];
+        lapB += rdGridB[((i - 1 + size) % size) * size + j] + rdGridB[((i + 1) % size) * size + j] + rdGridB[i * size + ((j - 1 + size) % size)] + rdGridB[i * size + ((j + 1) % size)];
+        let da = RD_DA * lapA - A * B * B + RD_F * (1 - A);
+        let db = RD_DB * lapB + A * B * B - (RD_K + RD_F) * B;
         rdNextA[idx] = A + da * 0.15;
         rdNextB[idx] = B + db * 0.15;
-        if (rdNextA[idx] < 0) rdNextA[idx] = 0; if (rdNextA[idx] > 1) rdNextA[idx] = 1;
-        if (rdNextB[idx] < 0) rdNextB[idx] = 0; if (rdNextB[idx] > 1) rdNextB[idx] = 1;
+        if (rdNextA[idx] < 0) rdNextA[idx] = 0;
+        if (rdNextA[idx] > 1) rdNextA[idx] = 1;
+        if (rdNextB[idx] < 0) rdNextB[idx] = 0;
+        if (rdNextB[idx] > 1) rdNextB[idx] = 1;
       }
     }
-    let tmpA = rdGridA; rdGridA = rdNextA; rdNextA = tmpA;
-    let tmpB = rdGridB; rdGridB = rdNextB; rdNextB = tmpB;
+    let tmpA = rdGridA;
+    rdGridA = rdNextA;
+    rdNextA = tmpA;
+    let tmpB = rdGridB;
+    rdGridB = rdNextB;
+    rdNextB = tmpB;
     for (let note of notes) {
-      let gx = Math.floor((note.x + WORLD_SIZE/2) / WORLD_SIZE * size);
-      let gy = Math.floor((note.y + WORLD_SIZE/2) / WORLD_SIZE * size);
-      if (gx>=0 && gx<size && gy>=0 && gy<size) {
-        rdGridB[gy*size + gx] = Math.min(1, rdGridB[gy*size + gx] + 0.15);
+      let gx = Math.floor((note.x + WORLD_SIZE / 2) / WORLD_SIZE * size);
+      let gy = Math.floor((note.y + WORLD_SIZE / 2) / WORLD_SIZE * size);
+      if (gx >= 0 && gx < size && gy >= 0 && gy < size) {
+        rdGridB[gy * size + gx] = Math.min(1, rdGridB[gy * size + gx] + 0.15);
       }
     }
     let imageData = rdCtx.createImageData(size, size);
     let data = imageData.data;
-    for (let i=0; i<size*size; i++) {
+    for (let i = 0; i < size * size; i++) {
       let val = rdGridB[i] * 200;
-      data[i*4] = Math.min(255, val * 1.2);
-      data[i*4+1] = Math.min(255, val * 0.4);
-      data[i*4+2] = Math.min(255, val * 2.0);
-      data[i*4+3] = Math.min(255, val * 0.7);
+      data[i * 4] = Math.min(255, val * 1.2);
+      data[i * 4 + 1] = Math.min(255, val * 0.4);
+      data[i * 4 + 2] = Math.min(255, val * 2.0);
+      data[i * 4 + 3] = Math.min(255, val * 0.7);
     }
     rdCtx.putImageData(imageData, 0, 0);
   }
 
-  function generateLSystem(name, iterations=3) {
+  function generateLSystem(name, iterations = 3) {
     let axiom = "F+F+F+F";
-    let rules = { 'F': ['F+F-F-FF+F+F-F', 'F-F+FF-F-F+F', 'FF-F+F-F+FF', 'F+F-F-F+F+F-F'][Math.floor(Math.random()*4)] };
+    let rules = { 'F': ['F+F-F-FF+F+F-F', 'F-F+FF-F-F+F', 'FF-F+F-F+FF', 'F+F-F-F+F+F-F'][Math.floor(Math.random() * 4)] };
     let current = axiom;
-    for (let i=0; i<iterations; i++) {
+    for (let i = 0; i < iterations; i++) {
       let next = '';
       for (let ch of current) next += rules[ch] || ch;
       current = next;
     }
     let lines = [];
-    let x = 0, y = 0, angle = 0;
+    let x = 0,
+      y = 0,
+      angle = 0;
     const step = 8;
     for (let ch of current) {
       if (ch === 'F') {
-        let nx = x + Math.cos(angle)*step, ny = y + Math.sin(angle)*step;
-        lines.push({x1:x,y1:y,x2:nx,y2:ny});
-        x = nx; y = ny;
-      } else if (ch === '+') angle += Math.PI/2;
-      else if (ch === '-') angle -= Math.PI/2;
+        let nx = x + Math.cos(angle) * step,
+          ny = y + Math.sin(angle) * step;
+        lines.push({ x1: x, y1: y, x2: nx, y2: ny });
+        x = nx;
+        y = ny;
+      } else if (ch === '+') angle += Math.PI / 2;
+      else if (ch === '-') angle -= Math.PI / 2;
     }
     return lines;
   }
 
-  // ========== STAR TYPES WITH RARITY (permanent) ==========
+  // ─── STAR TYPES ──────────────────────────────────────────────────
   const starTypes = [
     { name: "Main Sequence", prob: 0.65, sizeMul: 1.0, color: { core: "#88aaff", glow: "rgba(100,150,255,0.5)" }, hasRing: false, gasGiant: false, ageShift: true },
     { name: "Red Dwarf", prob: 0.10, sizeMul: 0.7, color: { core: "#ff8866", glow: "rgba(255,100,80,0.6)" }, hasRing: false, gasGiant: false, ageShift: false },
@@ -320,9 +807,9 @@
     { name: "Frostlight", prob: 0.01, sizeMul: 1.0, color: { core: "#88ccff", glow: "rgba(120,200,255,0.5)" }, hasRing: false, gasGiant: false, ageShift: true },
     { name: "Storm Giant", prob: 0.01, sizeMul: 2.0, color: { core: "#77aaff", glow: "rgba(100,150,255,0.6)" }, hasRing: false, gasGiant: true, ageShift: true },
     { name: "Silent Nova", prob: 0.01, sizeMul: 1.4, color: { core: "#ffffff", glow: "rgba(255,255,200,0.7)" }, hasRing: false, gasGiant: false, ageShift: true },
-    { name: "Eclipse Heart", prob: 0.00, sizeMul: 1.2, color: { core: "#6655aa", glow: "rgba(80,70,160,0.6)" }, hasRing: true, gasGiant: false, ageShift: true } // fallback
+    { name: "Eclipse Heart", prob: 0.00, sizeMul: 1.2, color: { core: "#6655aa", glow: "rgba(80,70,160,0.6)" }, hasRing: true, gasGiant: false, ageShift: true }
   ];
-  let totalProb = starTypes.reduce((s,t) => s + t.prob, 0);
+  let totalProb = starTypes.reduce((s, t) => s + t.prob, 0);
   starTypes.forEach(t => t.prob /= totalProb);
 
   const ephemeralTypes = [
@@ -333,7 +820,7 @@
     { name: "Pyreling", prob: 0.05, sizeMul: 0.8, color: { core: "#ff4422", glow: "rgba(255,60,30,0.6)" } },
     { name: "Wildfire Orb", prob: 0.02, sizeMul: 1.4, color: { core: "#ffcc77", glow: "rgba(255,200,100,0.6)" } }
   ];
-  totalProb = ephemeralTypes.reduce((s,t) => s + t.prob, 0);
+  totalProb = ephemeralTypes.reduce((s, t) => s + t.prob, 0);
   ephemeralTypes.forEach(t => t.prob /= totalProb);
 
   function pickDeterministicType(rng, isTemp) {
@@ -349,14 +836,14 @@
 
   function getStarColor(star, ageMs) {
     if (star.isTemp) {
-      return { core: star.starColor.core, glow: star.starColor.glow, trailRGB: [255,160,80] };
+      return { core: star.starColor.core, glow: star.starColor.glow, trailRGB: [255, 160, 80] };
     } else {
       let ageFactor = Math.min(1, ageMs / (86400000 * 30));
       let base = star.starColor.core;
       if (star.starTypeName === "Main Sequence") {
-        let r = parseInt(base.slice(1,3),16);
-        let g = parseInt(base.slice(3,5),16);
-        let b = parseInt(base.slice(5,7),16);
+        let r = parseInt(base.slice(1, 3), 16);
+        let g = parseInt(base.slice(3, 5), 16);
+        let b = parseInt(base.slice(5, 7), 16);
         let targetR = Math.min(255, r + (255 - r) * ageFactor * 0.4);
         let targetG = Math.min(255, g + (255 - g) * ageFactor * 0.2);
         let targetB = Math.max(100, b - b * ageFactor * 0.5);
@@ -364,11 +851,11 @@
         let glow = `rgba(${Math.floor(targetR)}, ${Math.floor(targetG)}, ${Math.floor(targetB)}, 0.55)`;
         return { core, glow, trailRGB: [Math.floor(targetR), Math.floor(targetG), Math.floor(targetB)] };
       } else if (star.starTypeName === "Red Dwarf") {
-        return { core: base, glow: star.starColor.glow, trailRGB: [255,100,80] };
+        return { core: base, glow: star.starColor.glow, trailRGB: [255, 100, 80] };
       } else if (star.starTypeName === "Giant") {
-        let r = parseInt(base.slice(1,3),16);
-        let g = parseInt(base.slice(3,5),16);
-        let b = parseInt(base.slice(5,7),16);
+        let r = parseInt(base.slice(1, 3), 16);
+        let g = parseInt(base.slice(3, 5), 16);
+        let b = parseInt(base.slice(5, 7), 16);
         let targetR = Math.min(255, r + (255 - r) * ageFactor * 0.3);
         let targetG = Math.max(100, g - g * ageFactor * 0.3);
         let targetB = Math.max(80, b - b * ageFactor * 0.4);
@@ -376,9 +863,9 @@
         let glow = `rgba(${Math.floor(targetR)}, ${Math.floor(targetG)}, ${Math.floor(targetB)}, 0.6)`;
         return { core, glow, trailRGB: [Math.floor(targetR), Math.floor(targetG), Math.floor(targetB)] };
       } else if (star.starTypeName === "Supergiant") {
-        let r = parseInt(base.slice(1,3),16);
-        let g = parseInt(base.slice(3,5),16);
-        let b = parseInt(base.slice(5,7),16);
+        let r = parseInt(base.slice(1, 3), 16);
+        let g = parseInt(base.slice(3, 5), 16);
+        let b = parseInt(base.slice(5, 7), 16);
         let targetR = Math.min(255, r + (255 - r) * ageFactor * 0.4);
         let targetG = Math.max(80, g - g * ageFactor * 0.5);
         let targetB = Math.max(60, b - b * ageFactor * 0.6);
@@ -386,12 +873,12 @@
         let glow = `rgba(${Math.floor(targetR)}, ${Math.floor(targetG)}, ${Math.floor(targetB)}, 0.7)`;
         return { core, glow, trailRGB: [Math.floor(targetR), Math.floor(targetG), Math.floor(targetB)] };
       } else if (star.starTypeName === "White Dwarf") {
-        return { core: "#eeefff", glow: "rgba(220,220,255,0.8)", trailRGB: [220,220,255] };
+        return { core: "#eeefff", glow: "rgba(220,220,255,0.8)", trailRGB: [220, 220, 255] };
       } else {
         let base = star.starColor.core;
-        let r = parseInt(base.slice(1,3),16);
-        let g = parseInt(base.slice(3,5),16);
-        let b = parseInt(base.slice(5,7),16);
+        let r = parseInt(base.slice(1, 3), 16);
+        let g = parseInt(base.slice(3, 5), 16);
+        let b = parseInt(base.slice(5, 7), 16);
         let targetR = Math.min(255, r + (255 - r) * ageFactor * 0.3);
         let targetG = Math.max(50, g - g * ageFactor * 0.2);
         let targetB = Math.max(50, b - b * ageFactor * 0.3);
@@ -435,23 +922,24 @@
       if (newMass > 25) newMass = 25;
       star.mass = newMass;
       let massRatio = star.mass / star.initialMass;
-      star.radius = star.initialRadius * Math.pow(massRatio, 1/3);
+      star.radius = star.initialRadius * Math.pow(massRatio, 1 / 3);
     }
   }
 
   const GRAVITY_CONST = 0.00035;
   const GRAVITY_RADIUS = 400;
+
   function applyUniversalGravity() {
     let allStars = [...notes, ...tempStars];
     let acc = new Map();
-    for (let star of allStars) acc.set(star, { ax:0, ay:0 });
+    for (let star of allStars) acc.set(star, { ax: 0, ay: 0 });
     for (let i = 0; i < allStars.length; i++) {
       let s1 = allStars[i];
-      for (let j = i+1; j < allStars.length; j++) {
+      for (let j = i + 1; j < allStars.length; j++) {
         let s2 = allStars[j];
         let dx = s2.x - s1.x;
         let dy = s2.y - s1.y;
-        let distSq = dx*dx + dy*dy;
+        let distSq = dx * dx + dy * dy;
         if (distSq < GRAVITY_RADIUS * GRAVITY_RADIUS && distSq > 0.1) {
           let dist = Math.sqrt(distSq);
           let force = (GRAVITY_CONST * s1.mass * s2.mass) / distSq;
@@ -517,21 +1005,25 @@
       if (sys.stars.length === 0) { systems.delete(id); continue; }
       sys.centerX /= sys.stars.length;
       sys.centerY /= sys.stars.length;
-      
+
       if (!sys.hasSun && sys.stars.length >= 3) {
-        let mostMassive = sys.stars.reduce((a,b) => (a.mass > b.mass) ? a : b);
+        let mostMassive = sys.stars.reduce((a, b) => (a.mass > b.mass) ? a : b);
         mostMassive.isSun = true;
         sys.hasSun = true;
-        for (let s of sys.stars) if (s !== mostMassive) s.isSun = false;
+        for (let s of sys.stars)
+          if (s !== mostMassive) s.isSun = false;
       }
       if (sys.stars.length === 2) {
-        for (let s of sys.stars) if (s.isSun) s.isSun = false;
+        for (let s of sys.stars)
+          if (s.isSun) s.isSun = false;
         sys.hasSun = false;
       }
-      
+
       if (sys.stars.length === 2) {
-        let s1 = sys.stars[0], s2 = sys.stars[1];
-        let dx = s2.x - s1.x, dy = s2.y - s1.y;
+        let s1 = sys.stars[0],
+          s2 = sys.stars[1];
+        let dx = s2.x - s1.x,
+          dy = s2.y - s1.y;
         let dist = Math.hypot(dx, dy);
         if (dist > 0.1) {
           let totalMass = s1.mass + s2.mass;
@@ -542,9 +1034,9 @@
           let angle1 = Math.atan2(s1.y - baryY, s1.x - baryX);
           let angle2 = angle1 + Math.PI;
           let v1x_des = -Math.sin(angle1) * vOrbit * (s2.mass / totalMass);
-          let v1y_des =  Math.cos(angle1) * vOrbit * (s2.mass / totalMass);
+          let v1y_des = Math.cos(angle1) * vOrbit * (s2.mass / totalMass);
           let v2x_des = -Math.sin(angle2) * vOrbit * (s1.mass / totalMass);
-          let v2y_des =  Math.cos(angle2) * vOrbit * (s1.mass / totalMass);
+          let v2y_des = Math.cos(angle2) * vOrbit * (s1.mass / totalMass);
           s1.vx += (v1x_des - s1.vx) * 0.1;
           s1.vy += (v1y_des - s1.vy) * 0.1;
           s2.vx += (v2x_des - s2.vx) * 0.1;
@@ -555,17 +1047,18 @@
       } else if (sys.stars.length >= 3 && sys.hasSun) {
         let sun = sys.stars.find(s => s.isSun === true);
         if (!sun) {
-          sun = sys.stars.reduce((a,b) => (a.mass > b.mass) ? a : b);
+          sun = sys.stars.reduce((a, b) => (a.mass > b.mass) ? a : b);
           sun.isSun = true;
           sys.hasSun = true;
         }
         for (let s of sys.stars) {
           if (s !== sun) {
-            let dx = s.x - sun.x, dy = s.y - sun.y;
+            let dx = s.x - sun.x,
+              dy = s.y - sun.y;
             let dist = Math.hypot(dx, dy);
             if (dist > 0.1) {
               let angleToSun = Math.atan2(dy, dx);
-              let perpAngle = angleToSun + Math.PI/2;
+              let perpAngle = angleToSun + Math.PI / 2;
               let currentSpeed = Math.hypot(s.vx, s.vy);
               let desiredSpeed = Math.sqrt(sun.mass / dist) * 0.12;
               let correction = (desiredSpeed - currentSpeed) * 0.02;
@@ -586,19 +1079,21 @@
       let nearestSys = null;
       let nearestDistSq = Infinity;
       for (let [id, sys] of systems.entries()) {
-        let dx = sys.centerX - star.x, dy = sys.centerY - star.y;
-        let distSq = dx*dx + dy*dy;
+        let dx = sys.centerX - star.x,
+          dy = sys.centerY - star.y;
+        let distSq = dx * dx + dy * dy;
         if (distSq < nearestDistSq && distSq < 640000) {
           nearestDistSq = distSq;
           nearestSys = sys;
         }
       }
       if (nearestSys) {
-        let dx = nearestSys.centerX - star.x, dy = nearestSys.centerY - star.y;
+        let dx = nearestSys.centerX - star.x,
+          dy = nearestSys.centerY - star.y;
         let dist = Math.sqrt(nearestDistSq);
         let force = 0.003 * (star.mass * nearestSys.totalMass) / (dist * dist);
-        star.vx = (star.vx||0) + dx * force;
-        star.vy = (star.vy||0) + dy * force;
+        star.vx = (star.vx || 0) + dx * force;
+        star.vy = (star.vy || 0) + dy * force;
         capVelocity(star);
         if (dist < 140) {
           star.systemId = nearestSys.stars[0].systemId;
@@ -609,11 +1104,12 @@
     for (let i = 0; i < allStars.length; i++) {
       let s1 = allStars[i];
       if (s1.systemId) continue;
-      for (let j = i+1; j < allStars.length; j++) {
+      for (let j = i + 1; j < allStars.length; j++) {
         let s2 = allStars[j];
         if (s2.systemId) continue;
-        let dx = s1.x - s2.x, dy = s1.y - s2.y;
-        if (dx*dx + dy*dy < 32400) {
+        let dx = s1.x - s2.x,
+          dy = s1.y - s2.y;
+        if (dx * dx + dy * dy < 32400) {
           let newSysId = 'sys_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
           s1.systemId = newSysId;
           s2.systemId = newSysId;
@@ -626,9 +1122,9 @@
           let angle1 = Math.atan2(s1.y - baryY, s1.x - baryX);
           let angle2 = angle1 + Math.PI;
           s1.vx = -Math.sin(angle1) * vOrbit * (s2.mass / totalMass);
-          s1.vy =  Math.cos(angle1) * vOrbit * (s2.mass / totalMass);
+          s1.vy = Math.cos(angle1) * vOrbit * (s2.mass / totalMass);
           s2.vx = -Math.sin(angle2) * vOrbit * (s1.mass / totalMass);
-          s2.vy =  Math.cos(angle2) * vOrbit * (s1.mass / totalMass);
+          s2.vy = Math.cos(angle2) * vOrbit * (s1.mass / totalMass);
           capVelocity(s1);
           capVelocity(s2);
           break;
@@ -638,225 +1134,308 @@
   }
 
   let viewportLeft, viewportRight, viewportTop, viewportBottom, margin;
-  function updateViewportBounds(){
+
+  function updateViewportBounds() {
     margin = 600;
-    let halfW = w/(2*camera.zoom), halfH = h/(2*camera.zoom);
-    let cx = camera.x, cy = camera.y;
+    let halfW = w / (2 * camera.zoom),
+      halfH = h / (2 * camera.zoom);
+    let cx = camera.x,
+      cy = camera.y;
     viewportLeft = -cx - halfW - margin;
     viewportRight = -cx + halfW + margin;
     viewportTop = -cy - halfH - margin;
     viewportBottom = -cy + halfH + margin;
   }
-  function isVisible(x,y,size){ return x+size>viewportLeft && x-size<viewportRight && y+size>viewportTop && y-size<viewportBottom; }
 
-  // ========== OBJECT POOLS ==========
-  burstPool = Array.from({length:MAX_BURST},()=>({active:false,x:0,y:0,vx:0,vy:0,life:0,size:0,color:''}));
-  function spawnBurst(x,y, isEphemeral=false){
-    for(let i=0;i<MAX_BURST;i++) if(!burstPool[i].active){
-      let angle=Math.random()*Math.PI*2, speed=1+Math.random()*4;
-      burstPool[i].active=true; burstPool[i].x=x; burstPool[i].y=y;
-      burstPool[i].vx=Math.cos(angle)*speed; burstPool[i].vy=Math.sin(angle)*speed;
-      burstPool[i].life=50+Math.random()*40; burstPool[i].size=1.5+Math.random()*3;
-      let r = isEphemeral ? 255 : 120+Math.floor(Math.random()*100);
-      let g = isEphemeral ? 150+Math.floor(Math.random()*105) : 110+Math.floor(Math.random()*100);
-      let b = isEphemeral ? 70+Math.floor(Math.random()*90) : 200+Math.floor(Math.random()*55);
-      burstPool[i].color = `rgba(${r},${g},${b},1)`;
-      return;
-    }
+  function isVisible(x, y, size) { return x + size > viewportLeft && x - size < viewportRight && y + size > viewportTop && y - size < viewportBottom; }
+
+  // ─── OBJECT POOLS ──────────────────────────────────────────────
+  burstPool = Array.from({ length: MAX_BURST }, () => ({ active: false, x: 0, y: 0, vx: 0, vy: 0, life: 0, size: 0, color: '' }));
+
+  function spawnBurst(x, y, isEphemeral = false) {
+    for (let i = 0; i < MAX_BURST; i++)
+      if (!burstPool[i].active) {
+        let angle = Math.random() * Math.PI * 2,
+          speed = 1 + Math.random() * 4;
+        burstPool[i].active = true;
+        burstPool[i].x = x;
+        burstPool[i].y = y;
+        burstPool[i].vx = Math.cos(angle) * speed;
+        burstPool[i].vy = Math.sin(angle) * speed;
+        burstPool[i].life = 50 + Math.random() * 40;
+        burstPool[i].size = 1.5 + Math.random() * 3;
+        let r = isEphemeral ? 255 : 120 + Math.floor(Math.random() * 100);
+        let g = isEphemeral ? 150 + Math.floor(Math.random() * 105) : 110 + Math.floor(Math.random() * 100);
+        let b = isEphemeral ? 70 + Math.floor(Math.random() * 90) : 200 + Math.floor(Math.random() * 55);
+        burstPool[i].color = `rgba(${r},${g},${b},1)`;
+        return;
+      }
   }
-  cometPool = Array.from({length:MAX_COMETS},()=>({active:false,x:0,y:0,vx:0,vy:0,life:0,tailLength:0}));
-  function spawnComet(){
-    for(let i=0;i<MAX_COMETS;i++) if(!cometPool[i].active){
-      let a=Math.random()*Math.PI*2, sp=2+Math.random()*4;
-      cometPool[i].active=true;
-      cometPool[i].x=Math.cos(a)*(WORLD_SIZE/2-500); 
-      cometPool[i].y=Math.sin(a)*(WORLD_SIZE/2-500);
-      cometPool[i].vx=Math.cos(a+Math.PI)*sp; cometPool[i].vy=Math.sin(a+Math.PI)*sp;
-      cometPool[i].life=1000+Math.random()*500; cometPool[i].tailLength=80+Math.random()*100;
-      return;
-    }
+  cometPool = Array.from({ length: MAX_COMETS }, () => ({ active: false, x: 0, y: 0, vx: 0, vy: 0, life: 0, tailLength: 0 }));
+
+  function spawnComet() {
+    for (let i = 0; i < MAX_COMETS; i++)
+      if (!cometPool[i].active) {
+        let a = Math.random() * Math.PI * 2,
+          sp = 2 + Math.random() * 4;
+        cometPool[i].active = true;
+        cometPool[i].x = Math.cos(a) * (WORLD_SIZE / 2 - 500);
+        cometPool[i].y = Math.sin(a) * (WORLD_SIZE / 2 - 500);
+        cometPool[i].vx = Math.cos(a + Math.PI) * sp;
+        cometPool[i].vy = Math.sin(a + Math.PI) * sp;
+        cometPool[i].life = 1000 + Math.random() * 500;
+        cometPool[i].tailLength = 80 + Math.random() * 100;
+        return;
+      }
   }
 
-  // ----- Background creation (unchanged) -----
-  function createStarLayer(count, spread, minSize, maxSize, minBright, maxBright, colorRange, parallax){
+  // ─── BACKGROUND ──────────────────────────────────────────────────
+  function createStarLayer(count, spread, minSize, maxSize, minBright, maxBright, colorRange, parallax) {
     let layer = new Array(count);
-    for(let i=0;i<count;i++){
+    for (let i = 0; i < count; i++) {
       layer[i] = {
-        x:(Math.random()-0.5)*spread, y:(Math.random()-0.5)*spread,
-        size:minSize+Math.random()*(maxSize-minSize),
-        brightness:minBright+Math.random()*(maxBright-minBright),
-        colorTemp:[colorRange[0]+Math.random()*(colorRange[1]-colorRange[0]), colorRange[2]+Math.random()*(colorRange[3]-colorRange[2]), colorRange[4]+Math.random()*(colorRange[5]-colorRange[4])],
-        parallax, phase:Math.random()*Math.PI*2
+        x: (Math.random() - 0.5) * spread,
+        y: (Math.random() - 0.5) * spread,
+        size: minSize + Math.random() * (maxSize - minSize),
+        brightness: minBright + Math.random() * (maxBright - minBright),
+        colorTemp: [colorRange[0] + Math.random() * (colorRange[1] - colorRange[0]), colorRange[2] + Math.random() * (colorRange[3] - colorRange[2]), colorRange[4] + Math.random() * (colorRange[5] - colorRange[4])],
+        parallax,
+        phase: Math.random() * Math.PI * 2
       };
     }
     return layer;
   }
-  function wrapPosition(obj, radius=0) {
-    const limit = WORLD_SIZE/2 - 200;
+
+  function wrapPosition(obj, radius = 0) {
+    const limit = WORLD_SIZE / 2 - 200;
     if (obj.x > limit) obj.x = -limit;
     if (obj.x < -limit) obj.x = limit;
     if (obj.y > limit) obj.y = -limit;
     if (obj.y < -limit) obj.y = limit;
   }
-  function initWorld(){
+
+  function initWorld() {
     const spread = WORLD_SIZE * 0.98;
     starLayers = [
-      createStarLayer(8000, spread, 0.2, 0.8, 0.6, 0.9, [210,255,220,255,230,255], 0.05),
-      createStarLayer(10000, spread, 0.25, 1.0, 0.65, 0.95, [190,255,200,255,210,255], 0.1),
-      createStarLayer(12000, spread, 0.35, 1.4, 0.7, 1.0, [170,250,180,250,190,250], 0.2),
-      createStarLayer(10000, spread, 0.6, 1.8, 0.75, 1.0, [150,240,160,240,170,240], 0.35),
-      createStarLayer(8000, spread, 0.8, 2.2, 0.8, 1.0, [130,230,140,230,150,230], 0.5),
-      createStarLayer(6000, spread, 1.0, 2.8, 0.85, 1.0, [110,220,120,220,130,220], 0.7),
-      createStarLayer(4000, spread, 1.4, 3.4, 0.9, 1.0, [90,210,100,210,110,210], 0.85),
-      createStarLayer(3000, spread, 1.8, 4.0, 0.95, 1.0, [70,200,80,200,90,200], 1.0)
+      createStarLayer(8000, spread, 0.2, 0.8, 0.6, 0.9, [210, 255, 220, 255, 230, 255], 0.05),
+      createStarLayer(10000, spread, 0.25, 1.0, 0.65, 0.95, [190, 255, 200, 255, 210, 255], 0.1),
+      createStarLayer(12000, spread, 0.35, 1.4, 0.7, 1.0, [170, 250, 180, 250, 190, 250], 0.2),
+      createStarLayer(10000, spread, 0.6, 1.8, 0.75, 1.0, [150, 240, 160, 240, 170, 240], 0.35),
+      createStarLayer(8000, spread, 0.8, 2.2, 0.8, 1.0, [130, 230, 140, 230, 150, 230], 0.5),
+      createStarLayer(6000, spread, 1.0, 2.8, 0.85, 1.0, [110, 220, 120, 220, 130, 220], 0.7),
+      createStarLayer(4000, spread, 1.4, 3.4, 0.9, 1.0, [90, 210, 100, 210, 110, 210], 0.85),
+      createStarLayer(3000, spread, 1.8, 4.0, 0.95, 1.0, [70, 200, 80, 200, 90, 200], 1.0)
     ];
     nebulaLayers = [];
-    let baseColors=[[[60,40,120],[80,50,150],[100,60,180]],[[50,70,110],[70,90,140],[90,110,170]],[[100,50,90],[130,70,120],[160,90,150]],[[40,80,70],[60,100,100],[90,130,130]],[[110,60,40],[140,80,70],[170,100,100]]];
-    for(let i=0;i<300;i++){
-      let cs=baseColors[Math.floor(Math.random()*baseColors.length)];
+    let baseColors = [
+      [
+        [60, 40, 120],
+        [80, 50, 150],
+        [100, 60, 180]
+      ],
+      [
+        [50, 70, 110],
+        [70, 90, 140],
+        [90, 110, 170]
+      ],
+      [
+        [100, 50, 90],
+        [130, 70, 120],
+        [160, 90, 150]
+      ],
+      [
+        [40, 80, 70],
+        [60, 100, 100],
+        [90, 130, 130]
+      ],
+      [
+        [110, 60, 40],
+        [140, 80, 70],
+        [170, 100, 100]
+      ]
+    ];
+    for (let i = 0; i < 300; i++) {
+      let cs = baseColors[Math.floor(Math.random() * baseColors.length)];
       nebulaLayers.push({
-        x:(Math.random()-0.5)*spread, y:(Math.random()-0.5)*spread,
-        radius:200+Math.random()*500,
-        baseColor1:cs[0], baseColor2:cs[1], baseColor3:cs[2],
-        color1:[...cs[0]], color2:[...cs[1]], color3:[...cs[2]],
-        pulseSpeed:0.001+Math.random()*0.002, phase:Math.random()*Math.PI*2
+        x: (Math.random() - 0.5) * spread,
+        y: (Math.random() - 0.5) * spread,
+        radius: 200 + Math.random() * 500,
+        baseColor1: cs[0],
+        baseColor2: cs[1],
+        baseColor3: cs[2],
+        color1: [...cs[0]],
+        color2: [...cs[1]],
+        color3: [...cs[2]],
+        pulseSpeed: 0.001 + Math.random() * 0.002,
+        phase: Math.random() * Math.PI * 2
       });
     }
     dustClouds = [];
+
     function gaussianRandom() {
-      let u = 0, v = 0;
-      while(u === 0) u = Math.random();
-      while(v === 0) v = Math.random();
-      return Math.sqrt( -2.0 * Math.log( u ) ) * Math.cos( 2.0 * Math.PI * v );
+      let u = 0,
+        v = 0;
+      while (u === 0) u = Math.random();
+      while (v === 0) v = Math.random();
+      return Math.sqrt(-2.0 * Math.log(u)) * Math.cos(2.0 * Math.PI * v);
     }
     const GAUSSIAN_STD = 300;
     const PARTICLE_COUNT_PER_CLOUD = 200;
     const CLOUD_COUNT = 100;
-    for(let i=0;i<CLOUD_COUNT;i++){
-      let cloud = { 
-        x:(Math.random()-0.5)*spread, 
-        y:(Math.random()-0.5)*spread, 
-        color:[80+Math.random()*100, 70+Math.random()*100, 100+Math.random()*80], 
-        particles: [] 
+    for (let i = 0; i < CLOUD_COUNT; i++) {
+      let cloud = {
+        x: (Math.random() - 0.5) * spread,
+        y: (Math.random() - 0.5) * spread,
+        color: [80 + Math.random() * 100, 70 + Math.random() * 100, 100 + Math.random() * 80],
+        particles: []
       };
-      for(let j=0;j<PARTICLE_COUNT_PER_CLOUD;j++){
+      for (let j = 0; j < PARTICLE_COUNT_PER_CLOUD; j++) {
         let offsetX = gaussianRandom() * GAUSSIAN_STD;
         let offsetY = gaussianRandom() * GAUSSIAN_STD;
         offsetX = Math.min(Math.max(offsetX, -800), 800);
         offsetY = Math.min(Math.max(offsetY, -800), 800);
-        cloud.particles.push({ 
-          offsetX: offsetX, 
-          offsetY: offsetY, 
+        cloud.particles.push({
+          offsetX: offsetX,
+          offsetY: offsetY,
           size: 2 + Math.random() * 6,
-          alpha: 0.15 + Math.random() * 0.4 
+          alpha: 0.15 + Math.random() * 0.4
         });
       }
       dustClouds.push(cloud);
     }
     let centerCloud = {
-      x: 0, y: 0,
+      x: 0,
+      y: 0,
       color: [150, 130, 200],
       particles: []
     };
-    for(let j=0;j<300;j++){
+    for (let j = 0; j < 300; j++) {
       let offsetX = gaussianRandom() * GAUSSIAN_STD;
       let offsetY = gaussianRandom() * GAUSSIAN_STD;
       offsetX = Math.min(Math.max(offsetX, -900), 900);
       offsetY = Math.min(Math.max(offsetY, -900), 900);
-      centerCloud.particles.push({ 
-        offsetX: offsetX, 
-        offsetY: offsetY, 
+      centerCloud.particles.push({
+        offsetX: offsetX,
+        offsetY: offsetY,
         size: 2 + Math.random() * 6,
         alpha: 0.2 + Math.random() * 0.5
       });
     }
     dustClouds.push(centerCloud);
-    
+
     flowParticles = [];
-    for(let i=0;i<4000;i++) flowParticles.push({ x:(Math.random()-0.5)*spread, y:(Math.random()-0.5)*spread, vx:(Math.random()-0.5)*0.3, vy:(Math.random()-0.5)*0.3, life:Math.random()*100, size:1+Math.random()*4 });
-    galacticClusters = SEED_CLUSTERS.map(c => ({...c}));
-    window._flowGrid = { cellSize:120, cols:200, rows:200, angles:new Float32Array(40000) };
+    for (let i = 0; i < 4000; i++) flowParticles.push({ x: (Math.random() - 0.5) * spread, y: (Math.random() - 0.5) * spread, vx: (Math.random() - 0.5) * 0.3, vy: (Math.random() - 0.5) * 0.3, life: Math.random() * 100, size: 1 + Math.random() * 4 });
+    galacticClusters = SEED_CLUSTERS.map(c => ({ ...c }));
+    window._flowGrid = { cellSize: 120, cols: 200, rows: 200, angles: new Float32Array(40000) };
     initRD();
   }
-  function updateNebulaColors(){
-    for(let neb of nebulaLayers){
-      let ir=0,ig=0,ib=0,tw=0;
-      for(let star of notes){
-        let dx=star.x-neb.x, dy=star.y-neb.y;
-        let dist = dx*dx+dy*dy;
-        if(dist < 90000){
-          let w = (1-Math.sqrt(dist)/300)*(star.mass||2);
-          let age = Date.now()-star.created, day=86400000;
-          let r,g,b;
-          if(age<day*7) { r=100; g=120; b=200; }
-          else if(age<day*28) { r=160; g=110; b=180; }
-          else { r=120; g=90; b=150; }
-          ir+=r*w; ig+=g*w; ib+=b*w; tw+=w;
+
+  function updateNebulaColors() {
+    for (let neb of nebulaLayers) {
+      let ir = 0,
+        ig = 0,
+        ib = 0,
+        tw = 0;
+      for (let star of notes) {
+        let dx = star.x - neb.x,
+          dy = star.y - neb.y;
+        let dist = dx * dx + dy * dy;
+        if (dist < 90000) {
+          let w = (1 - Math.sqrt(dist) / 300) * (star.mass || 2);
+          let age = Date.now() - star.created,
+            day = 86400000;
+          let r, g, b;
+          if (age < day * 7) { r = 100;
+            g = 120;
+            b = 200; } else if (age < day * 28) { r = 160;
+            g = 110;
+            b = 180; } else { r = 120;
+            g = 90;
+            b = 150; }
+          ir += r * w;
+          ig += g * w;
+          ib += b * w;
+          tw += w;
         }
       }
-      if(tw>0.1){
-        neb.color1 = [Math.floor(neb.baseColor1[0]*0.4 + ir/tw*0.6), Math.floor(neb.baseColor1[1]*0.4 + ig/tw*0.6), Math.floor(neb.baseColor1[2]*0.4 + ib/tw*0.6)];
-        neb.color2 = [Math.floor(neb.baseColor2[0]*0.4 + ir/tw*0.6), Math.floor(neb.baseColor2[1]*0.4 + ig/tw*0.6), Math.floor(neb.baseColor2[2]*0.4 + ib/tw*0.6)];
-        neb.color3 = [Math.floor(neb.baseColor3[0]*0.4 + ir/tw*0.6), Math.floor(neb.baseColor3[1]*0.4 + ig/tw*0.6), Math.floor(neb.baseColor3[2]*0.4 + ib/tw*0.6)];
+      if (tw > 0.1) {
+        neb.color1 = [Math.floor(neb.baseColor1[0] * 0.4 + ir / tw * 0.6), Math.floor(neb.baseColor1[1] * 0.4 + ig / tw * 0.6), Math.floor(neb.baseColor1[2] * 0.4 + ib / tw * 0.6)];
+        neb.color2 = [Math.floor(neb.baseColor2[0] * 0.4 + ir / tw * 0.6), Math.floor(neb.baseColor2[1] * 0.4 + ig / tw * 0.6), Math.floor(neb.baseColor2[2] * 0.4 + ib / tw * 0.6)];
+        neb.color3 = [Math.floor(neb.baseColor3[0] * 0.4 + ir / tw * 0.6), Math.floor(neb.baseColor3[1] * 0.4 + ig / tw * 0.6), Math.floor(neb.baseColor3[2] * 0.4 + ib / tw * 0.6)];
       } else {
-        neb.color1 = [...neb.baseColor1]; neb.color2 = [...neb.baseColor2]; neb.color3 = [...neb.baseColor3];
+        neb.color1 = [...neb.baseColor1];
+        neb.color2 = [...neb.baseColor2];
+        neb.color3 = [...neb.baseColor3];
       }
-    }
-  }
-  function updateFlowField(t){
-    let g = window._flowGrid;
-    let cs = g.cellSize, cols = g.cols, rows = g.rows, angles = g.angles;
-    for(let i=0;i<cols;i++){
-      for(let j=0;j<rows;j++){
-        let x = (i-cols/2)*cs, y = (j-rows/2)*cs;
-        angles[i+j*cols] = noise.noise3(x*0.0008, y*0.0008, t*0.0002) * Math.PI * 5;
-      }
-    }
-  }
-  function getFlowAngle(px,py){
-    let g = window._flowGrid;
-    let cx = Math.floor((px + WORLD_SIZE/2)/g.cellSize) % g.cols;
-    let cy = Math.floor((py + WORLD_SIZE/2)/g.cellSize) % g.rows;
-    if(cx<0||cy<0||cx>=g.cols||cy>=g.rows) return 0;
-    return g.angles[cx+cy*g.cols] || 0;
-  }
-  function updateOrganic(t){
-    for(let layer of starLayers){
-      for(let s of layer){
-        let angle = noise.noise3(s.x*0.00025, s.y*0.00025, t*0.00008)*Math.PI*2;
-        let speed = 0.03;
-        let jitterX = (Math.random() - 0.5) * 0.01;
-        let jitterY = (Math.random() - 0.5) * 0.01;
-        s.x += Math.cos(angle)*speed + jitterX;
-        s.y += Math.sin(angle)*speed + jitterY;
-        wrapPosition(s);
-      }
-    }
-    for(let cloud of dustClouds){
-      let angle = noise.noise3(cloud.x*0.0006, cloud.y*0.0006, t*0.00009)*Math.PI*2;
-      cloud.x += Math.cos(angle)*0.12; cloud.y += Math.sin(angle)*0.12;
-      wrapPosition(cloud);
-    }
-    for(let neb of nebulaLayers){
-      let angle = noise.noise3(neb.x*0.00025, neb.y*0.00025, t*0.00005)*Math.PI*2;
-      neb.x += Math.cos(angle)*0.06; neb.y += Math.sin(angle)*0.06;
-      wrapPosition(neb);
-      neb.phase = (neb.phase||0)+0.005;
-    }
-  }
-  function updateFlowParticles(){
-    for(let p of flowParticles){
-      let angle = getFlowAngle(p.x,p.y);
-      p.vx += Math.cos(angle)*0.025; p.vy += Math.sin(angle)*0.025;
-      let spd = p.vx*p.vx + p.vy*p.vy;
-      if(spd > 2.0*2.0){ p.vx*=0.97; p.vy*=0.97; }
-      p.x += p.vx; p.y += p.vy;
-      wrapPosition(p, 100);
-      p.life = (p.life+0.4)%100;
     }
   }
 
-  // ========== POSITION SAVING & LOADING (unchanged) ==========
+  function updateFlowField(t) {
+    let g = window._flowGrid;
+    let cs = g.cellSize,
+      cols = g.cols,
+      rows = g.rows,
+      angles = g.angles;
+    for (let i = 0; i < cols; i++) {
+      for (let j = 0; j < rows; j++) {
+        let x = (i - cols / 2) * cs,
+          y = (j - rows / 2) * cs;
+        angles[i + j * cols] = noise.noise3(x * 0.0008, y * 0.0008, t * 0.0002) * Math.PI * 5;
+      }
+    }
+  }
+
+  function getFlowAngle(px, py) {
+    let g = window._flowGrid;
+    let cx = Math.floor((px + WORLD_SIZE / 2) / g.cellSize) % g.cols;
+    let cy = Math.floor((py + WORLD_SIZE / 2) / g.cellSize) % g.rows;
+    if (cx < 0 || cy < 0 || cx >= g.cols || cy >= g.rows) return 0;
+    return g.angles[cx + cy * g.cols] || 0;
+  }
+
+  function updateOrganic(t) {
+    for (let layer of starLayers) {
+      for (let s of layer) {
+        let angle = noise.noise3(s.x * 0.00025, s.y * 0.00025, t * 0.00008) * Math.PI * 2;
+        let speed = 0.03;
+        let jitterX = (Math.random() - 0.5) * 0.01;
+        let jitterY = (Math.random() - 0.5) * 0.01;
+        s.x += Math.cos(angle) * speed + jitterX;
+        s.y += Math.sin(angle) * speed + jitterY;
+        wrapPosition(s);
+      }
+    }
+    for (let cloud of dustClouds) {
+      let angle = noise.noise3(cloud.x * 0.0006, cloud.y * 0.0006, t * 0.00009) * Math.PI * 2;
+      cloud.x += Math.cos(angle) * 0.12;
+      cloud.y += Math.sin(angle) * 0.12;
+      wrapPosition(cloud);
+    }
+    for (let neb of nebulaLayers) {
+      let angle = noise.noise3(neb.x * 0.00025, neb.y * 0.00025, t * 0.00005) * Math.PI * 2;
+      neb.x += Math.cos(angle) * 0.06;
+      neb.y += Math.sin(angle) * 0.06;
+      wrapPosition(neb);
+      neb.phase = (neb.phase || 0) + 0.005;
+    }
+  }
+
+  function updateFlowParticles() {
+    for (let p of flowParticles) {
+      let angle = getFlowAngle(p.x, p.y);
+      p.vx += Math.cos(angle) * 0.025;
+      p.vy += Math.sin(angle) * 0.025;
+      let spd = p.vx * p.vx + p.vy * p.vy;
+      if (spd > 2.0 * 2.0) { p.vx *= 0.97;
+        p.vy *= 0.97; }
+      p.x += p.vx;
+      p.y += p.vy;
+      wrapPosition(p, 100);
+      p.life = (p.life + 0.4) % 100;
+    }
+  }
+
+  // ─── POSITION SAVING ────────────────────────────────────────────
   let lastSavedPositions = new Map();
   let positionSaveInterval = null;
   const MOVE_THRESHOLD = 5.0;
@@ -874,8 +1453,12 @@
       if (dx > MOVE_THRESHOLD || dy > MOVE_THRESHOLD || !last) {
         let ref = db.collection('starPositions').doc(star.id);
         batch.set(ref, {
-          x: star.x, y: star.y, vx: star.vx, vy: star.vy,
-          mass: star.mass, radius: star.radius,
+          x: star.x,
+          y: star.y,
+          vx: star.vx,
+          vy: star.vy,
+          mass: star.mass,
+          radius: star.radius,
           updatedAt: now
         }, { merge: true });
         lastSavedPositions.set(star.id, { x: star.x, y: star.y, updatedAt: Date.now() });
@@ -884,14 +1467,12 @@
     }
     if (writes > 0) {
       await batch.commit();
-      console.log(`Saved ${writes} star positions`);
     }
   }
 
   let interpolating = false;
   let interpolStart = {};
   let interpolTarget = {};
-  let interpolProgress = 1.0;
   let interpolDuration = 2000;
   let interpolStartTime = 0;
 
@@ -913,9 +1494,8 @@
       interpolStart[u.star.id] = { x: u.star.x, y: u.star.y, vx: u.star.vx, vy: u.star.vy };
       interpolTarget[u.star.id] = { x: u.targetX, y: u.targetY, vx: u.targetVx, vy: u.targetVy };
     }
-    interpolProgress = 0;
     interpolStartTime = performance.now();
-    showToast("Loading saved universe positions...");
+    showToast("Loading saved universe…");
   }
 
   function updateInterpolation(now) {
@@ -948,58 +1528,62 @@
     }
   }
 
-  // ========== SIMULATION ==========
+  // ─── SIMULATION ──────────────────────────────────────────────────
   let lastFrameTimeSec = 0;
-  function simulate(nowSec){
+
+  function simulate(nowSec) {
     let now = Date.now();
     updateInterpolation(now);
     updateMassesAndRadii(nowSec);
-    
-    for(let note of notes){
-      if(!note.trail) note.trail=[];
-      note.trail.push({x:note.x,y:note.y});
-      if(note.trail.length>25) note.trail.shift();
-      if(note.fadeIn!=null && note.fadeIn<1) note.fadeIn+=0.02;
+
+    for (let note of notes) {
+      if (!note.trail) note.trail = [];
+      note.trail.push({ x: note.x, y: note.y });
+      if (note.trail.length > 25) note.trail.shift();
+      if (note.fadeIn != null && note.fadeIn < 1) note.fadeIn += 0.02;
       if (!note.systemId) {
         let flowAngle = getFlowAngle(note.x, note.y);
-        note.vx = (note.vx||0) + Math.cos(flowAngle)*0.006;
-        note.vy = (note.vy||0) + Math.sin(flowAngle)*0.006;
+        note.vx = (note.vx || 0) + Math.cos(flowAngle) * 0.006;
+        note.vy = (note.vy || 0) + Math.sin(flowAngle) * 0.006;
       } else {
         note.vx += (Math.random() - 0.5) * 0.015;
         note.vy += (Math.random() - 0.5) * 0.015;
       }
-      note.vx = (note.vx||0)*0.995;
-      note.vy = (note.vy||0)*0.995;
-      note.x += note.vx; note.y += note.vy;
+      note.vx = (note.vx || 0) * 0.995;
+      note.vy = (note.vy || 0) * 0.995;
+      note.x += note.vx;
+      note.y += note.vy;
       wrapPosition(note, note.radius);
       capVelocity(note);
-      note.pulsePhase = (note.pulsePhase||0)+0.008;
-      let ageMs = now - note.created, ageDays = ageMs/86400000;
-      note._isBirthday = (ageDays>=6.5&&ageDays<=7.5)||(ageDays>=29.5&&ageDays<=30.5);
-      note._ageMonths = ageDays/30;
+      note.pulsePhase = (note.pulsePhase || 0) + 0.008;
+      let ageMs = now - note.created,
+        ageDays = ageMs / 86400000;
+      note._isBirthday = (ageDays >= 6.5 && ageDays <= 7.5) || (ageDays >= 29.5 && ageDays <= 30.5);
+      note._ageMonths = ageDays / 30;
     }
-    for(let ts of tempStars) {
+    for (let ts of tempStars) {
       if (!ts.isTemp) continue;
       if (!ts.systemId) {
         let flowAngle = getFlowAngle(ts.x, ts.y);
-        ts.vx = (ts.vx||0) + Math.cos(flowAngle)*0.006;
-        ts.vy = (ts.vy||0) + Math.sin(flowAngle)*0.006;
+        ts.vx = (ts.vx || 0) + Math.cos(flowAngle) * 0.006;
+        ts.vy = (ts.vy || 0) + Math.sin(flowAngle) * 0.006;
       } else {
         ts.vx += (Math.random() - 0.5) * 0.015;
         ts.vy += (Math.random() - 0.5) * 0.015;
       }
-      ts.vx = (ts.vx||0)*0.995;
-      ts.vy = (ts.vy||0)*0.995;
-      ts.x += ts.vx; ts.y += ts.vy;
+      ts.vx = (ts.vx || 0) * 0.995;
+      ts.vy = (ts.vy || 0) * 0.995;
+      ts.x += ts.vx;
+      ts.y += ts.vy;
       wrapPosition(ts, 20);
       capVelocity(ts);
     }
-    
+
     applyUniversalGravity();
     updateSolarSystems();
     stabilizeSystemMotion();
 
-    for (let i=0; i<tempStars.length; i++) {
+    for (let i = 0; i < tempStars.length; i++) {
       let ts = tempStars[i];
       if (ts.expiresAt < Date.now()) {
         if (ts.systemId) {
@@ -1007,163 +1591,182 @@
           for (let s of systemStars) {
             let angle = Math.random() * Math.PI * 2;
             let speed = 1.5 + Math.random() * 1.5;
-            s.vx = (s.vx||0) + Math.cos(angle) * speed;
-            s.vy = (s.vy||0) + Math.sin(angle) * speed;
+            s.vx = (s.vx || 0) + Math.cos(angle) * speed;
+            s.vy = (s.vy || 0) + Math.sin(angle) * speed;
             capVelocity(s);
             s.systemId = null;
             if (s.isSun) s.isSun = false;
           }
         }
         tempStarsCollection.doc(ts.id).delete();
-        tempStars.splice(i,1);
+        tempStars.splice(i, 1);
         i--;
-        for (let p=0; p<55; p++) {
-          let angle=Math.random()*Math.PI*2, speed=0.4+Math.random()*1.4;
-          decayParticles.push({ x:ts.x, y:ts.y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed, life:2+Math.random()*3.5, size:1.2+Math.random()*3, color:`hsl(${30+Math.random()*40},80%,60%)` });
+        for (let p = 0; p < 55; p++) {
+          let angle = Math.random() * Math.PI * 2,
+            speed = 0.4 + Math.random() * 1.4;
+          decayParticles.push({ x: ts.x, y: ts.y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 2 + Math.random() * 3.5, size: 1.2 + Math.random() * 3, color: `hsl(${30 + Math.random() * 40},80%,60%)` });
         }
       }
     }
 
-    for(let i=birthdaySparkles.length-1;i>=0;i--){
-      birthdaySparkles[i].life-=0.02;
-      if(birthdaySparkles[i].life<=0) birthdaySparkles.splice(i,1);
+    for (let i = birthdaySparkles.length - 1; i >= 0; i--) {
+      birthdaySparkles[i].life -= 0.02;
+      if (birthdaySparkles[i].life <= 0) birthdaySparkles.splice(i, 1);
     }
-    if(Math.random()<0.3){
-      for(let note of notes){
-        if(note._isBirthday && Math.random()<0.1){
-          birthdaySparkles.push({ x:note.x+(Math.random()-0.5)*note.radius*2, y:note.y+(Math.random()-0.5)*note.radius*2, life:1+Math.random(), size:0.5+Math.random()*1.5 });
+    if (Math.random() < 0.3) {
+      for (let note of notes) {
+        if (note._isBirthday && Math.random() < 0.1) {
+          birthdaySparkles.push({ x: note.x + (Math.random() - 0.5) * note.radius * 2, y: note.y + (Math.random() - 0.5) * note.radius * 2, life: 1 + Math.random(), size: 0.5 + Math.random() * 1.5 });
         }
       }
     }
-    for(let i=0;i<MAX_BURST;i++){
+    for (let i = 0; i < MAX_BURST; i++) {
       let b = burstPool[i];
-      if(!b.active) continue;
-      b.x += b.vx; b.y += b.vy;
+      if (!b.active) continue;
+      b.x += b.vx;
+      b.y += b.vy;
       b.life--;
-      if(b.life<=0) b.active=false;
+      if (b.life <= 0) b.active = false;
     }
-    for(let i=sparks.length-1;i>=0;i--){
-      sparks[i].x+=sparks[i].vx; sparks[i].y+=sparks[i].vy;
-      sparks[i].life-=0.02;
-      if(sparks[i].life<=0) sparks.splice(i,1);
+    for (let i = sparks.length - 1; i >= 0; i--) {
+      sparks[i].x += sparks[i].vx;
+      sparks[i].y += sparks[i].vy;
+      sparks[i].life -= 0.02;
+      if (sparks[i].life <= 0) sparks.splice(i, 1);
     }
-    for(let i=decayParticles.length-1;i>=0;i--){
-      decayParticles[i].x+=decayParticles[i].vx; decayParticles[i].y+=decayParticles[i].vy;
-      decayParticles[i].life-=0.02;
-      if(decayParticles[i].life<=0) decayParticles.splice(i,1);
+    for (let i = decayParticles.length - 1; i >= 0; i--) {
+      decayParticles[i].x += decayParticles[i].vx;
+      decayParticles[i].y += decayParticles[i].vy;
+      decayParticles[i].life -= 0.02;
+      if (decayParticles[i].life <= 0) decayParticles.splice(i, 1);
     }
-    if(Math.random()<0.0006) spawnComet();
-    for(let i=0;i<MAX_COMETS;i++){
-      let c=cometPool[i];
-      if(!c.active) continue;
-      c.x+=c.vx; c.y+=c.vy;
+    if (Math.random() < 0.0006) spawnComet();
+    for (let i = 0; i < MAX_COMETS; i++) {
+      let c = cometPool[i];
+      if (!c.active) continue;
+      c.x += c.vx;
+      c.y += c.vy;
       c.life--;
-      if(c.life<=0) c.active=false;
+      if (c.life <= 0) c.active = false;
     }
-    camera.zoom += (camera.targetZoom-camera.zoom)*0.08;
+    camera.zoom += (camera.targetZoom - camera.zoom) * 0.08;
     camera.targetZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, camera.targetZoom));
-    for(let peerId in peerGlows) if(Date.now()-peerGlows[peerId].timestamp>15000) delete peerGlows[peerId];
+    for (let peerId in peerGlows)
+      if (Date.now() - peerGlows[peerId].timestamp > 15000) delete peerGlows[peerId];
     updateRD();
-    // Update floating messages
     let nowMs = performance.now();
-    for (let i = floatingMessages.length-1; i >= 0; i--) {
+    for (let i = floatingMessages.length - 1; i >= 0; i--) {
       let msg = floatingMessages[i];
       let elapsed = nowMs - msg.created;
       msg.life = Math.max(0, 1 - elapsed / msg.duration);
-      if (msg.life <= 0) floatingMessages.splice(i,1);
+      if (msg.life <= 0) floatingMessages.splice(i, 1);
     }
   }
 
-  // ========== RENDER ==========
-  function render(){
-    ctx.clearRect(0,0,w,h);
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(0,0,w,h);
-    let grad = ctx.createRadialGradient(w/2, h/2, 0, w/2, h/2, Math.max(w,h)*0.8);
-    grad.addColorStop(0, "rgba(40,50,100,0.2)");
-    grad.addColorStop(0.5, "rgba(20,30,70,0.1)");
+  // ─── RENDER ──────────────────────────────────────────────────────
+  function render() {
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = "#05050f";
+    ctx.fillRect(0, 0, w, h);
+    let grad = ctx.createRadialGradient(w / 2, h / 2, 0, w / 2, h / 2, Math.max(w, h) * 0.8);
+    grad.addColorStop(0, "rgba(40,50,100,0.15)");
+    grad.addColorStop(0.5, "rgba(20,30,70,0.08)");
     grad.addColorStop(1, "rgba(0,0,0,0)");
     ctx.fillStyle = grad;
-    ctx.fillRect(0,0,w,h);
-    
+    ctx.fillRect(0, 0, w, h);
+
     ctx.save();
-    ctx.translate(w/2,h/2);
-    ctx.scale(camera.zoom,camera.zoom);
-    ctx.translate(camera.x,camera.y);
+    ctx.translate(w / 2, h / 2);
+    ctx.scale(camera.zoom, camera.zoom);
+    ctx.translate(camera.x, camera.y);
     updateViewportBounds();
 
-    ctx.globalAlpha = 0.1;
-    ctx.drawImage(rdCanvas, -WORLD_SIZE/2, -WORLD_SIZE/2, WORLD_SIZE, WORLD_SIZE);
+    ctx.globalAlpha = 0.08;
+    ctx.drawImage(rdCanvas, -WORLD_SIZE / 2, -WORLD_SIZE / 2, WORLD_SIZE, WORLD_SIZE);
     ctx.globalAlpha = 1.0;
 
     const nowPerf = performance.now();
-    for(let layer of starLayers){
+    for (let layer of starLayers) {
       let parallax = layer[0].parallax;
       let cxOff = camera.x * parallax * 0.1;
       let cyOff = camera.y * parallax * 0.1;
-      for(let s of layer){
-        if(!isVisible(s.x, s.y, s.size)) continue;
-        let px = s.x - cxOff, py = s.y - cyOff;
-        let twinkle = 0.65 + 0.35*Math.sin(nowPerf*0.004 + s.phase);
-        ctx.fillStyle = `rgba(${s.colorTemp[0]},${s.colorTemp[1]},${s.colorTemp[2]},${s.brightness*twinkle*0.9})`;
-        ctx.beginPath(); ctx.arc(px, py, s.size, 0, Math.PI*2); ctx.fill();
+      for (let s of layer) {
+        if (!isVisible(s.x, s.y, s.size)) continue;
+        let px = s.x - cxOff,
+          py = s.y - cyOff;
+        let twinkle = 0.65 + 0.35 * Math.sin(nowPerf * 0.004 + s.phase);
+        ctx.fillStyle = `rgba(${s.colorTemp[0]},${s.colorTemp[1]},${s.colorTemp[2]},${s.brightness * twinkle * 0.9})`;
+        ctx.beginPath();
+        ctx.arc(px, py, s.size, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
-    for(let neb of nebulaLayers){
-      let pulse = 0.7+0.3*Math.sin(nowPerf*0.002*neb.pulseSpeed+neb.phase);
-      let rad = neb.radius*(0.9+0.1*Math.sin(nowPerf*0.001+neb.phase));
-      let gradN = ctx.createRadialGradient(neb.x, neb.y, rad*0.2, neb.x, neb.y, rad);
-      gradN.addColorStop(0, `rgba(${neb.color1[0]},${neb.color1[1]},${neb.color1[2]},${0.12*pulse})`);
-      gradN.addColorStop(0.5, `rgba(${neb.color2[0]},${neb.color2[1]},${neb.color2[2]},${0.06*pulse})`);
+    for (let neb of nebulaLayers) {
+      let pulse = 0.7 + 0.3 * Math.sin(nowPerf * 0.002 * neb.pulseSpeed + neb.phase);
+      let rad = neb.radius * (0.9 + 0.1 * Math.sin(nowPerf * 0.001 + neb.phase));
+      let gradN = ctx.createRadialGradient(neb.x, neb.y, rad * 0.2, neb.x, neb.y, rad);
+      gradN.addColorStop(0, `rgba(${neb.color1[0]},${neb.color1[1]},${neb.color1[2]},${0.12 * pulse})`);
+      gradN.addColorStop(0.5, `rgba(${neb.color2[0]},${neb.color2[1]},${neb.color2[2]},${0.06 * pulse})`);
       gradN.addColorStop(1, `rgba(${neb.color3[0]},${neb.color3[1]},${neb.color3[2]},0)`);
       ctx.fillStyle = gradN;
-      ctx.beginPath(); ctx.arc(neb.x, neb.y, rad, 0, Math.PI*2); ctx.fill();
+      ctx.beginPath();
+      ctx.arc(neb.x, neb.y, rad, 0, Math.PI * 2);
+      ctx.fill();
     }
 
-    for(let cloud of dustClouds){
-      if(!isVisible(cloud.x, cloud.y, 300)) continue;
-      for(let p of cloud.particles){
-        let wx = cloud.x + p.offsetX, wy = cloud.y + p.offsetY;
-        let alpha = p.alpha * (0.5+0.5*Math.sin(nowPerf*0.001+wx*0.02));
-        ctx.fillStyle = `rgba(${cloud.color[0]},${cloud.color[1]},${cloud.color[2]},${alpha*0.5})`;
-        ctx.beginPath(); ctx.arc(wx, wy, p.size, 0, Math.PI*2); ctx.fill();
+    for (let cloud of dustClouds) {
+      if (!isVisible(cloud.x, cloud.y, 300)) continue;
+      for (let p of cloud.particles) {
+        let wx = cloud.x + p.offsetX,
+          wy = cloud.y + p.offsetY;
+        let alpha = p.alpha * (0.5 + 0.5 * Math.sin(nowPerf * 0.001 + wx * 0.02));
+        ctx.fillStyle = `rgba(${cloud.color[0]},${cloud.color[1]},${cloud.color[2]},${alpha * 0.5})`;
+        ctx.beginPath();
+        ctx.arc(wx, wy, p.size, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
-    for(let p of flowParticles){
-      if(isVisible(p.x, p.y, p.size)){
-        let alpha = 0.3+0.2*Math.sin(p.life*0.2);
-        ctx.fillStyle = `rgba(200,220,255,${alpha*0.7})`;
-        ctx.beginPath(); ctx.arc(p.x, p.y, p.size*0.7, 0, Math.PI*2); ctx.fill();
+    for (let p of flowParticles) {
+      if (isVisible(p.x, p.y, p.size)) {
+        let alpha = 0.3 + 0.2 * Math.sin(p.life * 0.2);
+        ctx.fillStyle = `rgba(200,220,255,${alpha * 0.7})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * 0.7, 0, Math.PI * 2);
+        ctx.fill();
       }
     }
 
-    for(let gc of galacticClusters){
-      let glow = ctx.createRadialGradient(gc.x,gc.y,20,gc.x,gc.y,500);
-      glow.addColorStop(0,`rgba(${gc.color[0]},${gc.color[1]},${gc.color[2]},0.15)`);
-      glow.addColorStop(1,"rgba(0,0,0,0)");
-      ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(gc.x,gc.y,500,0,Math.PI*2); ctx.fill();
-      if(camera.zoom>0.55){
-        ctx.font = `${Math.max(12,18*camera.zoom)}px "Segoe UI",system-ui,sans-serif`;
-        ctx.fillStyle = `rgba(230,240,255,${0.8*Math.min(1,(camera.zoom-0.45)/0.4)})`;
-        ctx.shadowBlur=8; ctx.shadowColor="rgba(80,120,255,0.6)";
-        ctx.fillText(gc.name, gc.x-40, gc.y-70);
-        ctx.shadowBlur=0;
+    for (let gc of galacticClusters) {
+      let glow = ctx.createRadialGradient(gc.x, gc.y, 20, gc.x, gc.y, 500);
+      glow.addColorStop(0, `rgba(${gc.color[0]},${gc.color[1]},${gc.color[2]},0.15)`);
+      glow.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(gc.x, gc.y, 500, 0, Math.PI * 2);
+      ctx.fill();
+      if (camera.zoom > 0.55) {
+        ctx.font = `${Math.max(12, 18 * camera.zoom)}px -apple-system, "SF Pro Display", system-ui, sans-serif`;
+        ctx.fillStyle = `rgba(230,240,255,${0.8 * Math.min(1, (camera.zoom - 0.45) / 0.4)})`;
+        ctx.shadowBlur = 8;
+        ctx.shadowColor = "rgba(80,120,255,0.4)";
+        ctx.fillText(gc.name, gc.x - 40, gc.y - 70);
+        ctx.shadowBlur = 0;
       }
     }
 
-    ctx.strokeStyle = "rgba(160,180,240,0.4)";
+    ctx.strokeStyle = "rgba(160,180,240,0.25)";
     ctx.lineWidth = 0.9;
-    for(let cluster of currentClusters){
-      if(cluster.name){
+    for (let cluster of currentClusters) {
+      if (cluster.name) {
         let key = cluster.starIds.join(',');
-        if(!fractalPatterns[key]) fractalPatterns[key] = generateLSystem(cluster.name);
+        if (!fractalPatterns[key]) fractalPatterns[key] = generateLSystem(cluster.name);
         let lines = fractalPatterns[key];
         ctx.beginPath();
-        for(let line of lines){
-          ctx.moveTo(cluster.centroid.x+line.x1, cluster.centroid.y+line.y1);
-          ctx.lineTo(cluster.centroid.x+line.x2, cluster.centroid.y+line.y2);
+        for (let line of lines) {
+          ctx.moveTo(cluster.centroid.x + line.x1, cluster.centroid.y + line.y1);
+          ctx.lineTo(cluster.centroid.x + line.x2, cluster.centroid.y + line.y2);
         }
         ctx.stroke();
       }
@@ -1171,174 +1774,257 @@
 
     let allStars = [...notes, ...tempStars];
     let systems = new Map();
-    for (let star of allStars) if (star.systemId) {
-      if (!systems.has(star.systemId)) systems.set(star.systemId, []);
-      systems.get(star.systemId).push(star);
-    }
+    for (let star of allStars)
+      if (star.systemId) {
+        if (!systems.has(star.systemId)) systems.set(star.systemId, []);
+        systems.get(star.systemId).push(star);
+      }
     for (let [id, stars] of systems.entries()) {
       if (stars.length === 2) {
-        let s1 = stars[0], s2 = stars[1];
+        let s1 = stars[0],
+          s2 = stars[1];
         let totalMass = s1.mass + s2.mass;
         let baryX = s1.x + (s2.x - s1.x) * (s1.mass / totalMass);
         let baryY = s1.y + (s2.y - s1.y) * (s1.mass / totalMass);
-        ctx.beginPath(); ctx.arc(baryX, baryY, 5, 0, Math.PI*2);
-        ctx.fillStyle = "rgba(255,200,100,0.4)"; ctx.fill();
-        ctx.beginPath(); ctx.arc(baryX, baryY, 2, 0, Math.PI*2);
-        ctx.fillStyle = "rgba(255,220,150,0.8)"; ctx.fill();
+        ctx.beginPath();
+        ctx.arc(baryX, baryY, 5, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,200,100,0.3)";
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(baryX, baryY, 2, 0, Math.PI * 2);
+        ctx.fillStyle = "rgba(255,220,150,0.7)";
+        ctx.fill();
         ctx.setLineDash([5, 8]);
-        ctx.beginPath(); ctx.moveTo(s1.x, s1.y); ctx.lineTo(s2.x, s2.y);
-        ctx.strokeStyle = "rgba(200,180,255,0.5)"; ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(s1.x, s1.y);
+        ctx.lineTo(s2.x, s2.y);
+        ctx.strokeStyle = "rgba(200,180,255,0.3)";
+        ctx.stroke();
         ctx.setLineDash([]);
       }
     }
 
     ctx.save();
-    for(let sun of notes.filter(n=>n.isSun)){
-      ctx.setLineDash([6,10]);
-      ctx.lineDashOffset = nowPerf*0.007;
-      for(let planet of notes.filter(p=>p.orbitingSunId===sun.id)){
-        ctx.beginPath(); ctx.arc(sun.x, sun.y, planet.orbitRadius, 0, Math.PI*2);
-        ctx.strokeStyle="rgba(120,150,220,0.5)"; ctx.stroke();
+    for (let sun of notes.filter(n => n.isSun)) {
+      ctx.setLineDash([6, 10]);
+      ctx.lineDashOffset = nowPerf * 0.007;
+      for (let planet of notes.filter(p => p.orbitingSunId === sun.id)) {
+        ctx.beginPath();
+        ctx.arc(sun.x, sun.y, planet.orbitRadius, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(120,150,220,0.3)";
+        ctx.stroke();
       }
     }
     ctx.restore();
 
-    for(let star of notes){
-      if(!isVisible(star.x, star.y, star.radius*8)) continue;
+    for (let star of notes) {
+      if (!isVisible(star.x, star.y, star.radius * 8)) continue;
       let vs = getStarVisuals(star);
-      let pulse = Math.sin(star.pulsePhase||0)*0.5+0.5;
-      let size = Math.max(2.0, (star.radius||3.0)*vs.sizeFactor + pulse*0.6);
-      if(star.isSun) size *= 1.2;
-      let fadeAlpha = (star.fadeIn!=null)?star.fadeIn:1;
-      if(fadeAlpha<=0) continue;
+      let pulse = Math.sin(star.pulsePhase || 0) * 0.5 + 0.5;
+      let size = Math.max(2.0, (star.radius || 3.0) * vs.sizeFactor + pulse * 0.6);
+      if (star.isSun) size *= 1.2;
+      let fadeAlpha = (star.fadeIn != null) ? star.fadeIn : 1;
+      if (fadeAlpha <= 0) continue;
       let prevAlpha = ctx.globalAlpha;
       ctx.globalAlpha = fadeAlpha;
-      let glow = ctx.createRadialGradient(star.x, star.y, size*0.6, star.x, star.y, size*7);
-      glow.addColorStop(0, vs.glowColor); glow.addColorStop(1,"rgba(0,0,0,0)");
-      ctx.fillStyle=glow; ctx.beginPath(); ctx.arc(star.x, star.y, size*7, 0, Math.PI*2); ctx.fill();
-      let inner = ctx.createRadialGradient(star.x-2, star.y-2, 1, star.x, star.y, size*1.8);
-      inner.addColorStop(0, vs.coreColor); inner.addColorStop(0.5, vs.isWhiteDwarf?"#eeddff":"#aaccff"); inner.addColorStop(1,"rgba(0,0,0,0)");
-      ctx.fillStyle=inner; ctx.beginPath(); ctx.arc(star.x, star.y, size*1.4, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = vs.isWhiteDwarf?"#ffffff":"#cceeff";
-      ctx.shadowBlur=8; ctx.shadowColor=vs.isWhiteDwarf?"rgba(220,220,255,0.9)":"rgba(100,150,255,0.6)";
-      ctx.beginPath(); ctx.arc(star.x-1, star.y-1, size*0.35, 0, Math.PI*2); ctx.fill();
-      ctx.shadowBlur=0;
-      if(star.hasRing){
-        ctx.save(); ctx.translate(star.x,star.y); ctx.rotate(star.ringTilt||0);
-        ctx.beginPath(); ctx.ellipse(0,0, size*1.4, size*0.4, 0, 0, Math.PI*2);
-        ctx.strokeStyle = "rgba(200,220,255,0.5)";
+      let glow = ctx.createRadialGradient(star.x, star.y, size * 0.6, star.x, star.y, size * 7);
+      glow.addColorStop(0, vs.glowColor);
+      glow.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, size * 7, 0, Math.PI * 2);
+      ctx.fill();
+      let inner = ctx.createRadialGradient(star.x - 2, star.y - 2, 1, star.x, star.y, size * 1.8);
+      inner.addColorStop(0, vs.coreColor);
+      inner.addColorStop(0.5, vs.isWhiteDwarf ? "#eeddff" : "#aaccff");
+      inner.addColorStop(1, "rgba(0,0,0,0)");
+      ctx.fillStyle = inner;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, size * 1.4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = vs.isWhiteDwarf ? "#ffffff" : "#cceeff";
+      ctx.shadowBlur = 8;
+      ctx.shadowColor = vs.isWhiteDwarf ? "rgba(220,220,255,0.9)" : "rgba(100,150,255,0.6)";
+      ctx.beginPath();
+      ctx.arc(star.x - 1, star.y - 1, size * 0.35, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.shadowBlur = 0;
+      if (star.hasRing) {
+        ctx.save();
+        ctx.translate(star.x, star.y);
+        ctx.rotate(star.ringTilt || 0);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, size * 1.4, size * 0.4, 0, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(200,220,255,0.4)";
         ctx.lineWidth = 1.5;
         ctx.stroke();
         ctx.restore();
       }
-      if(star.gasGiant){
-        if(!star._gasBands){
+      if (star.gasGiant) {
+        if (!star._gasBands) {
           let bands = [];
-          let numBands = 4+Math.floor(Math.random()*4);
-          for(let b=0;b<numBands;b++){
-            bands.push({ offset:(b-numBands/2+0.5)*size*0.18, height:size*0.07+Math.random()*size*0.12, color:`hsl(${200+Math.random()*60}, ${60+Math.random()*30}%, ${55+Math.random()*25}%)` });
+          let numBands = 4 + Math.floor(Math.random() * 4);
+          for (let b = 0; b < numBands; b++) {
+            bands.push({ offset: (b - numBands / 2 + 0.5) * size * 0.18, height: size * 0.07 + Math.random() * size * 0.12, color: `hsl(${200 + Math.random() * 60}, ${60 + Math.random() * 30}%, ${55 + Math.random() * 25}%)` });
           }
           star._gasBands = bands;
         }
         let prevAlpha2 = ctx.globalAlpha;
         ctx.globalAlpha = 0.45;
-        for(let band of star._gasBands){
+        for (let band of star._gasBands) {
           ctx.fillStyle = band.color;
-          ctx.beginPath(); ctx.ellipse(star.x, star.y+band.offset, size*0.9, band.height, 0, 0, Math.PI*2); ctx.fill();
+          ctx.beginPath();
+          ctx.ellipse(star.x, star.y + band.offset, size * 0.9, band.height, 0, 0, Math.PI * 2);
+          ctx.fill();
         }
         ctx.globalAlpha = prevAlpha2;
       }
-      if(star._isBirthday){
-        ctx.fillStyle="rgba(220,200,255,0.4)";
-        for(let b=0;b<2;b++){
-          let bx=star.x+(Math.random()-0.5)*size*2, by=star.y+(Math.random()-0.5)*size*2;
-          ctx.beginPath(); ctx.arc(bx,by,1.0,0,Math.PI*2); ctx.fill();
+      if (star._isBirthday) {
+        ctx.fillStyle = "rgba(220,200,255,0.3)";
+        for (let b = 0; b < 2; b++) {
+          let bx = star.x + (Math.random() - 0.5) * size * 2,
+            by = star.y + (Math.random() - 0.5) * size * 2;
+          ctx.beginPath();
+          ctx.arc(bx, by, 1.0, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
-      if(star._ageMonths>1){
-        ctx.beginPath(); ctx.arc(star.x, star.y, size*2.0, 0, Math.PI*2);
-        ctx.strokeStyle="rgba(200,220,255,0.25)"; ctx.lineWidth=1.2; ctx.stroke();
+      if (star._ageMonths > 1) {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, size * 2.0, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(200,220,255,0.15)";
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
       }
-      if(star._ageMonths>2){
-        for(let m=0;m<2;m++){
-          let angle = nowPerf*0.001 + m*Math.PI;
-          let mx = star.x + Math.cos(angle)*size*1.8;
-          let my = star.y + Math.sin(angle)*size*1.8;
-          ctx.fillStyle="rgba(200,220,255,0.4)";
-          ctx.beginPath(); ctx.arc(mx, my, 1.2, 0, Math.PI*2); ctx.fill();
+      if (star._ageMonths > 2) {
+        for (let m = 0; m < 2; m++) {
+          let angle = nowPerf * 0.001 + m * Math.PI;
+          let mx = star.x + Math.cos(angle) * size * 1.8;
+          let my = star.y + Math.sin(angle) * size * 1.8;
+          ctx.fillStyle = "rgba(200,220,255,0.3)";
+          ctx.beginPath();
+          ctx.arc(mx, my, 1.2, 0, Math.PI * 2);
+          ctx.fill();
         }
       }
-      if(star._ageMonths>3){
-        ctx.beginPath(); ctx.arc(star.x, star.y, size*2.5, 0, Math.PI*2);
-        ctx.strokeStyle="rgba(160,180,240,0.2)"; ctx.lineWidth=1.0; ctx.stroke();
+      if (star._ageMonths > 3) {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, size * 2.5, 0, Math.PI * 2);
+        ctx.strokeStyle = "rgba(160,180,240,0.15)";
+        ctx.lineWidth = 1.0;
+        ctx.stroke();
       }
-      if(star.isSun){
-        let pa=ctx.globalAlpha; ctx.globalAlpha*=0.15;
-        for(let ray=0;ray<10;ray++){
-          let angle=(nowPerf*0.0005+ray*Math.PI/5)%(Math.PI*2);
-          let rayLength=size*(5+Math.sin(nowPerf*0.002+ray)*3);
-          let gradRay=ctx.createLinearGradient(star.x,star.y,star.x+Math.cos(angle)*rayLength,star.y+Math.sin(angle)*rayLength);
-          gradRay.addColorStop(0,"rgba(200,220,255,0.7)"); gradRay.addColorStop(1,"rgba(200,220,255,0)");
-          ctx.fillStyle=gradRay;
-          ctx.beginPath(); ctx.moveTo(star.x,star.y);
-          ctx.lineTo(star.x+Math.cos(angle-0.1)*rayLength,star.y+Math.sin(angle-0.1)*rayLength);
-          ctx.lineTo(star.x+Math.cos(angle+0.1)*rayLength,star.y+Math.sin(angle+0.1)*rayLength);
-          ctx.closePath(); ctx.fill();
+      if (star.isSun) {
+        let pa = ctx.globalAlpha;
+        ctx.globalAlpha *= 0.12;
+        for (let ray = 0; ray < 10; ray++) {
+          let angle = (nowPerf * 0.0005 + ray * Math.PI / 5) % (Math.PI * 2);
+          let rayLength = size * (5 + Math.sin(nowPerf * 0.002 + ray) * 3);
+          let gradRay = ctx.createLinearGradient(star.x, star.y, star.x + Math.cos(angle) * rayLength, star.y + Math.sin(angle) * rayLength);
+          gradRay.addColorStop(0, "rgba(200,220,255,0.6)");
+          gradRay.addColorStop(1, "rgba(200,220,255,0)");
+          ctx.fillStyle = gradRay;
+          ctx.beginPath();
+          ctx.moveTo(star.x, star.y);
+          ctx.lineTo(star.x + Math.cos(angle - 0.1) * rayLength, star.y + Math.sin(angle - 0.1) * rayLength);
+          ctx.lineTo(star.x + Math.cos(angle + 0.1) * rayLength, star.y + Math.sin(angle + 0.1) * rayLength);
+          ctx.closePath();
+          ctx.fill();
         }
-        ctx.globalAlpha=pa;
+        ctx.globalAlpha = pa;
       }
-      for(let pid in peerGlows){
-        if(peerGlows[pid].starId===star.id){
+      for (let pid in peerGlows) {
+        if (peerGlows[pid].starId === star.id) {
           let gc = peerGlows[pid].color;
-          ctx.save(); ctx.globalAlpha=0.5;
-          ctx.beginPath(); ctx.arc(star.x, star.y, size*3.5, 0, Math.PI*2);
-          ctx.strokeStyle=gc; ctx.lineWidth=3; ctx.shadowColor=gc; ctx.shadowBlur=12; ctx.stroke();
+          ctx.save();
+          ctx.globalAlpha = 0.4;
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, size * 3.5, 0, Math.PI * 2);
+          ctx.strokeStyle = gc;
+          ctx.lineWidth = 2.5;
+          ctx.shadowColor = gc;
+          ctx.shadowBlur = 12;
+          ctx.stroke();
           ctx.restore();
         }
       }
       ctx.globalAlpha = prevAlpha;
     }
 
-    for(let star of tempStars){
+    for (let star of tempStars) {
       let vs = getStarVisuals(star);
       let pulse = 0.96 + 0.04 * Math.sin(nowPerf * (star.isSpecial ? 0.0015 : 0.002));
       let size = (star.isSpecial ? 5.0 : 4.5) * vs.sizeFactor * pulse;
       if (star.isSun) size *= 1.3;
-      let g = ctx.createRadialGradient(star.x,star.y,size*0.5,star.x,star.y,size*6);
-      g.addColorStop(0, vs.glowColor); g.addColorStop(1,"rgba(255,100,50,0)");
-      ctx.fillStyle=g; ctx.beginPath(); ctx.arc(star.x,star.y,size*6,0,Math.PI*2); ctx.fill();
-      ctx.fillStyle=vs.coreColor; ctx.shadowBlur=12; ctx.shadowColor=star.isSpecial?"rgba(255,120,60,0.8)":"rgba(255,140,80,0.7)";
-      ctx.beginPath(); ctx.arc(star.x,star.y,size*0.9,0,Math.PI*2); ctx.fill();
-      ctx.beginPath(); ctx.arc(star.x,star.y,size*1.3+pulse*0.2,0,Math.PI*2); ctx.strokeStyle=vs.glowColor; ctx.lineWidth=1.5; ctx.stroke();
-      ctx.shadowBlur=0;
+      let g = ctx.createRadialGradient(star.x, star.y, size * 0.5, star.x, star.y, size * 6);
+      g.addColorStop(0, vs.glowColor);
+      g.addColorStop(1, "rgba(255,100,50,0)");
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, size * 6, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = vs.coreColor;
+      ctx.shadowBlur = 12;
+      ctx.shadowColor = star.isSpecial ? "rgba(255,120,60,0.7)" : "rgba(255,140,80,0.6)";
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, size * 0.9, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(star.x, star.y, size * 1.3 + pulse * 0.2, 0, Math.PI * 2);
+      ctx.strokeStyle = vs.glowColor;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.shadowBlur = 0;
     }
 
-    for(let i=0;i<MAX_COMETS;i++){
-      let c=cometPool[i];
-      if(!c.active) continue;
-      if(!isVisible(c.x,c.y,c.tailLength)) continue;
-      let tailX=c.x-c.vx*80, tailY=c.y-c.vy*80;
-      let gradC=ctx.createLinearGradient(c.x,c.y,tailX,tailY);
-      gradC.addColorStop(0,"rgba(255,220,140,0.8)"); gradC.addColorStop(1,"rgba(140,100,60,0)");
-      ctx.beginPath(); ctx.moveTo(c.x,c.y); ctx.lineTo(tailX,tailY);
-      ctx.strokeStyle=gradC; ctx.lineWidth=3; ctx.stroke();
-      ctx.fillStyle="#ffdd99"; ctx.beginPath(); ctx.arc(c.x,c.y,3,0,Math.PI*2); ctx.fill();
+    for (let i = 0; i < MAX_COMETS; i++) {
+      let c = cometPool[i];
+      if (!c.active) continue;
+      if (!isVisible(c.x, c.y, c.tailLength)) continue;
+      let tailX = c.x - c.vx * 80,
+        tailY = c.y - c.vy * 80;
+      let gradC = ctx.createLinearGradient(c.x, c.y, tailX, tailY);
+      gradC.addColorStop(0, "rgba(255,220,140,0.7)");
+      gradC.addColorStop(1, "rgba(140,100,60,0)");
+      ctx.beginPath();
+      ctx.moveTo(c.x, c.y);
+      ctx.lineTo(tailX, tailY);
+      ctx.strokeStyle = gradC;
+      ctx.lineWidth = 3;
+      ctx.stroke();
+      ctx.fillStyle = "#ffdd99";
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, 3, 0, Math.PI * 2);
+      ctx.fill();
     }
-    for(let p of sparks) if(isVisible(p.x,p.y,2)){ ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,2.5*p.life,0,Math.PI*2); ctx.fill(); }
-    for(let p of decayParticles) if(isVisible(p.x,p.y,p.size)){ ctx.fillStyle=p.color; ctx.beginPath(); ctx.arc(p.x,p.y,p.size*(p.life*0.6+0.3),0,Math.PI*2); ctx.fill(); }
-    for(let i=0;i<MAX_BURST;i++){
-      let p=burstPool[i];
-      if(!p.active) continue;
-      if(!isVisible(p.x,p.y,p.size)) continue;
-      let alpha = p.life/90;
+    for (let p of sparks)
+      if (isVisible(p.x, p.y, 2)) { ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 2.5 * p.life, 0, Math.PI * 2);
+        ctx.fill(); }
+    for (let p of decayParticles)
+      if (isVisible(p.x, p.y, p.size)) { ctx.fillStyle = p.color;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size * (p.life * 0.6 + 0.3), 0, Math.PI * 2);
+        ctx.fill(); }
+    for (let i = 0; i < MAX_BURST; i++) {
+      let p = burstPool[i];
+      if (!p.active) continue;
+      if (!isVisible(p.x, p.y, p.size)) continue;
+      let alpha = p.life / 90;
       ctx.fillStyle = p.color.replace('1)', `${alpha})`);
-      ctx.beginPath(); ctx.arc(p.x,p.y,p.size,0,Math.PI*2); ctx.fill();
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      ctx.fill();
     }
-    for(let sp of birthdaySparkles) if(isVisible(sp.x,sp.y,sp.size)){ ctx.fillStyle=`rgba(220,200,255,${sp.life*0.6})`; ctx.beginPath(); ctx.arc(sp.x,sp.y,sp.size,0,Math.PI*2); ctx.fill(); }
-    
+    for (let sp of birthdaySparkles)
+      if (isVisible(sp.x, sp.y, sp.size)) { ctx.fillStyle = `rgba(220,200,255,${sp.life * 0.6})`;
+        ctx.beginPath();
+        ctx.arc(sp.x, sp.y, sp.size, 0, Math.PI * 2);
+        ctx.fill(); }
+
     ctx.restore();
 
-    // Draw floating messages (canvas-based)
     ctx.save();
     let nowMs = performance.now();
     for (let msg of floatingMessages) {
@@ -1346,10 +2032,10 @@
       let progress = Math.min(1, elapsed / msg.duration);
       let alpha = progress < 0.3 ? progress / 0.3 : 1 - (progress - 0.3) / 0.7;
       let offsetY = -20 - progress * 40;
-      let screenX = (msg.worldX + camera.x) * camera.zoom + w/2;
-      let screenY = (msg.worldY + camera.y) * camera.zoom + h/2;
+      let screenX = (msg.worldX + camera.x) * camera.zoom + w / 2;
+      let screenY = (msg.worldY + camera.y) * camera.zoom + h / 2;
       ctx.globalAlpha = alpha;
-      ctx.font = '14px "Segoe UI", system-ui, sans-serif';
+      ctx.font = '13px -apple-system, "SF Pro Display", system-ui, sans-serif';
       ctx.fillStyle = '#ffe5b0';
       ctx.shadowColor = 'rgba(0,0,0,0.8)';
       ctx.shadowBlur = 6;
@@ -1360,8 +2046,8 @@
     ctx.globalAlpha = 1;
   }
 
-  // ========== FIREBASE HELPERS ==========
-  async function saveNoteToFirestore(note){ 
+  // ─── FIREBASE HELPERS ────────────────────────────────────────────
+  async function saveNoteToFirestore(note) {
     let data = {
       id: note.id,
       created: note.created,
@@ -1379,15 +2065,21 @@
     };
     await notesCollection.doc(note.id).set(data);
   }
-  function debouncedSave(note){ if(saveTimer) clearTimeout(saveTimer); saveTimer=setTimeout(()=>saveNoteToFirestore(note),500); }
-  async function deleteNoteFromFirestore(id){ await notesCollection.doc(id).delete(); }
-  function updatePresence(starId){ let now=Date.now(); if(now-lastPresenceUpdate<2000) return; lastPresenceUpdate=now; presenceCollection.doc(localPeerId).set({peerId:localPeerId,starId,timestamp:now}); }
-  function getPeerColor(peerId){ let hash=0; for(let i=0;i<peerId.length;i++) hash=peerId.charCodeAt(i)+((hash<<5)-hash); return `hsl(${hash%360},70%,65%)`; }
 
-  // ========== CREATE / DELETE STARS ==========
+  function debouncedSave(note) { if (saveTimer) clearTimeout(saveTimer);
+    saveTimer = setTimeout(() => saveNoteToFirestore(note), 500); }
+  async function deleteNoteFromFirestore(id) { await notesCollection.doc(id).delete(); }
+
+  function updatePresence(starId) { let now = Date.now(); if (now - lastPresenceUpdate < 2000) return;
+    lastPresenceUpdate = now;
+    presenceCollection.doc(localPeerId).set({ peerId: localPeerId, starId, timestamp: now }); }
+
+  function getPeerColor(peerId) { let hash = 0; for (let i = 0; i < peerId.length; i++) hash = peerId.charCodeAt(i) + ((hash << 5) - hash); return `hsl(${hash % 360},70%,65%)`; }
+
+  // ─── CREATE / DELETE ──────────────────────────────────────────────
   const SPAWN_RADIUS = 4000;
 
-  function createMemory(text=""){
+  function createMemory(text = "") {
     let starId = Date.now() + Math.random().toString(36);
     let rng = makeSeededRandom(starId);
     let radius = SPAWN_RADIUS;
@@ -1400,17 +2092,37 @@
     let hasRing = typeInfo.hasRing || false;
     let gasGiant = typeInfo.gasGiant || false;
     let mass = 1.5 + rng() * 8;
-    let note={
+    let note = {
       id: starId,
-      created: Date.now(), opened:0, text:text.trim()===""?"a drifting thought":text,
-      x, y, vx:(rng()-0.5)*0.06, vy:(rng()-0.5)*0.06,
-      radius:3.5+rng()*3.5, mass: mass, orbitPhase:0, pulsePhase:rng()*Math.PI*2,
-      creatorId:localPeerId, creatorName:localPeerName, trail:[], isSun:false, orbitingSunId:null,
-      orbitRadius:0, orbitAngle:0, orbitSpeed:0, orbitDirection:1, fadeIn:0,
-      starTypeName, starTypeMul, starColor, hasRing, gasGiant,
+      created: Date.now(),
+      opened: 0,
+      text: text.trim() === "" ? "a drifting thought" : text,
+      x,
+      y,
+      vx: (rng() - 0.5) * 0.06,
+      vy: (rng() - 0.5) * 0.06,
+      radius: 3.5 + rng() * 3.5,
+      mass: mass,
+      orbitPhase: 0,
+      pulsePhase: rng() * Math.PI * 2,
+      creatorId: localPeerId,
+      creatorName: localPeerName,
+      trail: [],
+      isSun: false,
+      orbitingSunId: null,
+      orbitRadius: 0,
+      orbitAngle: 0,
+      orbitSpeed: 0,
+      orbitDirection: 1,
+      fadeIn: 0,
+      starTypeName,
+      starTypeMul,
+      starColor,
+      hasRing,
+      gasGiant,
       systemId: null,
       initialMass: mass,
-      initialRadius: 3.5+rng()*3.5,
+      initialRadius: 3.5 + rng() * 3.5,
       isTemp: false
     };
     note.radius = note.initialRadius;
@@ -1418,88 +2130,94 @@
     debouncedSave(note);
     updateCounter();
     showToast(`${localPeerName} created a ${starTypeName}`, note);
-    if(navigator.vibrate) navigator.vibrate(15);
-    for(let i=0;i<35;i++) spawnBurst(x,y, false);
+    if (navigator.vibrate) navigator.vibrate(15);
+    for (let i = 0; i < 35; i++) spawnBurst(x, y, false);
     updatePresence(note.id);
     return note;
   }
-  function deleteNote(id){
-    let star=notes.find(n=>n.id===id);
-    if(star){
-      for(let i=0;i<55;i++){
-        let angle=Math.random()*Math.PI*2, speed=0.4+Math.random()*1.4;
-        decayParticles.push({ x:star.x, y:star.y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed, life:2+Math.random()*3.5, size:1.2+Math.random()*3, color:`hsl(${30+Math.random()*40},80%,60%)` });
+
+  function deleteNote(id) {
+    let star = notes.find(n => n.id === id);
+    if (star) {
+      for (let i = 0; i < 55; i++) {
+        let angle = Math.random() * Math.PI * 2,
+          speed = 0.4 + Math.random() * 1.4;
+        decayParticles.push({ x: star.x, y: star.y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 2 + Math.random() * 3.5, size: 1.2 + Math.random() * 3, color: `hsl(${30 + Math.random() * 40},80%,60%)` });
       }
     }
-    notes = notes.filter(n=>n.id!==id);
+    notes = notes.filter(n => n.id !== id);
     deleteNoteFromFirestore(id);
     updateCounter();
   }
-  async function clearAllStars(){
-    for(let n of notes) await deleteNoteFromFirestore(n.id);
-    notes = [];
-    for(let ts of tempStars) await tempStarsCollection.doc(ts.id).delete();
-    tempStars = [];
-    updateCounter();
-    showToast("entire galaxy cleared");
-  }
-  function updateCounter(){
+
+  function updateCounter() {
     let total = notes.length + tempStars.length;
     document.getElementById("starCountValue").innerText = total;
   }
 
-  function computeClusters(){
-    let threshold=300, visited=new Set(), clusters=[];
-    for(let i=0;i<notes.length;i++){
-      if(visited.has(i)) continue;
-      let comp=[], queue=[i]; visited.add(i);
-      while(queue.length){
-        let idx=queue.pop(); comp.push(idx);
-        for(let j=0;j<notes.length;j++){
-          if(visited.has(j)) continue;
-          let dx=notes[idx].x-notes[j].x, dy=notes[idx].y-notes[j].y;
-          if(dx*dx+dy*dy < threshold*threshold){
-            visited.add(j); queue.push(j);
+  function computeClusters() {
+    let threshold = 300,
+      visited = new Set(),
+      clusters = [];
+    for (let i = 0; i < notes.length; i++) {
+      if (visited.has(i)) continue;
+      let comp = [],
+        queue = [i];
+      visited.add(i);
+      while (queue.length) {
+        let idx = queue.pop();
+        comp.push(idx);
+        for (let j = 0; j < notes.length; j++) {
+          if (visited.has(j)) continue;
+          let dx = notes[idx].x - notes[j].x,
+            dy = notes[idx].y - notes[j].y;
+          if (dx * dx + dy * dy < threshold * threshold) {
+            visited.add(j);
+            queue.push(j);
           }
         }
       }
-      if(comp.length>=3){
-        let cx=0,cy=0;
-        for(let idx of comp){ cx+=notes[idx].x; cy+=notes[idx].y; }
-        cx/=comp.length; cy/=comp.length;
-        let starIds=comp.map(i=>notes[i].id);
-        let name=namedConstellations.find(nc=>nc.starIds.length===starIds.length && nc.starIds.every(id=>starIds.includes(id)))?.name||null;
-        clusters.push({ starIds, centroid:{x:cx,y:cy}, name });
+      if (comp.length >= 3) {
+        let cx = 0,
+          cy = 0;
+        for (let idx of comp) { cx += notes[idx].x;
+          cy += notes[idx].y; }
+        cx /= comp.length;
+        cy /= comp.length;
+        let starIds = comp.map(i => notes[i].id);
+        let name = namedConstellations.find(nc => nc.starIds.length === starIds.length && nc.starIds.every(id => starIds.includes(id)))?.name || null;
+        clusters.push({ starIds, centroid: { x: cx, y: cy }, name });
       }
     }
-    currentClusters=clusters;
+    currentClusters = clusters;
   }
-  function autoNameUnnamedClusters(){
-    for(let cluster of currentClusters){
-      if(!cluster.name && cluster.starIds.length>=3){
-        let existing=namedConstellations.find(c=>c.starIds.join(',')===cluster.starIds.join(','));
-        if(!existing){
-          let newName=autoNames[Math.floor(Math.random()*autoNames.length)];
-          while(namedConstellations.some(c=>c.name===newName)) newName+=" "+(Math.floor(Math.random()*100)+1);
-          namedConstellations.push({ starIds:cluster.starIds, name:newName });
-          constellationsCollection.doc(cluster.starIds.join(',')).set({ starIds:cluster.starIds, name:newName });
+
+  function autoNameUnnamedClusters() {
+    for (let cluster of currentClusters) {
+      if (!cluster.name && cluster.starIds.length >= 3) {
+        let existing = namedConstellations.find(c => c.starIds.join(',') === cluster.starIds.join(','));
+        if (!existing) {
+          let newName = autoNames[Math.floor(Math.random() * autoNames.length)];
+          while (namedConstellations.some(c => c.name === newName)) newName += " " + (Math.floor(Math.random() * 100) + 1);
+          namedConstellations.push({ starIds: cluster.starIds, name: newName });
+          constellationsCollection.doc(cluster.starIds.join(',')).set({ starIds: cluster.starIds, name: newName });
           showToast(`New system: ${newName}`);
         }
       }
     }
   }
 
-  // ========== EPHEMERAL STAR SPAWNING ==========
+  // ─── EPHEMERAL STARS ──────────────────────────────────────────────
   async function spawnEphemeralBatch(count = 0) {
     if (!quotesLoaded) return;
-    if (count <= 0) count = 1 + Math.floor(Math.random() * 3); // 1-3 stars
+    if (count <= 0) count = 1 + Math.floor(Math.random() * 3);
     let specialIndex = Math.floor(Math.random() * count);
     let radius = SPAWN_RADIUS;
     for (let i = 0; i < count; i++) {
       let isSpecial = (i === specialIndex);
       let expiryDays = 1 + Math.random() * 30;
       let expiresAt = Date.now() + expiryDays * 86400000;
-      let starId = 'temp_' + Date.now() + '_' + Math.random().toString(36).substr(2,6);
+      let starId = 'temp_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
       let rng = makeSeededRandom(starId);
       let x = (rng() - 0.5) * radius * 2;
       let y = (rng() - 0.5) * radius * 2;
@@ -1509,26 +2227,37 @@
       let typeInfo = pickDeterministicType(rng, true);
       let tempStar = {
         id: starId,
-        x, y, vx, vy, mass,
-        createdAt: Date.now(), expiresAt,
+        x,
+        y,
+        vx,
+        vy,
+        mass,
+        createdAt: Date.now(),
+        expiresAt,
         message: getRandomQuote(isSpecial),
-        isSpecial, rewarded: false, creatorId: null, isTemp: true,
-        systemId: null, initialMass: mass, initialRadius: 4 + rng() * 3,
-        starTypeName: typeInfo.name, starTypeMul: typeInfo.sizeMul,
-        starColor: typeInfo.color, hasRing: false, gasGiant: false
+        isSpecial,
+        rewarded: false,
+        creatorId: null,
+        isTemp: true,
+        systemId: null,
+        initialMass: mass,
+        initialRadius: 4 + rng() * 3,
+        starTypeName: typeInfo.name,
+        starTypeMul: typeInfo.sizeMul,
+        starColor: typeInfo.color,
+        hasRing: false,
+        gasGiant: false
       };
       tempStar.radius = tempStar.initialRadius;
       await tempStarsCollection.doc(tempStar.id).set(tempStar);
     }
-    showToast(`${count} new ephemeral stars have appeared`);
+    showToast(`${count} new ephemeral stars appeared`);
   }
 
   let ephemeralTimer = null;
 
   function scheduleEphemeralSpawns() {
-    // Spawn first batch after a delay (10-30 min) so not immediate
     let firstDelay = (10 + Math.floor(Math.random() * 20)) * 60 * 1000;
-    // Then spawn every 30-90 min
     let intervalMin = 30 * 60 * 1000;
     let intervalMax = 90 * 60 * 1000;
 
@@ -1536,24 +2265,22 @@
       let delay = intervalMin + Math.random() * (intervalMax - intervalMin);
       ephemeralTimer = setTimeout(() => {
         spawnEphemeralBatch();
-        scheduleNext(); // schedule next
+        scheduleNext();
       }, delay);
     }
-
-    // Start the cycle after the initial delay
     ephemeralTimer = setTimeout(() => {
       spawnEphemeralBatch();
       scheduleNext();
     }, firstDelay);
   }
 
-  function listenToFirestore(){
-    notesCollection.onSnapshot(snap=>{
-      snap.docChanges().forEach(ch=>{
-        let data=ch.doc.data();
-        if(ch.type==="added"||ch.type==="modified"){
-          let idx=notes.findIndex(n=>n.id===data.id);
-          if(idx!==-1) {
+  function listenToFirestore() {
+    notesCollection.onSnapshot(snap => {
+      snap.docChanges().forEach(ch => {
+        let data = ch.doc.data();
+        if (ch.type === "added" || ch.type === "modified") {
+          let idx = notes.findIndex(n => n.id === data.id);
+          if (idx !== -1) {
             notes[idx].text = data.text;
             notes[idx].creatorName = data.creatorName;
             notes[idx].starTypeName = data.starType;
@@ -1592,45 +2319,49 @@
             };
             notes.push(note);
           }
-        } else if(ch.type==="removed"){
-          let removed=notes.find(n=>n.id===ch.doc.id);
-          if(removed){
-            for(let i=0;i<55;i++){
-              let angle=Math.random()*Math.PI*2, speed=0.4+Math.random()*1.4;
-              decayParticles.push({ x:removed.x, y:removed.y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed, life:2+Math.random()*3.5, size:1.2+Math.random()*3, color:`hsl(${30+Math.random()*40},80%,60%)` });
+        } else if (ch.type === "removed") {
+          let removed = notes.find(n => n.id === ch.doc.id);
+          if (removed) {
+            for (let i = 0; i < 55; i++) {
+              let angle = Math.random() * Math.PI * 2,
+                speed = 0.4 + Math.random() * 1.4;
+              decayParticles.push({ x: removed.x, y: removed.y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 2 + Math.random() * 3.5, size: 1.2 + Math.random() * 3, color: `hsl(${30 + Math.random() * 40},80%,60%)` });
             }
           }
-          notes=notes.filter(n=>n.id!==ch.doc.id);
+          notes = notes.filter(n => n.id !== ch.doc.id);
         }
       });
-      updateCounter(); computeClusters(); autoNameUnnamedClusters();
+      updateCounter();
+      computeClusters();
+      autoNameUnnamedClusters();
     });
-    constellationsCollection.onSnapshot(snap=>{
-      snap.docChanges().forEach(ch=>{
-        let data=ch.doc.data();
-        if(ch.type==="added"||ch.type==="modified"){
-          let existing=namedConstellations.findIndex(c=>c.starIds.join(',')===data.starIds.join(','));
-          if(existing!==-1) namedConstellations[existing]=data;
+    constellationsCollection.onSnapshot(snap => {
+      snap.docChanges().forEach(ch => {
+        let data = ch.doc.data();
+        if (ch.type === "added" || ch.type === "modified") {
+          let existing = namedConstellations.findIndex(c => c.starIds.join(',') === data.starIds.join(','));
+          if (existing !== -1) namedConstellations[existing] = data;
           else namedConstellations.push(data);
-        } else if(ch.type==="removed"){
-          namedConstellations=namedConstellations.filter(c=>c.starIds.join(',')!==data.starIds.join(','));
+        } else if (ch.type === "removed") {
+          namedConstellations = namedConstellations.filter(c => c.starIds.join(',') !== data.starIds.join(','));
         }
       });
     });
-    presenceCollection.onSnapshot(snap=>{
-      snap.docChanges().forEach(ch=>{
-        let data=ch.doc.data();
-        if(!data||data.peerId===localPeerId) return;
-        if(ch.type==="removed") delete peerGlows[data.peerId];
-        else peerGlows[data.peerId]={ starId:data.starId, timestamp:data.timestamp, color:getPeerColor(data.peerId) };
+    presenceCollection.onSnapshot(snap => {
+      snap.docChanges().forEach(ch => {
+        let data = ch.doc.data();
+        if (!data || data.peerId === localPeerId) return;
+        if (ch.type === "removed") delete peerGlows[data.peerId];
+        else peerGlows[data.peerId] = { starId: data.starId, timestamp: data.timestamp, color: getPeerColor(data.peerId) };
       });
     });
   }
-  function listenToTempStars(){
-    tempStarsCollection.onSnapshot(snap=>{
-      snap.docChanges().forEach(ch=>{
-        let data=ch.doc.data();
-        if(ch.type==="added") {
+
+  function listenToTempStars() {
+    tempStarsCollection.onSnapshot(snap => {
+      snap.docChanges().forEach(ch => {
+        let data = ch.doc.data();
+        if (ch.type === "added") {
           let rng = makeSeededRandom(data.id);
           let radius = SPAWN_RADIUS;
           data.x = (rng() - 0.5) * radius * 2;
@@ -1642,153 +2373,197 @@
           data.starTypeMul = data.starTypeMul || 1.0;
           data.starColor = data.starColor || { core: "#ffaa66", glow: "rgba(255,160,80,0.6)" };
           tempStars.push(data);
-        } else if(ch.type==="modified"){
-          let idx=tempStars.findIndex(s=>s.id===data.id);
-          if(idx!==-1) tempStars[idx]={...tempStars[idx], ...data};
-        } else if(ch.type==="removed"){
-          let removed=tempStars.find(s=>s.id===ch.doc.id);
-          if(removed){
-            for(let i=0;i<55;i++){
-              let angle=Math.random()*Math.PI*2, speed=0.4+Math.random()*1.4;
-              decayParticles.push({ x:removed.x, y:removed.y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed, life:2+Math.random()*3.5, size:1.2+Math.random()*3, color:`hsl(${30+Math.random()*40},80%,60%)` });
+        } else if (ch.type === "modified") {
+          let idx = tempStars.findIndex(s => s.id === data.id);
+          if (idx !== -1) tempStars[idx] = { ...tempStars[idx], ...data };
+        } else if (ch.type === "removed") {
+          let removed = tempStars.find(s => s.id === ch.doc.id);
+          if (removed) {
+            for (let i = 0; i < 55; i++) {
+              let angle = Math.random() * Math.PI * 2,
+                speed = 0.4 + Math.random() * 1.4;
+              decayParticles.push({ x: removed.x, y: removed.y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 2 + Math.random() * 3.5, size: 1.2 + Math.random() * 3, color: `hsl(${30 + Math.random() * 40},80%,60%)` });
             }
           }
-          tempStars=tempStars.filter(s=>s.id!==ch.doc.id);
+          tempStars = tempStars.filter(s => s.id !== ch.doc.id);
         }
       });
       updateCounter();
     });
   }
 
-  // ========== UI HELPERS ==========
+  // ─── UI HELPERS ────────────────────────────────────────────────────
+  let toastTimeout = null;
+
   function showToast(msg, target) {
     let worldX, worldY;
     if (target && target.x !== undefined) {
       worldX = target.x;
       worldY = target.y - (target.radius || 5) * 0.8;
     } else {
-      let screenX = w/2;
+      let screenX = w / 2;
       let screenY = h * 0.12;
-      worldX = (screenX - w/2) / camera.zoom - camera.x;
-      worldY = (screenY - h/2) / camera.zoom - camera.y;
+      worldX = (screenX - w / 2) / camera.zoom - camera.x;
+      worldY = (screenY - h / 2) / camera.zoom - camera.y;
     }
     let duration = Math.min(8000, Math.max(2000, msg.length * 45 + 500));
     floatingMessages.push({
-      worldX, worldY,
+      worldX,
+      worldY,
       text: msg,
       created: performance.now(),
       duration: duration,
       life: 1
     });
+
+    // Also show a toast in the UI
+    const container = document.getElementById('toastContainer');
+    const toast = document.createElement('div');
+    toast.className = 'toast';
+    toast.textContent = msg;
+    container.appendChild(toast);
+    requestAnimationFrame(() => {
+      toast.classList.add('show');
+    });
+    if (toastTimeout) clearTimeout(toastTimeout);
+    toastTimeout = setTimeout(() => {
+      toast.classList.remove('show');
+      setTimeout(() => toast.remove(), 500);
+    }, duration);
   }
 
-  let isPan = false, panStart = {x:0,y:0}, camStart = {x:0,y:0};
-  let lastTapTime = 0, pendingSingleClick = null;
+  let isPan = false,
+    panStart = { x: 0, y: 0 },
+    camStart = { x: 0, y: 0 };
+  let lastTapTime = 0,
+    pendingSingleClick = null;
 
-  function worldPos(px,py){ return { x:(px-w/2)/camera.zoom-camera.x, y:(py-h/2)/camera.zoom-camera.y }; }
-  function hitTest(px,py){
-    let wp=worldPos(px,py); let best=null, bestD=100;
-    for(let n of notes){
-      if(!isVisible(n.x,n.y,n.radius*4)) continue;
-      let dx=wp.x-n.x, dy=wp.y-n.y;
-      let d=dx*dx+dy*dy;
-      let thresh=Math.min(100,45+(n.radius||3.5)*3); thresh*=thresh;
-      if(d<thresh && d<bestD){ bestD=d; best=n; }
+  function worldPos(px, py) { return { x: (px - w / 2) / camera.zoom - camera.x, y: (py - h / 2) / camera.zoom - camera.y }; }
+
+  function hitTest(px, py) {
+    let wp = worldPos(px, py);
+    let best = null,
+      bestD = 100;
+    for (let n of notes) {
+      if (!isVisible(n.x, n.y, n.radius * 4)) continue;
+      let dx = wp.x - n.x,
+        dy = wp.y - n.y;
+      let d = dx * dx + dy * dy;
+      let thresh = Math.min(100, 45 + (n.radius || 3.5) * 3);
+      thresh *= thresh;
+      if (d < thresh && d < bestD) { bestD = d;
+        best = n; }
     }
-    for(let t of tempStars){
-      let dx=wp.x-t.x, dy=wp.y-t.y;
-      let d=dx*dx+dy*dy;
-      if(d<700 && d<bestD){ bestD=d; best=t; }
+    for (let t of tempStars) {
+      let dx = wp.x - t.x,
+        dy = wp.y - t.y;
+      let d = dx * dx + dy * dy;
+      if (d < 700 && d < bestD) { bestD = d;
+        best = t; }
     }
     return best;
   }
-  function hitTestConstellation(px,py){
-    let wp=worldPos(px,py);
-    for(let cl of currentClusters){
-      if(cl.starIds.length>=3){
-        let dx=wp.x-cl.centroid.x, dy=wp.y-cl.centroid.y;
-        if(dx*dx+dy*dy<4000) return cl;
+
+  function hitTestConstellation(px, py) {
+    let wp = worldPos(px, py);
+    for (let cl of currentClusters) {
+      if (cl.starIds.length >= 3) {
+        let dx = wp.x - cl.centroid.x,
+          dy = wp.y - cl.centroid.y;
+        if (dx * dx + dy * dy < 4000) return cl;
       }
     }
     return null;
   }
 
   let previewTimer;
-  async function showPreview(star, cx, cy){
-    if(previewTimer) clearTimeout(previewTimer);
-    let creatorInfo = "", text = "";
-    if(star.isTemp){
-      if(star.isSpecial && !star.rewarded){
-        await tempStarsCollection.doc(star.id).update({rewarded:true});
+
+  async function showPreview(star, cx, cy) {
+    if (previewTimer) clearTimeout(previewTimer);
+    let creatorInfo = "",
+      text = "";
+    if (star.isTemp) {
+      if (star.isSpecial && !star.rewarded) {
+        await tempStarsCollection.doc(star.id).update({ rewarded: true });
         star.rewarded = true;
-        currentStreak += 1; localStorage.setItem('streak', currentStreak);
+        currentStreak += 1;
+        localStorage.setItem('streak', currentStreak);
         updateStreakCounter();
-        for(let i=0;i<55;i++){
-          let angle = Math.random()*Math.PI*2, speed = 0.4+Math.random()*1.4;
-          decayParticles.push({ x:star.x, y:star.y, vx:Math.cos(angle)*speed, vy:Math.sin(angle)*speed, life:2+Math.random()*3.5, size:1.2+Math.random()*3, color:`hsl(${30+Math.random()*40},80%,60%)` });
+        for (let i = 0; i < 55; i++) {
+          let angle = Math.random() * Math.PI * 2,
+            speed = 0.4 + Math.random() * 1.4;
+          decayParticles.push({ x: star.x, y: star.y, vx: Math.cos(angle) * speed, vy: Math.sin(angle) * speed, life: 2 + Math.random() * 3.5, size: 1.2 + Math.random() * 3, color: `hsl(${30 + Math.random() * 40},80%,60%)` });
         }
       }
       creatorInfo = star.isSpecial ? '✦ SPECIAL EPHEMERAL ✦' : '✨ ephemeral star';
       text = star.message || "";
     } else {
       creatorInfo = (star.creatorName && star.creatorName !== localPeerName) ? `from ${star.creatorName}` : "";
-      text = star.text.length > 85 ? star.text.slice(0,82) + "…" : star.text;
+      text = star.text.length > 85 ? star.text.slice(0, 82) + "…" : star.text;
     }
     let fullMessage = creatorInfo;
-    if(text) fullMessage += " · " + text;
+    if (text) fullMessage += " · " + text;
     showToast(fullMessage, star);
     updatePresence(star.id);
   }
 
-  function openEdit(id){
-    let star=notes.find(s=>s.id===id);
-    if(!star) return;
-    activeId=id;
-    document.getElementById("editCreator").innerText=star.creatorName?`created by ${star.creatorName}`:"";
-    document.getElementById("memoryEditor").value=star.text;
-    let modal=document.getElementById("editModal");
-    modal.style.display="flex";
-    requestAnimationFrame(()=>modal.classList.add("visible"));
+  function openEdit(id) {
+    let star = notes.find(s => s.id === id);
+    if (!star) return;
+    activeId = id;
+    document.getElementById("editCreator").innerText = star.creatorName ? `created by ${star.creatorName}` : "";
+    document.getElementById("memoryEditor").value = star.text;
+    let modal = document.getElementById("editModal");
+    modal.style.display = "flex";
+    requestAnimationFrame(() => modal.classList.add("visible"));
   }
-  function saveEdit(){
-    if(activeId){
-      let star=notes.find(s=>s.id===activeId);
-      if(star){
-        star.text=document.getElementById("memoryEditor").value;
-        if(!star.text.trim()) star.text="a distant echo";
+
+  function saveEdit() {
+    if (activeId) {
+      let star = notes.find(s => s.id === activeId);
+      if (star) {
+        star.text = document.getElementById("memoryEditor").value;
+        if (!star.text.trim()) star.text = "a distant echo";
         debouncedSave(star);
       }
-      activeId=null;
+      activeId = null;
     }
     closeModal(document.getElementById("editModal"));
   }
-  function closeModal(m){ m.classList.remove("visible"); setTimeout(()=>m.style.display="none",250); }
 
-  // ========== INITIALIZATION ==========
-  function startApp(name){
-    localPeerName=name;
-    localStorage.setItem('constellation_peer_name',name);
+  function closeModal(m) { m.classList.remove("visible");
+    setTimeout(() => m.style.display = "none", 250); }
+
+  // ─── INIT ──────────────────────────────────────────────────────────
+  function startApp(name) {
+    localPeerName = name;
+    localStorage.setItem('constellation_peer_name', name);
     document.getElementById('nameModal').classList.remove('visible');
-    setTimeout(()=>document.getElementById('nameModal').style.display='none',350);
+    setTimeout(() => document.getElementById('nameModal').style.display = 'none', 350);
     initApp();
   }
-  function initApp(){
+
+  function initApp() {
     initWorld();
     canvasElem = document.getElementById("cosmicCanvas");
-    function resize(){
-      w=innerWidth; h=innerHeight;
-      canvasElem.width=w*devicePixelRatio; canvasElem.height=h*devicePixelRatio;
-      canvasElem.style.width=w+"px"; canvasElem.style.height=h+"px";
-      ctx=canvasElem.getContext("2d");
-      ctx.setTransform(devicePixelRatio,0,0,devicePixelRatio,0,0);
+
+    function resize() {
+      w = innerWidth;
+      h = innerHeight;
+      canvasElem.width = w * devicePixelRatio;
+      canvasElem.height = h * devicePixelRatio;
+      canvasElem.style.width = w + "px";
+      canvasElem.style.height = h + "px";
+      ctx = canvasElem.getContext("2d");
+      ctx.setTransform(devicePixelRatio, 0, 0, devicePixelRatio, 0, 0);
     }
-    resize(); window.addEventListener("resize",resize);
+    resize();
+    window.addEventListener("resize", resize);
     listenToFirestore();
     listenToTempStars();
     updateCounter();
     updateStreakCounter();
 
-    // Load quotes, then start the periodic ephemeral star scheduler
     loadQuotes().then(() => {
       scheduleEphemeralSpawns();
     });
@@ -1796,98 +2571,114 @@
     setTimeout(() => loadStarPositions(), 1000);
 
     document.getElementById("resetViewBtn").onclick = () => {
-      camera.x = 0; camera.y = 0; camera.targetZoom = 1.0;
+      camera.x = 0;
+      camera.y = 0;
+      camera.targetZoom = 1.0;
       showToast("view reset to center");
     };
-    document.getElementById("novaBtn").onclick = () => { let ns = createMemory(""); openEdit(ns.id); };
-    document.getElementById("clearAllBtn").onclick = () => {
-      document.getElementById("clearConfirmModal").style.display = "flex";
-      requestAnimationFrame(() => document.getElementById("clearConfirmModal").classList.add("visible"));
-    };
-    document.getElementById("confirmClearBtn").onclick = async () => {
-      await clearAllStars();
-      closeModal(document.getElementById("clearConfirmModal"));
-    };
-    document.getElementById("cancelClearBtn").onclick = () => closeModal(document.getElementById("clearConfirmModal"));
+    document.getElementById("novaBtn").onclick = () => { let ns = createMemory("");
+      openEdit(ns.id); };
     document.getElementById("saveMemoryBtn").onclick = saveEdit;
     document.getElementById("cancelEditBtn").onclick = () => closeModal(document.getElementById("editModal"));
-    document.getElementById("deleteMemoryBtn").onclick = () => { if(activeId){ deleteNote(activeId); activeId=null; closeModal(document.getElementById("editModal")); } };
+    document.getElementById("deleteMemoryBtn").onclick = () => { if (activeId) { deleteNote(activeId);
+        activeId = null;
+        closeModal(document.getElementById("editModal")); } };
     document.getElementById("closeViewBtn").onclick = () => closeModal(document.getElementById("viewModal"));
-    document.getElementById("editFromViewBtn").onclick = () => { closeModal(document.getElementById("viewModal")); setTimeout(()=>{ if(activeId) openEdit(activeId); },100); };
+    document.getElementById("editFromViewBtn").onclick = () => { closeModal(document.getElementById("viewModal"));
+      setTimeout(() => { if (activeId) openEdit(activeId); }, 100); };
 
     let currentClusterForName = null;
-    function promptConstellationName(cl){
-      currentClusterForName=cl;
-      document.getElementById("constellationNameInput").value=cl.name||"";
-      let m=document.getElementById("constellationNameModal");
-      m.style.display="flex";
-      requestAnimationFrame(()=>m.classList.add("visible"));
+
+    function promptConstellationName(cl) {
+      currentClusterForName = cl;
+      document.getElementById("constellationNameInput").value = cl.name || "";
+      let m = document.getElementById("constellationNameModal");
+      m.style.display = "flex";
+      requestAnimationFrame(() => m.classList.add("visible"));
     }
     document.getElementById("saveConstellationName").onclick = () => {
-      let name=document.getElementById("constellationNameInput").value.trim();
-      if(name && currentClusterForName){
-        let existing=namedConstellations.findIndex(c=>c.starIds.join(',')===currentClusterForName.starIds.join(','));
-        if(existing!==-1) namedConstellations[existing].name=name;
-        else namedConstellations.push({ starIds:currentClusterForName.starIds, name });
-        constellationsCollection.doc(currentClusterForName.starIds.join(',')).set({ starIds:currentClusterForName.starIds, name });
+      let name = document.getElementById("constellationNameInput").value.trim();
+      if (name && currentClusterForName) {
+        let existing = namedConstellations.findIndex(c => c.starIds.join(',') === currentClusterForName.starIds.join(','));
+        if (existing !== -1) namedConstellations[existing].name = name;
+        else namedConstellations.push({ starIds: currentClusterForName.starIds, name });
+        constellationsCollection.doc(currentClusterForName.starIds.join(',')).set({ starIds: currentClusterForName.starIds, name });
         showToast(`System named: ${name}`);
       }
       closeModal(document.getElementById("constellationNameModal"));
-      currentClusterForName=null;
+      currentClusterForName = null;
     };
-    document.getElementById("cancelConstellationName").onclick = () => { closeModal(document.getElementById("constellationNameModal")); currentClusterForName=null; };
+    document.getElementById("cancelConstellationName").onclick = () => { closeModal(document.getElementById("constellationNameModal"));
+      currentClusterForName = null; };
 
-    canvasElem.addEventListener("touchstart",e=>{
-      e.preventDefault(); let t=e.touches[0];
-      let star=hitTest(t.clientX,t.clientY);
-      let cl=hitTestConstellation(t.clientX,t.clientY);
-      if(cl){ promptConstellationName(cl); return; }
-      if(star){
-        let now=Date.now();
-        if(now-lastTapTime<300){
-          if(pendingSingleClick) clearTimeout(pendingSingleClick);
-          if(!star.isTemp) openEdit(star.id); else showToast("ephemeral stars cannot be edited.", star);
-          lastTapTime=0;
+    canvasElem.addEventListener("touchstart", e => {
+      e.preventDefault();
+      let t = e.touches[0];
+      let star = hitTest(t.clientX, t.clientY);
+      let cl = hitTestConstellation(t.clientX, t.clientY);
+      if (cl) { promptConstellationName(cl); return; }
+      if (star) {
+        let now = Date.now();
+        if (now - lastTapTime < 300) {
+          if (pendingSingleClick) clearTimeout(pendingSingleClick);
+          if (!star.isTemp) openEdit(star.id);
+          else showToast("ephemeral stars cannot be edited.", star);
+          lastTapTime = 0;
         } else {
-          lastTapTime=now;
-          pendingSingleClick=setTimeout(()=>{ showPreview(star,t.clientX,t.clientY); pendingSingleClick=null; },150);
+          lastTapTime = now;
+          pendingSingleClick = setTimeout(() => { showPreview(star, t.clientX, t.clientY);
+            pendingSingleClick = null; }, 150);
         }
       } else {
-        lastTapTime=0;
-        isPan=true; panStart={x:t.clientX,y:t.clientY}; camStart={x:camera.x,y:camera.y};
-        if(pendingSingleClick){ clearTimeout(pendingSingleClick); pendingSingleClick=null; }
+        lastTapTime = 0;
+        isPan = true;
+        panStart = { x: t.clientX, y: t.clientY };
+        camStart = { x: camera.x, y: camera.y };
+        if (pendingSingleClick) { clearTimeout(pendingSingleClick);
+          pendingSingleClick = null; }
       }
-    }, {passive:false});
-    canvasElem.addEventListener("touchmove",e=>{
-      if(isPan && e.touches.length===1){
-        let dx=e.touches[0].clientX-panStart.x, dy=e.touches[0].clientY-panStart.y;
-        camera.x=camStart.x+dx/camera.zoom; camera.y=camStart.y+dy/camera.zoom;
+    }, { passive: false });
+    canvasElem.addEventListener("touchmove", e => {
+      if (isPan && e.touches.length === 1) {
+        let dx = e.touches[0].clientX - panStart.x,
+          dy = e.touches[0].clientY - panStart.y;
+        camera.x = camStart.x + dx / camera.zoom;
+        camera.y = camStart.y + dy / camera.zoom;
         e.preventDefault();
       }
-      if(pendingSingleClick){ clearTimeout(pendingSingleClick); pendingSingleClick=null; }
-    }, {passive:false});
-    canvasElem.addEventListener("touchend",()=>{ isPan=false; });
-    canvasElem.addEventListener("mousedown",e=>{
-      let star=hitTest(e.clientX,e.clientY);
-      let cl=hitTestConstellation(e.clientX,e.clientY);
-      if(cl){ promptConstellationName(cl); return; }
-      if(star){
-        if(e.detail===2){ if(!star.isTemp) openEdit(star.id); else showToast("ephemeral stars cannot be edited.", star); }
-        else{ showPreview(star,e.clientX,e.clientY); }
+      if (pendingSingleClick) { clearTimeout(pendingSingleClick);
+        pendingSingleClick = null; }
+    }, { passive: false });
+    canvasElem.addEventListener("touchend", () => { isPan = false; });
+    canvasElem.addEventListener("mousedown", e => {
+      let star = hitTest(e.clientX, e.clientY);
+      let cl = hitTestConstellation(e.clientX, e.clientY);
+      if (cl) { promptConstellationName(cl); return; }
+      if (star) {
+        if (e.detail === 2) { if (!star.isTemp) openEdit(star.id);
+          else showToast("ephemeral stars cannot be edited.", star); } else { showPreview(star, e.clientX, e.clientY); }
       } else {
-        isPan=true; panStart={x:e.clientX,y:e.clientY}; camStart={x:camera.x,y:camera.y};
+        isPan = true;
+        panStart = { x: e.clientX, y: e.clientY };
+        camStart = { x: camera.x, y: camera.y };
       }
     });
-    window.addEventListener("mousemove",e=>{
-      if(isPan){
-        let dx=e.clientX-panStart.x, dy=e.clientY-panStart.y;
-        camera.x=camStart.x+dx/camera.zoom; camera.y=camStart.y+dy/camera.zoom;
+    window.addEventListener("mousemove", e => {
+      if (isPan) {
+        let dx = e.clientX - panStart.x,
+          dy = e.clientY - panStart.y;
+        camera.x = camStart.x + dx / camera.zoom;
+        camera.y = camStart.y + dy / camera.zoom;
       }
     });
-    window.addEventListener("mouseup",()=>{ isPan=false; });
-    canvasElem.addEventListener("wheel",e=>{ e.preventDefault(); let delta=e.deltaY>0?0.92:1.08; camera.targetZoom=Math.min(MAX_ZOOM,Math.max(MIN_ZOOM,camera.targetZoom*delta)); }, {passive:false});
+    window.addEventListener("mouseup", () => { isPan = false; });
+    canvasElem.addEventListener("wheel", e => { e.preventDefault();
+      let delta = e.deltaY > 0 ? 0.92 : 1.08;
+      camera.targetZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, camera.targetZoom * delta)); }, { passive: false });
 
-    let initialPinchDistance = 0, initialZoom = 1.0;
+    let initialPinchDistance = 0,
+      initialZoom = 1.0;
+
     function getPinchDistance(touches) {
       if (touches.length < 2) return 0;
       let dx = touches[0].clientX - touches[1].clientX;
@@ -1918,7 +2709,8 @@
     window.addEventListener('beforeunload', () => { saveStarPositions(); });
 
     let lastFrameTime = performance.now() / 1000;
-    function animateLoop(){
+
+    function animateLoop() {
       let nowSec = performance.now() / 1000;
       let delta = Math.min(0.033, nowSec - lastFrameTime);
       lastFrameTime = nowSec;
@@ -1933,14 +2725,15 @@
     requestAnimationFrame(animateLoop);
   }
 
-  if(!localPeerName){
-    document.getElementById('nameModal').style.display='flex';
-    requestAnimationFrame(()=>document.getElementById('nameModal').classList.add('visible'));
-    document.getElementById('saveNameBtn').onclick=()=>{ let name=document.getElementById('nameInput').value.trim(); if(!name) name='stargazer'; startApp(name); };
+  if (!localPeerName) {
+    document.getElementById('nameModal').style.display = 'flex';
+    requestAnimationFrame(() => document.getElementById('nameModal').classList.add('visible'));
+    document.getElementById('saveNameBtn').onclick = () => { let name = document.getElementById('nameInput').value.trim(); if (!name) name = 'stargazer';
+      startApp(name); };
   } else {
     initApp();
   }
-  if('serviceWorker' in navigator){ navigator.serviceWorker.register('service-worker.js').catch(err=>console.warn('SW failed',err)); }
+  if ('serviceWorker' in navigator) { navigator.serviceWorker.register('service-worker.js').catch(() => {}); }
 })();
 </script>
 </body>
